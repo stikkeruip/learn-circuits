@@ -9,6 +9,12 @@ export function lessonUrl(lesson: Lesson): string {
     return "lesson.html?" + new URLSearchParams({ id: lesson.id });
 }
 
+/** "№0001": the lesson's place in the course, told as a repair-job number. */
+export function jobNumber(lesson: Lesson): string {
+    const i = lessons.findIndex(l => l.id === lesson.id);
+    return "№" + String(i + 1).padStart(4, "0");
+}
+
 /** The lesson after this one in course order, or null for the last. */
 export function nextLesson(lesson: Lesson): Lesson | null {
     const i = lessons.findIndex(l => l.id === lesson.id);

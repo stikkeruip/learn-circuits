@@ -11,6 +11,8 @@ export interface Lesson {
     title: string;
     /** One sentence on what the lesson teaches, shown on the home page. */
     summary: string;
+    /** The story: the lesson is a repair job someone has brought in to the shop. */
+    job: Job;
     /**
      * The circuit, in CircuitJS1's text format (the line format is described
      * in tests/comparison/circuits.ts). Values set by steps replace the ones
@@ -22,6 +24,21 @@ export interface Lesson {
     /** What the learner sees and changes, in the order the readouts appear. */
     quantities: Record<string, Quantity>;
     steps: Step[];
+}
+
+/**
+ * A lesson told as a repair job (see docs/design/). Job numbers come from the
+ * lesson's place in the course: the first lesson is job №0001.
+ */
+export interface Job {
+    /** "First day on the bench" */
+    title: string;
+    /** Who brought the job in: "Rita, who runs the shop". */
+    customer: string;
+    /** What they say when they hand it over. */
+    request: string;
+    /** What they say when it is done. */
+    thanks: string;
 }
 
 export interface PartRef {

@@ -3,38 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bench · learn-circuits</title>
-  <style>
-    /* Deliberately plain. The simulator in the frame is CircuitJS1's own interface. */
-    html, body { height: 100%; margin: 0; }
-    body { display: flex; flex-direction: column; font: 14px/1.4 system-ui, sans-serif; background: #fff; color: #111; }
-    header { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; padding: 6px 12px; border-bottom: 1px solid #ccc; }
-    header h1 { font-size: 15px; margin: 0; }
-    header .home { color: inherit; text-decoration: none; font-weight: 600; }
-    header .home:hover { text-decoration: underline; }
-    header .hint { color: #555; }
-    header .from { flex-basis: 100%; padding: 4px 8px; background: #e8f6eb; border-radius: 4px; }
-    #sim { flex: 1 1 0; min-height: 0; width: 100%; border: 0; }
-    #tablePanel { flex: none; max-height: 40vh; overflow: auto; border-top: 1px solid #ccc; }
-    body.no-table #tablePanel { display: none; }
-    table { border-collapse: collapse; font-family: ui-monospace, monospace; font-size: 12px; }
-    th, td { border: 1px solid #ddd; padding: 2px 8px; text-align: right; white-space: nowrap; }
-    th { position: sticky; top: 0; background: #f4f4f4; }
-    th:nth-child(-n+2), td:nth-child(-n+2), td:last-child, th:last-child { text-align: left; }
-    tr.hover td { background: #fff3e0; }
-    td input[type=number] { width: 9ch; }
-    td label { margin-right: 8px; }
-  </style>
+  <title>The Bench · Ohmwork</title>
 </head>
 <body class="no-table">
-  <header>
-    <a class="home" href="./" title="Back to your lessons">← learn-circuits</a>
-    <h1>Bench</h1>
-    <label><input id="showTable" type="checkbox"> Show table</label>
-    <span class="hint">Pick a part from the toolbar or the Draw menu, then drag on the canvas to place it. Right-click a part to edit or delete it.</span>
-    <a href="sim.html">Simulator only</a>
-    <span id="fromLesson" class="from" hidden></span>
+  <header class="bench-bar">
+    <a class="brand" href="./" title="Back to the job path">
+      <svg class="logo-resistor" viewBox="0 0 92 20" aria-hidden="true">
+        <path class="lead" d="M0 10 H18 M74 10 H92" />
+        <rect class="body" x="18" y="2" width="56" height="16" rx="8" />
+        <rect x="28" y="3" width="5" height="14" fill="#7A4A2A" />
+        <rect x="37" y="3" width="5" height="14" fill="#F26B1D" />
+        <rect x="46" y="3" width="5" height="14" fill="#D63A2A" />
+        <rect x="60" y="3" width="5" height="14" fill="#C9A227" />
+      </svg>
+      <h1 class="heading">The Bench</h1>
+    </a>
+    <span id="fromLesson" class="file-tag mono" hidden></span>
+    <div class="bar-keys">
+      <a class="button secondary small" href="./">Job path</a>
+      <label class="button secondary small toggle"><input id="showTable" type="checkbox"> Parts table</label>
+      <a class="button secondary small" href="sim.html">Simulator only</a>
+    </div>
   </header>
+  <p class="bench-hint">Pick a part from the toolbar or the Draw menu, then drag on the screen to place it. Right-click a part to edit or delete it.</p>
+  <p id="fromNote" class="from-note" hidden></p>
 
   <iframe id="sim" title="Circuit simulator"></iframe>
 

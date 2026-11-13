@@ -16,6 +16,12 @@ export const ohmsLaw: Lesson = {
     id: "ohms-law",
     title: "Ohm's law",
     summary: "How voltage and resistance set the current, and the formula that ties all three together.",
+    job: {
+        title: "First day on the bench",
+        customer: "Rita, who runs the shop",
+        request: "Before you touch a customer's set, show me you know your Ohm's law. Battery, resistor, meter. Go on.",
+        thanks: "Good. You'll do. The customers start coming in tomorrow.",
+    },
     circuit,
     parts: {
         battery: { type: "Voltage" },

@@ -7,7 +7,7 @@ import { CircuitEngine } from "../src/engine";
 import { LessonCircuit } from "../src/lesson/circuit";
 import * as LZString from "lz-string";
 import { formatValue, isClose, parseAnswer } from "../src/lesson/format";
-import { benchUrl, nextLesson } from "../src/lesson/links";
+import { benchUrl, jobNumber, nextLesson } from "../src/lesson/links";
 import { lessons } from "../src/lessons";
 
 let engine: CircuitEngine;
@@ -107,6 +107,18 @@ describe.each(lessons)("lesson $id", lesson => {
 describe("course order", () => {
     it("leads from each lesson to the next, and from the last to none", () => {
         lessons.forEach((lesson, i) => expect(nextLesson(lesson)).toBe(lessons[i + 1] ?? null));
+    });
+
+    it("numbers the jobs in course order, from №0001", () => {
+        lessons.forEach((lesson, i) => expect(jobNumber(lesson)).toBe("№" + String(i + 1).padStart(4, "0")));
+        expect(jobNumber(lessons[0])).toBe("№0001");
+    });
+
+    it("tells every lesson as a job, with its story filled in", () => {
+        for (const lesson of lessons) {
+            for (const [field, text] of Object.entries(lesson.job))
+                expect(text.trim(), `${lesson.id} job.${field}`).not.toBe("");
+        }
     });
 });
 

@@ -1,8 +1,10 @@
 # learn-circuits
 
-A Duolingo-style app for learning circuits: short lessons built around a live
-circuit, and a Bench to build your own. The simulator is Paul Falstad's full
-editor, running from his source, with our engine API on top of it.
+**Ohmwork**: learn circuits by working at a 1980s TV and radio repair shop.
+Each lesson is a repair job someone brings in, built around a live circuit on
+a green-phosphor monitor, and the Bench is where you build your own. The
+simulator is Paul Falstad's full editor, running from his source, with our
+engine API on top of it. The look and story are in [`docs/design/`](docs/design/README.md).
 
 ## What is here
 
@@ -11,11 +13,12 @@ editor, running from his source, with our engine API on top of it.
 | `circuitjs1/` | Paul Falstad's [CircuitJS1](https://github.com/pfalstad/circuitjs1) simulator, unmodified, as a git submodule pinned to one commit (GPL-2.0). All circuit maths lives here. |
 | `src/engine/` | Our wrapper: a small typed API over CircuitJS1's simulation. Works with no user interface (`create()`) or on top of the full editor (`attach()`). |
 | `sim.html` + `src/sim/` | The simulator page: CircuitJS1's own interface (symbols, current animation, menus, drag-to-build editing, scopes) started from the clone, with the engine attached as `window.engine`. |
-| `index.html` + `src/home/` | The home page: the lessons in order, which are done and which is next, and the way into the Bench. |
+| `index.html` + `src/home/` | The home page, as the shop's job board: the job on the bench now, the path of jobs (which are done, which is next), and the way into the Bench. |
 | `bench.html` + `src/bench/` | The Bench: the full simulator in a frame, to build anything, plus an optional live table of every component, read through the engine. A lesson's circuit opens here from the end of the lesson or from the home page. |
-| `lesson.html` + `src/lesson/` | The lesson player: one lesson a step at a time (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. Which lessons the learner has finished is kept in the browser's `localStorage` by `src/lesson/progress.ts`; there is no server or account yet. |
+| `lesson.html` + `src/lesson/` | The lesson player: one lesson, told as a repair job (the ticket first, then a step at a time) (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. Which lessons the learner has finished is kept in the browser's `localStorage` by `src/lesson/progress.ts`; there is no server or account yet. |
 | `src/lessons/` | The lessons, as data in the format of `src/lesson/types.ts`. So far one: Ohm's law (`lesson.html?id=ohms-law`). |
-| `src/ui/theme.css` | Colours, type and buttons shared by the home and lesson pages. |
+| `src/ui/` | The Repair Shop '84 look shared by our pages: `theme.css` (colours, fonts, keycaps, tickets) and `crt.ts` (the phosphor colours CircuitJS1 draws the circuit in, set through its own address options). |
+| `docs/design/` | The style guide and mock-ups the look comes from, and what of them is built. |
 | `iframe.html` | An empty page CircuitJS1's side panel asks for. |
 | `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). `lessons.test.ts` loads every lesson into the engine and checks each stated answer against the simulator. |
 | `tests/comparison/` | Seven hand-written circuits and a script that compares our results with Falstad's live site. On 2026-11-13 every number matched to the last bit; see its README. |

@@ -1,65 +1,176 @@
-/* Shared by the app's own pages (home, lesson): colours, type and buttons.
-   Light only: the simulator they show draws on white. */
+/* Repair Shop '84: the look shared by every page of our own (home, lesson,
+   bench header). The full guide and the mock-ups are in docs/design/.
+
+   Two worlds: the bench (cream, ink outlines, hard shadows, keycaps, manila
+   tickets) and the screen (green phosphor on a dark CRT), which never borrow
+   each other's colours. */
+
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+@import "@fontsource/vt323/400.css";
 
 :root {
   color-scheme: light;
-  --bg: #ffffff;
-  --ink: #1e2533;
-  --muted: #5d6879;
-  --line: #e2e6ed;
-  --surface: #f5f7fa;
-  --green: #2f9e44;
-  --green-dark: #237a34;
-  --green-soft: #e8f6eb;
-  --red: #e03131;
-  --red-dark: #b02525;
-  --red-soft: #fdeeee;
-  --blue: #1c7ed6;
-  --blue-dark: #0b4f96;
-  --blue-soft: #e8f2fc;
-  --radius: 14px;
+  /* bench */
+  --ink: #221E19;        --ink-deep: #0E0C0A;     --panel: #FBF6EA;      --backdrop: #EDE3CF;
+  --panel-dim: #E6DCC6;  --manila: #EBD9A6;       --pegboard: #D9C9A6;   --bezel: #D9CDB4;
+  --metal: #B9B0A0;      --text-2: #4A433A;       --mono-label: #6B6255; --mono-manila: #6B5A33;
+  --hairline: #8A7F6A;   --disabled-edge: #A99C82; --disabled-text: #7D725F;
+  /* accents */
+  --signal: #F26B1D;     --signal-press: #E05E14; --amber: #F7A823;      --copper: #C9773E;
+  --brown: #7A4A2A;      --gold: #C9A227;         --live: #2F9E44;       --live-ink: #08200D;
+  --fault: #C9321F;      --fault-fill: #D63A2A;   --fault-ink: #FFF4E8;  --neon: #FF8A4C;
+  --tint-correct: #DFF3D5; --tint-correct-ink: #1D5A28;
+  --tint-wrong: #FBE0D8;   --tint-wrong-ink: #8E2015;  --tint-selected: #FDE7B8;
+  /* screen */
+  --crt: #0B140E;        --crt-grid: #163020;     --crt-panel: #0F1A14;
+  --phos: #8DF78A;       --phos-bright: #D8FFC9;  --phos-mid: #A2C89B;   --phos-low: #517456;
+  --phos-gnd: #417049;   --phos-dim: #5FA86C;     --phos-dot: #F2FFE8;   --phos-bloom: #B8FF9F;
+  /* shape */
+  --radius-key: 10px;    --radius-card: 14px;     --radius-bezel: 22px;  --radius-ticket: 4px;
+  --outline: 2.5px solid var(--ink);
+  --panel-shadow: 6px 6px 0 var(--ink);
+  --key-shadow: 0 5px 0 var(--ink), inset 0 3px 0 rgba(255, 255, 255, 0.3);
+  --key-shadow-pressed: 0 1px 0 var(--ink), inset 0 3px 4px rgba(0, 0, 0, 0.2);
+  /* type */
+  --font-ui: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-screen: "VT323", ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--ink);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 400 16px/1.45 var(--font-ui);
+  background-color: var(--backdrop);
+  background-image: radial-gradient(#D8CBAE 2.2px, transparent 2.8px);
+  background-size: 26px 26px;
 }
 .hidden { display: none !important; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* ---- buttons (a <button> or a link) ---- */
+/* Headings are uppercase and expanded; prose stays sentence case. */
+.heading {
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* Space Mono metadata: JOB №0001 · STEP 4. Never whole sentences. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mono-label);
+}
+
+/* ---- keycaps: a <button> or a link ---- */
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
-  padding: 14px 28px;
-  font: inherit;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  font-family: var(--font-ui);
   font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.03em;
+  font-weight: 900;
+  font-stretch: 115%;
+  line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
-  border: 0;
-  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--panel);
+  border: var(--outline);
+  border-radius: var(--radius-key);
+  box-shadow: var(--key-shadow);
   cursor: pointer;
 }
-.button.primary { color: #fff; background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
-.button.primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-dark); }
-.button.secondary {
-  padding: 12px 26px;
-  color: var(--blue-dark);
-  background: #fff;
-  border: 2px solid var(--line);
-  box-shadow: 0 4px 0 var(--line);
+.button:active:not(:disabled) { transform: translateY(4px); box-shadow: var(--key-shadow-pressed); }
+.button.primary { background: var(--signal); }
+.button.primary:active:not(:disabled) { background: var(--signal-press); }
+.button.go { background: var(--live); color: var(--live-ink); }
+.button.fault { background: var(--fault); color: var(--fault-ink); }
+.button.ghost { background: transparent; box-shadow: none; }
+.button.ghost:active { transform: none; box-shadow: none; }
+.button.secondary:hover:not(:disabled), .button.ghost:hover { background: #fff; }
+.button.small { min-height: 40px; padding: 0 16px; font-size: 13px; box-shadow: 0 4px 0 var(--ink), inset 0 3px 0 rgba(255, 255, 255, 0.3); }
+.button.small:active { transform: translateY(3px); }
+.button.icon { width: 52px; padding: 0; }
+.button:disabled {
+  color: var(--disabled-text);
+  background: var(--panel-dim);
+  border-color: var(--disabled-edge);
+  box-shadow: 0 5px 0 var(--disabled-edge);
+  cursor: not-allowed;
 }
-.button.secondary:hover { background: var(--surface); }
-.button.secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
-.button:disabled { color: #98a1b0; background: var(--line); box-shadow: none; cursor: default; }
 
-.link { color: var(--blue); font-weight: 700; }
+/* Keys, pictures and simulator frames are pressed or looked at, not copied:
+   a drag or double-click must not paint them with the selection colour. */
+.button, svg, iframe { -webkit-user-select: none; user-select: none; }
 
-.button:focus-visible, .link:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.link { color: var(--ink); font-weight: 800; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.link:hover { color: var(--brown); }
+
+:is(a, button, input, [tabindex]):focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* ---- bench surfaces ---- */
+
+.panel {
+  background: var(--panel);
+  border: var(--outline);
+  border-radius: var(--radius-card);
+  box-shadow: var(--panel-shadow);
+}
+
+/* A repair ticket: manila, a tear strip down the left, Space Mono. */
+.ticket {
+  position: relative;
+  padding: 12px 14px 12px 20px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  background: var(--manila);
+  border: 2px solid var(--ink);
+  border-left: 6px dotted var(--ink);
+  border-radius: var(--radius-ticket);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.ticket .mono { color: var(--mono-manila); }
+.ticket.done { background: #F3EAD0; border-color: var(--hairline); box-shadow: none; }
+.ticket.done .struck { text-decoration: line-through; color: var(--mono-manila); }
+.stamp {
+  display: inline-block;
+  padding: 2px 10px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  color: var(--tint-correct-ink);
+  border: 3px solid var(--live);
+  border-radius: 6px;
+  transform: rotate(-8deg);
+}
+
+/* A reading: VT323 on a dark readout box. The only place numbers from the simulator appear. */
+.screen-text {
+  font-family: var(--font-screen);
+  font-weight: 400;
+  color: var(--phos);
+  background: var(--crt-panel);
+  border: var(--outline);
+  border-radius: 6px;
+}
+
+/* ---- the logo: a resistor, banded brown-black-red-gold ---- */
+
+.logo-resistor { display: block; width: 92px; height: 20px; }
+.logo-resistor .lead { stroke: var(--metal); stroke-width: 3; }
+.logo-resistor .body { fill: #E9D7B0; stroke: var(--ink); stroke-width: 2; }

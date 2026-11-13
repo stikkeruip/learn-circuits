@@ -7,7 +7,14 @@
   <link rel="stylesheet" href="/circuitjs1/ts/style.css">
   <link rel="stylesheet" href="/circuitjs/font/fontello.css">
   <!-- CircuitJS1 sets no page background and assumes the browser's white one. -->
-  <style>html { background: #fff; }</style>
+  <style>
+    html { background: #fff; }
+    /* The simulator is a drawing and controls, not text: a drag or Ctrl+A
+       must not paint it with the browser's selection blue. Fields you type
+       in keep normal selection. */
+    body { -webkit-user-select: none; user-select: none; }
+    input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+  </style>
 </head>
 <body>
   <script type="module" src="/src/sim/main.ts"></script>

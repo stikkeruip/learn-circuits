@@ -1,0 +1,58 @@
+/* The Bench: our bar on top, then CircuitJS1's own editor in the frame, drawn
+   in phosphor colours (src/ui/crt.ts). Colours, type and keycaps:
+   src/ui/theme.css. */
+
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; }
+
+.bench-bar {
+  -webkit-user-select: none;
+  user-select: none;
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  padding: 10px 16px;
+  color: var(--panel);
+  background: var(--ink);
+}
+.brand { display: flex; align-items: center; gap: 14px; color: var(--panel); text-decoration: none; }
+.brand .logo-resistor { width: 72px; height: 16px; }
+.brand h1 { margin: 0; font-size: 22px; }
+.brand:hover h1 { color: #fff; }
+.file-tag { padding: 4px 10px; color: var(--ink); background: var(--manila); border-radius: var(--radius-ticket); }
+.bar-keys { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+.bench-bar .button { border-color: var(--ink-deep); box-shadow: 0 4px 0 var(--ink-deep), inset 0 3px 0 rgba(255, 255, 255, 0.3); }
+.bench-bar .button:active { box-shadow: 0 1px 0 var(--ink-deep), inset 0 3px 4px rgba(0, 0, 0, 0.2); }
+.bench-bar :focus-visible { outline-color: var(--panel); }
+.toggle { gap: 8px; user-select: none; }
+.toggle input { width: 16px; height: 16px; margin: 0; accent-color: var(--signal); }
+.toggle:has(input:checked) { background: var(--amber); }
+.toggle:has(input:focus-visible) { outline: 3px solid var(--panel); outline-offset: 3px; }
+
+.bench-hint, .from-note { flex: none; margin: 0; padding: 6px 16px; font-size: 14px; }
+.bench-hint { color: var(--text-2); background: var(--panel); border-bottom: var(--outline); }
+.from-note { font-family: var(--font-mono); font-size: 13px; background: var(--manila); border-bottom: var(--outline); }
+.from-note a { color: var(--ink); font-weight: 700; }
+
+#sim { flex: 1 1 0; min-height: 0; width: 100%; border: 0; background: #000; }
+
+/* The parts table: every component, read through our engine. */
+#tablePanel { flex: none; max-height: 40vh; overflow: auto; background: var(--panel); border-top: var(--outline); }
+body.no-table #tablePanel { display: none; }
+table { border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+th, td { border: 1px solid var(--panel-dim); padding: 3px 8px; text-align: right; white-space: nowrap; }
+th { position: sticky; top: 0; color: var(--panel); background: var(--ink); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+th:nth-child(-n+2), td:nth-child(-n+2), td:last-child, th:last-child { text-align: left; }
+tr.hover td { background: var(--tint-selected); }
+/* Room for the longest reading, "-999.9 mV", so columns don't jump as values change. */
+.reading { display: inline-block; min-width: 10ch; text-align: right; white-space: pre; }
+td input[type=number] { width: 9ch; font: inherit; }
+td label { margin-right: 8px; }
+td button { font: inherit; }
+
+@media (max-width: 700px) {
+  .bench-hint { display: none; }
+  .bar-keys { margin-left: 0; }
+}

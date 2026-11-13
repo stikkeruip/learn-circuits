@@ -4,9 +4,12 @@
 // CircuitEngine, which lives inside the frame, so it doubles as a check that
 // the engine API works on top of the real editor.
 
+import "../ui/theme.css";
+import "./bench.css";
 import type { CircuitElement, CircuitEngine, ElementParam } from "../engine";
-import { lessonUrl, nextLesson } from "../lesson/links";
+import { jobNumber, lessonUrl, nextLesson } from "../lesson/links";
 import { lessons } from "../lessons";
+import { PHOSPHOR_COLOURS } from "../ui/crt";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const frame = $<HTMLIFrameElement>("sim");
@@ -30,13 +33,29 @@ if (circuit != null) {
 const fromLesson = lessons.find(l => l.id === query.get("from"));
 query.delete("from");
 if (fromLesson != null) {
-    const note = $("fromLesson");
+    const tag = $("fromLesson");
+    tag.textContent = `${jobNumber(fromLesson)} · ${fromLesson.title}`;
+    tag.hidden = false;
+    const note = $("fromNote");
     const next = nextLesson(fromLesson);
     const link = document.createElement("a");
     link.href = lessonUrl(next ?? fromLesson);
-    link.textContent = next != null ? `Next lesson: ${next.title} →` : `Replay “${fromLesson.title}”`;
-    note.append(`This is the circuit from the lesson “${fromLesson.title}”. Change anything you like. `, link);
+    link.textContent = next != null ? `Next job: ${next.job.title} →` : `Do “${fromLesson.job.title}” again`;
+    note.append(`The circuit from job ${jobNumber(fromLesson)}, “${fromLesson.job.title}”. Change anything you like. `, link);
     note.hidden = false;
+}
+
+// Draw in the shop's phosphor colours, unless the address asks for others or
+// colours were saved in CircuitJS1's own Options dialog (kept in this browser).
+for (const [name, value] of Object.entries(PHOSPHOR_COLOURS)) {
+    let saved: string | null = null;
+    try {
+        saved = localStorage.getItem(name);
+    } catch {
+        // storage unavailable: nothing saved
+    }
+    if (!query.has(name) && saved == null)
+        query.set(name, value);
 }
 const simLoaded = new Promise<CircuitEngine>(resolve => {
     frame.addEventListener("load", () => resolve((frame.contentWindow as any).engineReady), { once: true });
@@ -48,15 +67,19 @@ const engine = await simLoaded;
 
 // ---- live table ------------------------------------------------------------
 
+/**
+ * A reading for the table: four significant figures and an SI prefix. With no
+ * prefix a space stands in its place, so units and digits line up in a column.
+ */
 function format(value: number, unit: string): string {
     if (!Number.isFinite(value))
         return String(value);
     const abs = Math.abs(value);
     if (abs === 0 || abs < 1e-15)
-        return "0 " + unit;
-    const scales: [number, string][] = [[1e9, "G"], [1e6, "M"], [1e3, "k"], [1, ""], [1e-3, "m"], [1e-6, "µ"], [1e-9, "n"], [1e-12, "p"]];
+        return "0  " + unit;
+    const scales: [number, string][] = [[1e9, "G"], [1e6, "M"], [1e3, "k"], [1, ""], [1e-3, "m"], [1e-6, "µ"], [1e-9, "n"], [1e-12, "p"], [1e-15, "f"]];
     const [scale, prefix] = scales.find(([s]) => abs >= s) ?? scales[scales.length - 1];
-    return (value / scale).toPrecision(4) + " " + prefix + unit;
+    return (value / scale).toPrecision(4) + " " + (prefix || " ") + unit;
 }
 
 function paramControl(el: CircuitElement, param: ElementParam): HTMLElement | null {
@@ -117,7 +140,15 @@ function controlsFor(el: CircuitElement): HTMLElement[] {
     return out;
 }
 
-interface Row { el: CircuitElement; row: HTMLTableRowElement; cells: HTMLTableCellElement[] }
+interface Row {
+    el: CircuitElement;
+    row: HTMLTableRowElement;
+    /** One per terminal. */
+    terminals: HTMLSpanElement[];
+    across: HTMLSpanElement;
+    current: HTMLSpanElement;
+    power: HTMLSpanElement;
+}
 let rows: Row[] = [];
 let shownIds = "";
 let stale = true;       // the circuit changed since the table was built
@@ -141,12 +172,25 @@ function rebuildTable(elements: CircuitElement[]): void {
         const row = table.insertRow();
         row.insertCell().textContent = el.id;
         row.insertCell().textContent = el.type.replace(/Elm$/, "");
-        const cells = [row.insertCell(), row.insertCell(), row.insertCell(), row.insertCell()];
+        // Each reading sits in a box of fixed width, so the columns keep their
+        // size while the numbers change (0 V, 12.00 V, -472.9 mV ...).
+        const reading = () => {
+            const span = document.createElement("span");
+            span.className = "reading";
+            return span;
+        };
+        const terminals = Array.from({ length: el.postCount }, reading);
+        const terminalCell = row.insertCell();
+        terminals.forEach((span, i) => terminalCell.append(...(i > 0 ? [" | ", span] : [span])));
+        const across = reading(), current = reading(), power = reading();
+        row.insertCell().append(across);
+        row.insertCell().append(current);
+        row.insertCell().append(power);
         row.insertCell().append(...controlsFor(el));
         // Hovering a row highlights that part in the simulator, and the other way round (see render).
         row.addEventListener("pointerenter", () => highlight(el));
         row.addEventListener("pointerleave", () => highlight(null));
-        return { el, row, cells };
+        return { el, row, terminals, across, current, power };
     });
 }
 
@@ -168,15 +212,16 @@ function render(): void {
         rebuildTable(elements);
     }
     const underMouse = engine.app.mouse.getMouseElm();
-    for (const { el, row, cells } of rows) {
-        const volts: string[] = [];
-        for (let i = 0; i < el.postCount; i++)
-            volts.push(format(el.voltage(i), "V"));
-        cells[0].textContent = volts.join(" | ");
+    const show = (span: HTMLElement, text: string) => {
+        if (span.textContent !== text)
+            span.textContent = text;
+    };
+    for (const { el, row, terminals, across, current, power } of rows) {
+        terminals.forEach((span, i) => show(span, format(el.voltage(i), "V")));
         const twoTerminal = el.postCount === 2;
-        cells[1].textContent = twoTerminal ? format(el.voltageDiff, "V") : "";
-        cells[2].textContent = el.postCount <= 2 ? format(el.current, "A") : "";
-        cells[3].textContent = twoTerminal ? format(el.power, "W") : "";
+        show(across, twoTerminal ? format(el.voltageDiff, "V") : "");
+        show(current, el.postCount <= 2 ? format(el.current, "A") : "");
+        show(power, twoTerminal ? format(el.power, "W") : "");
         row.classList.toggle("hover", el.raw === underMouse);
     }
 }

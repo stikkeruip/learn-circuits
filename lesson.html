@@ -3,23 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lesson · learn-circuits</title>
+  <title>Job · Ohmwork</title>
 </head>
 <body>
   <header class="top">
-    <a class="quit" href="./" title="Leave the lesson" aria-label="Leave the lesson">✕</a>
-    <div id="progress" class="progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <div id="progressFill" class="progress-fill"></div>
-    </div>
+    <a class="button secondary icon quit" href="./" title="Leave the job" aria-label="Leave the job">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" /></svg>
+    </a>
+    <div id="progress" class="progress" role="progressbar" aria-label="Job progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
   </header>
 
   <main id="main">
     <div id="column" class="column">
       <section id="prompt" class="prompt"></section>
-      <section id="circuitCard" class="circuit-card" aria-label="Circuit">
-        <!-- The simulator, display only: the lesson changes the circuit through its own controls. -->
-        <iframe id="circuitFrame" title="Circuit simulation" tabindex="-1"></iframe>
-        <div id="readouts" class="readouts"><span class="loading">Starting the simulator…</span></div>
+      <section id="circuitCard" class="instrument" aria-label="Circuit">
+        <div class="crt">
+          <!-- The simulator, display only: the lesson changes the circuit through its own controls. -->
+          <iframe id="circuitFrame" title="Circuit simulation" tabindex="-1"></iframe>
+          <div class="crt-glass" aria-hidden="true"></div>
+        </div>
+        <div id="readouts" class="readouts"><span class="loading">Warming up the monitor…</span></div>
       </section>
       <section id="answer" class="answer"></section>
     </div>
@@ -27,7 +30,7 @@
 
   <footer id="footer" class="footer">
     <div class="footer-inner">
-      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
       <button id="primary" class="button primary" type="button" disabled>Continue</button>
     </div>
   </footer>
