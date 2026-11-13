@@ -10,39 +10,49 @@
     <a class="button secondary icon quit" href="./" title="Leave the job" aria-label="Leave the job">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" /></svg>
     </a>
-    <button id="back" class="button secondary icon back" type="button" title="Previous step" aria-label="Previous step" hidden>
+    <button id="back" class="button secondary icon back" type="button" title="Previous step" aria-label="Previous step" disabled>
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M14.5 5.5 L8 12 L14.5 18.5" /></svg>
     </button>
     <div id="progress" class="progress" role="progressbar" aria-label="Job progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
   </header>
 
-  <main id="main">
-    <div id="column" class="column">
-      <section id="prompt" class="prompt"></section>
-      <section id="circuitCard" class="instrument" aria-label="Circuit">
-        <div class="crt">
-          <!-- The simulator: its switches can be flipped, but nothing in it can be added, moved or edited. -->
-          <iframe id="circuitFrame" title="Circuit simulation" tabindex="-1"></iframe>
-          <div class="crt-glass" aria-hidden="true"></div>
-          <!-- The probe: what is under the pointer (src/lesson/probe.ts). The readouts below say the same for screen readers. -->
-          <div id="probe" class="probe" aria-hidden="true" hidden><p class="probe-title"></p><dl class="probe-rows"></dl></div>
-          <!-- Fades in once the view has been zoomed or moved. -->
-          <button id="recentre" class="recentre" type="button" tabindex="-1" title="Recentre the circuit" aria-label="Recentre the circuit">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15" /><circle cx="12" cy="12" r="2.2" /></svg>
-          </button>
-        </div>
-        <div id="readouts" class="readouts"><span class="loading">Warming up the monitor…</span></div>
-      </section>
-      <section id="answer" class="answer"></section>
-    </div>
-  </main>
+  <!-- The frame: a monitor and a sheet, each sized by the window alone. What a
+       step says or asks goes inside the sheet and never moves the monitor
+       (src/lesson/lesson.css, "the frame"). -->
+  <main id="stage" class="stage">
+    <section id="circuitCard" class="instrument" aria-label="Circuit">
+      <div class="crt">
+        <!-- The simulator: its switches can be flipped, but nothing in it can be added, moved or edited. -->
+        <iframe id="circuitFrame" title="Circuit simulation" tabindex="-1"></iframe>
+        <div class="crt-glass" aria-hidden="true"></div>
+        <!-- The probe: what is under the pointer (src/lesson/probe.ts). The readouts below say the same for screen readers. -->
+        <div id="probe" class="probe" aria-hidden="true" hidden><p class="probe-title"></p><dl class="probe-rows"></dl></div>
+        <!-- Fades in once the view has been zoomed or moved. -->
+        <button id="recentre" class="recentre" type="button" tabindex="-1" title="Recentre the circuit" aria-label="Recentre the circuit">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15" /><circle cx="12" cy="12" r="2.2" /></svg>
+        </button>
+      </div>
+      <div id="readouts" class="readouts"><span class="loading">Warming up the monitor…</span></div>
+    </section>
 
-  <footer id="footer" class="footer">
-    <div class="footer-inner">
-      <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
-      <button id="primary" class="button primary" type="button" disabled>Continue</button>
-    </div>
-  </footer>
+    <section id="sheet" class="sheet">
+      <!-- Where in the job this screen is, in the sheet's top left corner: JOB №0001 · STEP 4 · QUICK CHECK. -->
+      <p id="tag" class="tag-slot"></p>
+      <!-- What the step says and asks. Scrolls by itself when it is longer than the sheet. -->
+      <div id="sheetBody" class="sheet-body">
+        <section id="prompt" class="prompt"></section>
+        <section id="answer" class="answer"></section>
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+      </div>
+      <!-- The key to go on, always in the bottom right corner. -->
+      <div id="actions" class="actions">
+        <span class="key-wrap">
+          <button id="primary" class="button primary" type="button" disabled>Continue</button>
+          <span id="sparks" class="sparks" aria-hidden="true"></span>
+        </span>
+      </div>
+    </section>
+  </main>
 
   <script type="module" src="/src/lesson/main.ts"></script>
 </body>

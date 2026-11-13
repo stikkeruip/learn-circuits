@@ -143,6 +143,15 @@ Rules:
 Four kinds. Every step may carry `set`: values for settings and switches when
 the step starts.
 
+**The frame does not move.** The player shows every step in the same two
+boxes: the monitor, and a sheet beside it (under it on a phone) that holds the
+step's tag, its text, its answers, the note that says how it went, and the key
+to go on in the bottom right corner. Both boxes are sized by the window alone,
+so nothing a step says or asks can move or resize the monitor. A step that is
+longer than the sheet scrolls inside the sheet. That keeps the monitor still,
+but it hides the top of the question, so write to the lengths given below: at
+1024 × 768 no step of the seven lessons scrolls.
+
 **Always give `set` in full**, on every step, with every value the step relies
 on. A wrongly answered question comes back at the end of the job, alone, so no
 step can count on the one before it. A question that follows an explore step
@@ -301,8 +310,10 @@ lesson is a job a customer brings in.
    the right answer is not in the same place in every choice question, and
    that the job's story is filled in.
 3. Play it from start to finish at `lesson.html?id=<id>`, at full width and
-   at phone width (375 px). Tests cannot see text that overflows, a long
-   question that squeezes the screen, or a dull question.
+   at phone width (375 px). Tests cannot see text that overflows, a question
+   or explanation so long that the sheet has to scroll, or a dull question.
+   On a small phone the sheet does scroll once the note appears; at full
+   width it should not.
 4. Answer one question wrongly on purpose, and check that it reads right
    when it comes back at the end.
 

@@ -3,9 +3,12 @@
 // own drawing and animation) on a CRT. The page changes and reads the circuit
 // only through the CircuitEngine inside that frame, via LessonCircuit.
 //
-// The job ticket first, then one thing per screen: a progress bar, a Check
-// key, and a footer that turns green or red. A question answered wrongly
-// comes back at the end of the job until it is answered right.
+// The job ticket first, then one thing per screen, in a frame that does not
+// move: the monitor, and beside it (under it, on a phone) a sheet with what
+// the step says and asks, a note that says how it went, and the key to go on
+// in the bottom right corner. Nothing a step shows changes the monitor's size
+// or place (lesson.css, "the frame"). A question answered wrongly comes back
+// at the end of the job until it is answered right.
 
 import "../ui/theme.css";
 import "./lesson.css";
@@ -18,6 +21,7 @@ import { formatValue, isClose, parseAnswer } from "./format";
 import { benchUrl, jobNumber, lessonUrl, nextLesson } from "./links";
 import { describePart, describeTerminal } from "./probe";
 import { ProgressStore } from "./progress";
+import { throwSparks } from "./sparks";
 import type { ChoiceStep, ExploreStep, NumberStep, ReadStep, Step } from "./types";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -28,15 +32,17 @@ const job = jobNumber(lesson);
 document.title = `${lesson.job.title} · Ohmwork`;
 
 const progress = $("progress");
-const main = $("main");
+const tagView = $("tag");
+const stage = $("stage");
+const sheetBody = $("sheetBody");
 const promptView = $("prompt");
-const circuitCard = $("circuitCard");
 const frame = $<HTMLIFrameElement>("circuitFrame");
 const readoutsView = $("readouts");
 const answerView = $("answer");
-const footer = $("footer");
 const feedback = $("feedback");
+const actions = $("actions");
 const primary = $<HTMLButtonElement>("primary");
+const sparks = $("sparks");
 const back = $<HTMLButtonElement>("back");
 
 // ---- start the simulator ---------------------------------------------------
@@ -73,6 +79,12 @@ const engine = await engineReady;
 // can be added, moved, rewired, deleted or edited. (CircuitJS1's own
 // editable=false option is not used: it puts a padlock on the drawing.)
 engine.editable = false;
+// CircuitJS1 asks "Are you sure? There are unsaved changes" when its page is
+// left with a changed circuit, and a flipped switch or a moved slider is a
+// change. A lesson's circuit is not the learner's to save or lose, so on this
+// page's simulator nothing ever counts as unsaved: leaving for the next job,
+// the Bench or the job board never asks.
+engine.app.isModified = () => false;
 const circuit = new LessonCircuit(engine, lesson);
 
 // ---- small helpers ---------------------------------------------------------
@@ -144,14 +156,15 @@ function formula(text: string): HTMLElement {
     const box = el("div", "formula");
     box.setAttribute("role", "math");
     box.setAttribute("aria-label", text);
+    box.style.setProperty("--chars", String(text.length));   // sizes the type to fit the sheet (lesson.css)
     for (const token of text.split(/(\s+|[()])/))   // brackets apart, so "(R1" is still R1
         box.append(quantitySymbols.has(token) ? el("span", "symbol", token) : token);
     return box;
 }
 
-/** The manila tag over each screen: JOB №0001 · STEP 4 · QUICK CHECK. */
-function tag(text: string): HTMLElement {
-    return el("p", "tag mono", `Job ${job} · ${text}`);
+/** The manila tag in the sheet's top left corner: JOB №0001 · STEP 4 · QUICK CHECK. */
+function setTag(text: string): void {
+    tagView.replaceChildren(el("span", "tag mono", `Job ${job} · ${text}`));
 }
 
 const STEP_NAMES: Record<Step["kind"], string> = {
@@ -198,9 +211,9 @@ function updateReadouts(): void {
 // The view is the learner's: the wheel or a pinch zooms, a drag moves it
 // (engine.editable = false makes a drag move the view). The circuit starts
 // fitted to the screen, and the Recentre key, which fades in once the view
-// has been zoomed or moved, fits it again. When the screen changes size (the
-// monitor grows and shrinks with what is around it), a fitted circuit is
-// fitted anew and a moved view keeps what was in its middle in the middle.
+// has been zoomed or moved, fits it again. When the screen changes size (only
+// with the window: no step resizes the monitor), a fitted circuit is fitted
+// anew and a moved view keeps what was in its middle in the middle.
 // The fit is ours, not CircuitJS1's: its own caps the zoom and, in a narrow
 // window, keeps room free for oscilloscope panels, so a small circuit would
 // be drawn small.
@@ -392,11 +405,14 @@ engine.on("frame", () => {
     showProbe();
 });
 
-// ---- footer ----------------------------------------------------------------
+// ---- the key to go on, and the note ------------------------------------------
 
 let primaryAction: () => void = () => {};
 
-/** The big key at the bottom right: orange to go on, green after a right answer, red after a wrong one. */
+/**
+ * The big key in the bottom right corner: grey while there is something to
+ * do, orange to check or go on, green once it is done, red after a wrong answer.
+ */
 function setPrimary(label: string, enabled: boolean, action?: () => void, look: "primary" | "go" | "fault" = "primary"): void {
     primary.textContent = label;
     primary.disabled = !enabled;
@@ -406,28 +422,43 @@ function setPrimary(label: string, enabled: boolean, action?: () => void, look: 
 }
 primary.addEventListener("click", () => primaryAction());
 
-function clearFooter(): void {
-    footer.className = "footer";
+function clearFeedback(): void {
+    feedback.className = "feedback";
     feedback.replaceChildren();
 }
 
-/** Turn the footer green or red, with a ✓ or ✕ badge, a heading and some detail. */
+/**
+ * A green or red note on the sheet, under what was asked: a ✓ or ✕ badge, a
+ * heading and some detail. It takes room only inside the sheet, which scrolls
+ * to show it if it has to.
+ */
 function showFeedback(correct: boolean, title: string, detail: (string | Node)[]): void {
-    footer.className = "footer " + (correct ? "correct" : "wrong");
+    feedback.className = "feedback " + (correct ? "correct" : "wrong");
     const badge = el("span", "badge");
     badge.append(icon(correct ? "check" : "cross"));
     const text = el("div");
-    text.append(el("strong", undefined, title), ...detail);
+    text.append(el("strong", "feedback-title", title), ...detail);
     feedback.replaceChildren(badge, text);
+    const below = feedback.getBoundingClientRect().bottom - sheetBody.getBoundingClientRect().bottom;
+    if (below > 0)
+        sheetBody.scrollTop += below + 6;
 }
 
-function showResult(correct: boolean, detail: (string | Node)[], next: () => void): void {
+/** The step is done: the key has turned green, and throws a few sparks. */
+function celebrate(): void {
+    throwSparks(sparks);
+}
+
+/** `fresh` is false for an answer looked at again: it is shown as it was, without the sparks. */
+function showResult(correct: boolean, detail: (string | Node)[], next: () => void, fresh: boolean): void {
     showFeedback(correct, correct ? praise() : "Not quite.", detail);
     if (correct)
         setPrimary("Continue", true, next, "go");
     else
         setPrimary("Got it", true, next, "fault");
-    primary.focus();
+    if (correct && fresh)
+        celebrate();
+    primary.focus({ preventScroll: true });
 }
 
 // Short and shop-floor (docs/design/, "Voice").
@@ -468,8 +499,9 @@ function showJob(): void {
     ticket.append(el("p", undefined, `“${lesson.job.request}”`), el("p", "who", `— ${lesson.job.customer}`));
     const topic = el("p");
     topic.append(el("strong", undefined, lesson.title + ". "), lesson.summary);
-    promptView.replaceChildren(tag("New job"), el("h1", "heading", lesson.job.title), topic, ticket);
-    back.hidden = true;
+    setTag("New job");
+    promptView.replaceChildren(el("h1", "heading", lesson.job.title), topic, ticket);
+    back.disabled = true;
     setPrimary("Start job", true, () => {
         started = true;
         stats.started = Date.now();
@@ -487,19 +519,21 @@ function showStep(): void {
     circuit.setLabels(hiddenQuantity == null);
     for (const view of readouts.values())
         view.root.classList.remove("revealed");
-    promptView.replaceChildren(tag(`Step ${index + 1} · ${STEP_NAMES[step.kind]}`));
+    setTag(`Step ${index + 1} · ${STEP_NAMES[step.kind]}`);
+    promptView.replaceChildren();
     answerView.replaceChildren();
-    clearFooter();
+    clearFeedback();
+    sparks.replaceChildren();   // any still in the air belong to the step before
     switch (step.kind) {
         case "read": showRead(step, index); break;
         case "explore": showExplore(step, index); break;
         case "choice": showChoice(step, index); break;
         case "number": showNumber(step, index); break;
     }
-    back.hidden = position === 0;
+    back.disabled = position === 0;
     updateProgress();
     updateReadouts();
-    main.scrollTop = 0;
+    sheetBody.scrollTop = 0;
 }
 
 /** Move on. `passed` is false when the step was answered wrongly and will come back. */
@@ -531,7 +565,7 @@ back.addEventListener("click", () => {
         return;
     position--;
     showStep();
-    if (back.hidden)
+    if (back.disabled)
         primary.focus();    // the key the focus was on has gone
 });
 
@@ -561,6 +595,7 @@ function showExplore(step: ExploreStep, index: number): void {
         reached = true;
         showFeedback(true, praise(), richText(step.success));
         setPrimary("Continue", true, undefined, "go");
+        celebrate();
         // After a click on the drawing the keyboard is the simulator's, which
         // ignores it; bring it back, so that Enter continues. A slider keeps it.
         if (!(document.activeElement instanceof HTMLInputElement))
@@ -618,7 +653,7 @@ function showChoice(step: ChoiceStep, index: number): void {
     });
     answerView.append(list);
     /** Mark the answer: right in green, the learner's wrong one in red, and say why. */
-    const answered = (pick: number) => {
+    const answered = (pick: number, fresh: boolean) => {
         choiceKeys = null;
         const correct = pick === step.answer;
         answers.set(position, { correct, chosen: pick });
@@ -635,11 +670,11 @@ function showChoice(step: ChoiceStep, index: number): void {
             }
         });
         const detail = correct ? [] : [el("p", "mono answer-line", "Answer: " + step.options[step.answer])];
-        showResult(correct, [...detail, ...richText(step.explain)], () => proceed(correct));
+        showResult(correct, [...detail, ...richText(step.explain)], () => proceed(correct), fresh);
     };
     const before = answers.get(position);
     if (before != null && "chosen" in before) {
-        answered(before.chosen);    // looked at again: as it was answered
+        answered(before.chosen, false);    // looked at again: as it was answered
         return;
     }
     choiceKeys = buttons;
@@ -647,7 +682,7 @@ function showChoice(step: ChoiceStep, index: number): void {
         if (chosen == null)
             return;
         record(chosen === step.answer);
-        answered(chosen);
+        answered(chosen, true);
     });
 }
 
@@ -680,7 +715,7 @@ function showNumber(step: NumberStep, index: number): void {
         setPrimary("Check", input.value.trim() !== "");
     });
     /** Mark the answer and reveal what the simulator shows: the value on the drawing and in the readout. */
-    const answered = (typed: string, correct: boolean) => {
+    const answered = (typed: string, correct: boolean, fresh: boolean) => {
         answers.set(position, { correct, typed });
         input.value = typed;
         input.disabled = true;
@@ -690,11 +725,11 @@ function showNumber(step: NumberStep, index: number): void {
         readouts.get(step.solveFor)?.root.classList.add("revealed");
         updateReadouts();
         const detail = correct ? [] : [el("p", "mono answer-line", "Answer: " + formatValue(step.answer, q.unit))];
-        showResult(correct, [...detail, el("p", "working", step.explain)], () => proceed(correct));
+        showResult(correct, [...detail, el("p", "working", step.explain)], () => proceed(correct), fresh);
     };
     const before = answers.get(position);
     if (before != null && "typed" in before) {
-        answered(before.typed, before.correct);    // looked at again: as it was answered
+        answered(before.typed, before.correct, false);    // looked at again: as it was answered
         return;
     }
     setPrimary("Check", false, () => {
@@ -706,15 +741,18 @@ function showNumber(step: NumberStep, index: number): void {
         }
         const correct = isClose(value, step.answer, step.tolerance);
         record(correct);
-        answered(input.value, correct);
+        answered(input.value, correct, true);
     });
     input.focus();
 }
 
 function showComplete(): void {
     hiddenQuantity = null;
-    back.hidden = true;
-    circuitCard.classList.add("hidden");
+    back.disabled = true;
+    // The monitor stays where there is room for it beside the sheet; a phone
+    // gives the whole frame to the sheet (lesson.css).
+    stage.classList.add("complete");
+    circuit.setLabels(true);
     answerView.replaceChildren();
     updateProgress();
     const seconds = Math.round((Date.now() - stats.started) / 1000);
@@ -744,8 +782,8 @@ function showComplete(): void {
     const again = el("a", "link", "Do this job again");
     again.href = lessonUrl(lesson);
     const box = el("div", "complete");
+    setTag("Done");
     box.append(
-        tag("Done"),
         el("h1", "heading", "Job done"),
         el("p", undefined, next != null
             ? "Take this circuit to the Bench and change anything you like, or start the next job."
@@ -756,18 +794,19 @@ function showComplete(): void {
     );
     box.lastElementChild!.append(again);
     promptView.replaceChildren(box);
-    clearFooter();
+    clearFeedback();
+    sparks.replaceChildren();
     // The next job is the main way on; without one, the Bench is.
     const bench = benchUrl(lesson);
     if (next != null) {
         const link = el("a", "button secondary", "Open on the Bench");
         link.href = bench;
-        primary.before(link);
+        actions.prepend(link);
         setPrimary("Next job", true, () => { location.href = lessonUrl(next); });
     } else {
         setPrimary("Open on the Bench", true, () => { location.href = bench; });
     }
-    main.scrollTop = 0;
+    sheetBody.scrollTop = 0;
     primary.focus();
 }
 
