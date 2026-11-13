@@ -18,7 +18,9 @@ body { display: flex; flex-direction: column; }
   margin: 0 auto;
   padding: 16px 16px 12px;
 }
-.quit svg { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
+.quit svg, .back svg { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+/* Kept in the row while hidden, so the progress tray does not jump. */
+.back[hidden] { display: inline-flex; visibility: hidden; }
 
 /* One segment per step, in an ink tray: done, current, still to do. */
 .progress {

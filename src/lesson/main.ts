@@ -37,6 +37,7 @@ const answerView = $("answer");
 const footer = $("footer");
 const feedback = $("feedback");
 const primary = $<HTMLButtonElement>("primary");
+const back = $<HTMLButtonElement>("back");
 
 // ---- start the simulator ---------------------------------------------------
 
@@ -437,8 +438,14 @@ const praise = () => PRAISE[Math.floor(Math.random() * PRAISE.length)];
 
 /** Steps still to do, in order. A wrongly answered step is added again at the end. */
 const queue = lesson.steps.map((_, i) => i);
+/** The screen shown: a place in the queue. Back moves it back to look again. */
 let position = 0;
+/** The first place in the queue not yet done; screens before it are seen again as they were left. */
+let furthest = 0;
 let started = false;
+/** What was answered at each place in the queue, so that a question looked at again is not asked again. */
+type Answer = { correct: boolean } & ({ chosen: number } | { typed: string });
+const answers = new Map<number, Answer>();
 const completed = new Set<number>();
 const stats = { attempts: 0, right: 0, started: Date.now() };
 /** Which lessons are finished, kept in this browser. */
@@ -462,6 +469,7 @@ function showJob(): void {
     const topic = el("p");
     topic.append(el("strong", undefined, lesson.title + ". "), lesson.summary);
     promptView.replaceChildren(tag("New job"), el("h1", "heading", lesson.job.title), topic, ticket);
+    back.hidden = true;
     setPrimary("Start job", true, () => {
         started = true;
         stats.started = Date.now();
@@ -488,6 +496,7 @@ function showStep(): void {
         case "choice": showChoice(step, index); break;
         case "number": showNumber(step, index); break;
     }
+    back.hidden = position === 0;
     updateProgress();
     updateReadouts();
     main.scrollTop = 0;
@@ -500,11 +509,31 @@ function next(index: number, passed: boolean): void {
     else
         queue.push(index);
     position++;
+    furthest = position;
     if (position < queue.length)
         showStep();
     else
         showComplete();
 }
+
+/** Continue from the screen shown: forward again after looking back, or on from a step just done. */
+function proceed(passed: boolean): void {
+    if (position < furthest) {
+        position++;
+        showStep();
+    } else {
+        next(queue[position], passed);
+    }
+}
+
+back.addEventListener("click", () => {
+    if (position === 0)
+        return;
+    position--;
+    showStep();
+    if (back.hidden)
+        primary.focus();    // the key the focus was on has gone
+});
 
 function record(correct: boolean): void {
     stats.attempts++;
@@ -520,7 +549,7 @@ function showRead(step: ReadStep, index: number): void {
         promptView.append(formula(step.formula));
     if (step.note != null)
         promptView.append(...richText(step.note));
-    setPrimary("Continue", true, () => next(index, true));
+    setPrimary("Continue", true, () => proceed(true));
 }
 
 function showExplore(step: ExploreStep, index: number): void {
@@ -558,7 +587,8 @@ function showExplore(step: ExploreStep, index: number): void {
         row.append(head, slider);
         answerView.append(row);
     }
-    setPrimary("Continue", false, () => next(index, true));
+    // Done before, the step can be played with again and left at any time.
+    setPrimary("Continue", position < furthest, () => proceed(true));
     checkGoal();
     // A switch has no control here: the learner flips it on the drawing.
     syncStep = checkGoal;
@@ -587,26 +617,37 @@ function showChoice(step: ChoiceStep, index: number): void {
         return button;
     });
     answerView.append(list);
-    choiceKeys = buttons;
-    setPrimary("Check", false, () => {
-        if (chosen == null)
-            return;
+    /** Mark the answer: right in green, the learner's wrong one in red, and say why. */
+    const answered = (pick: number) => {
         choiceKeys = null;
-        const correct = chosen === step.answer;
-        record(correct);
+        const correct = pick === step.answer;
+        answers.set(position, { correct, chosen: pick });
         buttons.forEach((b, i) => {
             b.disabled = true;
+            b.setAttribute("aria-checked", String(i === pick));
             // Right and wrong are told by an icon as well as by colour.
             if (i === step.answer) {
                 b.classList.add("right");
                 b.prepend(icon("check", "mark"));
-            } else if (i === chosen) {
+            } else if (i === pick) {
                 b.classList.add("wrong");
                 b.prepend(icon("cross", "mark"));
             }
         });
         const detail = correct ? [] : [el("p", "mono answer-line", "Answer: " + step.options[step.answer])];
-        showResult(correct, [...detail, ...richText(step.explain)], () => next(index, correct));
+        showResult(correct, [...detail, ...richText(step.explain)], () => proceed(correct));
+    };
+    const before = answers.get(position);
+    if (before != null && "chosen" in before) {
+        answered(before.chosen);    // looked at again: as it was answered
+        return;
+    }
+    choiceKeys = buttons;
+    setPrimary("Check", false, () => {
+        if (chosen == null)
+            return;
+        record(chosen === step.answer);
+        answered(chosen);
     });
 }
 
@@ -638,6 +679,24 @@ function showNumber(step: NumberStep, index: number): void {
         setText(hint, "");
         setPrimary("Check", input.value.trim() !== "");
     });
+    /** Mark the answer and reveal what the simulator shows: the value on the drawing and in the readout. */
+    const answered = (typed: string, correct: boolean) => {
+        answers.set(position, { correct, typed });
+        input.value = typed;
+        input.disabled = true;
+        row.classList.add(correct ? "right" : "wrong");
+        hiddenQuantity = null;
+        circuit.setLabels(true);
+        readouts.get(step.solveFor)?.root.classList.add("revealed");
+        updateReadouts();
+        const detail = correct ? [] : [el("p", "mono answer-line", "Answer: " + formatValue(step.answer, q.unit))];
+        showResult(correct, [...detail, el("p", "working", step.explain)], () => proceed(correct));
+    };
+    const before = answers.get(position);
+    if (before != null && "typed" in before) {
+        answered(before.typed, before.correct);    // looked at again: as it was answered
+        return;
+    }
     setPrimary("Check", false, () => {
         const value = parseAnswer(input.value, q.unit);
         if (value == null) {
@@ -647,21 +706,14 @@ function showNumber(step: NumberStep, index: number): void {
         }
         const correct = isClose(value, step.answer, step.tolerance);
         record(correct);
-        input.disabled = true;
-        row.classList.add(correct ? "right" : "wrong");
-        // Reveal what the simulator shows: the value on the drawing and in the readout.
-        hiddenQuantity = null;
-        circuit.setLabels(true);
-        readouts.get(step.solveFor)?.root.classList.add("revealed");
-        updateReadouts();
-        const detail = correct ? [] : [el("p", "mono answer-line", "Answer: " + formatValue(step.answer, q.unit))];
-        showResult(correct, [...detail, el("p", "working", step.explain)], () => next(index, correct));
+        answered(input.value, correct);
     });
     input.focus();
 }
 
 function showComplete(): void {
     hiddenQuantity = null;
+    back.hidden = true;
     circuitCard.classList.add("hidden");
     answerView.replaceChildren();
     updateProgress();
