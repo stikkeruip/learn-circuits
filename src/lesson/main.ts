@@ -284,6 +284,10 @@ frameDoc.addEventListener("pointerout", event => {
     if (event.relatedTarget == null && event.pointerType === "mouse")   // out of the frame
         endProbe();
 });
+// A click on the drawing gives the keyboard to the simulator, which ignores it
+// (engine.editable). Hand it straight back, so that the page's own keys go on
+// working: Enter, and 1 2 3 for an answer.
+frameDoc.addEventListener("pointerdown", () => setTimeout(() => frame.blur()));
 // A touch probe stays until the next tap, on the screen or anywhere else.
 document.addEventListener("pointerdown", () => {
     if (probed != null)
@@ -291,8 +295,8 @@ document.addEventListener("pointerdown", () => {
 });
 
 /**
- * The step's own keeping up with the circuit, which the learner can change
- * on the drawing too: a switch clicked there, say. Set by the step shown.
+ * The step's own keeping up with the circuit, which the learner changes on
+ * the drawing too: a switch is flipped there. Set by the step shown.
  */
 let syncStep: (() => void) | null = null;
 
@@ -445,19 +449,13 @@ function showExplore(step: ExploreStep, index: number): void {
         reached = true;
         showFeedback(true, praise(), richText(step.success));
         setPrimary("Continue", true, undefined, "go");
-        // Enter on a switch's key would flip it back; from here it continues.
-        if (document.activeElement instanceof HTMLButtonElement)
+        // After a click on the drawing the keyboard is the simulator's, which
+        // ignores it; bring it back, so that Enter continues. A slider keeps it.
+        if (!(document.activeElement instanceof HTMLInputElement))
             primary.focus();
     };
-    const syncs: (() => void)[] = [];
     for (const control of step.controls) {
         const q = lesson.quantities[control.quantity];
-        if (!("min" in control)) {
-            const key = switchKey(control.quantity, checkGoal);
-            answerView.append(key.row);
-            syncs.push(key.sync);
-            continue;
-        }
         const row = el("label", "control");
         const output = el("output", "live", format(control.quantity));
         const head = el("span", "control-head");
@@ -479,40 +477,8 @@ function showExplore(step: ExploreStep, index: number): void {
     }
     setPrimary("Continue", false, () => next(index, true));
     checkGoal();
-    // A switch can be flipped on the drawing as well as with its key.
-    syncStep = () => {
-        for (const sync of syncs)
-            sync();
-        checkGoal();
-    };
-}
-
-/**
- * A switch to flip: its name and position, and a key that says what pressing
- * it does. sync() brings them up to date after a click on the drawing.
- */
-function switchKey(name: string, changed: () => void): { row: HTMLElement; sync: () => void } {
-    const q = lesson.quantities[name];
-    const row = el("div", "control");
-    const output = el("output", "live", format(name));
-    const head = el("span", "control-head");
-    head.append(el("span", undefined, q.label), output);
-    const key = el("button", "button secondary");
-    key.type = "button";
-    const action = () => `${circuit.read(name) === 1 ? "Open" : "Close"} the ${q.label.toLowerCase()}`;
-    key.textContent = action();
-    const sync = () => {
-        setText(key, action());
-        setText(output, format(name));
-    };
-    key.addEventListener("click", () => {
-        circuit.set(name, circuit.read(name) === 1 ? 0 : 1);
-        sync();
-        updateReadouts();
-        changed();
-    });
-    row.append(head, key);
-    return { row, sync };
+    // A switch has no control here: the learner flips it on the drawing.
+    syncStep = checkGoal;
 }
 
 function showChoice(step: ChoiceStep, index: number): void {

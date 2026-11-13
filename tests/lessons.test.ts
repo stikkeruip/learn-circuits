@@ -46,11 +46,9 @@ describe.each(lessons)("lesson $id", lesson => {
             for (const name of texts.flatMap(placeholders))
                 expect(names.has(name), `${where} shows {${name}}`).toBe(true);
             if (step.kind === "explore") {
-                for (const c of step.controls) {
-                    expect(circuit.isSetting(c.quantity), `${where} has a control for "${c.quantity}"`).toBe(true);
-                    // A slider (with a range) changes a setting; a key (without one) flips a switch.
-                    expect(circuit.isSwitch(c.quantity), `${where}: "${c.quantity}" is a switch`).toBe(!("min" in c));
-                }
+                // Sliders change settings. A switch has none: it is flipped on the drawing.
+                for (const c of step.controls)
+                    expect(circuit.isSetting(c.quantity) && !circuit.isSwitch(c.quantity), `${where} has a slider for "${c.quantity}"`).toBe(true);
             }
             if (step.kind === "number")
                 expect(names.has(step.solveFor), `${where} asks for "${step.solveFor}"`).toBe(true);
@@ -82,15 +80,16 @@ describe.each(lessons)("lesson $id", lesson => {
             if (step.kind !== "explore")
                 continue;
             for (const [name, value] of Object.entries(step.goal)) {
-                const control = step.controls.find(c => c.quantity === name);
-                expect(control, `"${step.title}" has a control for ${name}`).toBeDefined();
-                if (!("min" in control!)) {
+                if (lesson.quantities[name] != null && "switch" in lesson.quantities[name]) {
+                    // Flipped on the drawing, so it needs no slider.
                     expect([0, 1], `"${step.title}": switch ${name} is 1 (closed) or 0 (open)`).toContain(value);
                     // The step must not start with its goal already reached.
                     expect(step.set?.[name], `"${step.title}" starts with switch ${name} the other way`).toBe(1 - value);
                     continue;
                 }
-                const { min, max, step: by } = control;
+                const control = step.controls.find(c => c.quantity === name);
+                expect(control, `"${step.title}" has a slider for ${name}`).toBeDefined();
+                const { min, max, step: by } = control!;
                 expect(value).toBeGreaterThanOrEqual(min);
                 expect(value).toBeLessThanOrEqual(max);
                 expect(Number.isInteger(Math.round((value - min) / by * 1e9) / 1e9), `${name} = ${value} is on the slider's steps`).toBe(true);

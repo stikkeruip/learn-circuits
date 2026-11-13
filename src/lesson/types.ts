@@ -75,7 +75,7 @@ export interface SwitchQuantity extends QuantityBase {
 /**
  * A setting of a part (steps and sliders can change it, e.g. a battery's
  * "Voltage"), something the simulator measures (e.g. the current through
- * a resistor), or a switch (steps and a key can flip it). Settings are
+ * a resistor), or a switch (steps set it; the learner flips it on the drawing). Settings are
  * matched by name like CircuitElement.setParam().
  */
 export type Quantity =
@@ -107,11 +107,15 @@ export interface ReadStep extends StepBase {
     note?: string;
 }
 
-/** The learner moves sliders and flips switches until the circuit reaches a goal. */
+/**
+ * The learner moves sliders, and flips switches on the drawing itself, until
+ * the circuit reaches a goal.
+ */
 export interface ExploreStep extends StepBase {
     kind: "explore";
     title: string;
     text: string;
+    /** The sliders shown. A switch has no control: the text says to press it on the drawing. */
     controls: Control[];
     /** Values the learner must reach before continuing, by quantity name. */
     goal: Record<string, number>;
@@ -119,20 +123,13 @@ export interface ExploreStep extends StepBase {
     success: string;
 }
 
-export type Control = SliderControl | SwitchControl;
-
-export interface SliderControl {
+/** A slider. */
+export interface Control {
     /** A quantity that is a setting. */
     quantity: string;
     min: number;
     max: number;
     step: number;
-}
-
-/** A key that opens and closes a switch. */
-export interface SwitchControl {
-    /** A quantity that is a switch. */
-    quantity: string;
 }
 
 export interface ChoiceStep extends StepBase {
