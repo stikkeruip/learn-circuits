@@ -356,7 +356,8 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
   .prompt .tag { margin-bottom: 6px; font-size: 11px; }
   .prompt h1 { font-size: 22px; }
   .prompt p { margin-bottom: 6px; font-size: 15px; }
-  .formula { margin: 8px 0; font-size: 34px; }
+  /* Narrower still on a small phone, so the longest formula (25 characters) fits. */
+  .formula { margin: 8px 0; font-size: min(34px, 8.4vw); }
   .instrument { min-height: 0; padding: 8px; }
   .crt { min-height: 100px; }
   .readouts { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 6px; margin-top: 8px; }

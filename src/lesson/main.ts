@@ -140,7 +140,7 @@ function formula(text: string): HTMLElement {
     const box = el("div", "formula");
     box.setAttribute("role", "math");
     box.setAttribute("aria-label", text);
-    for (const token of text.split(/(\s+)/))
+    for (const token of text.split(/(\s+|[()])/))   // brackets apart, so "(R1" is still R1
         box.append(quantitySymbols.has(token) ? el("span", "symbol", token) : token);
     return box;
 }
@@ -533,6 +533,15 @@ let choiceKeys: HTMLButtonElement[] | null = null;
 function showNumber(step: NumberStep, index: number): void {
     const q = lesson.quantities[step.solveFor];
     promptView.append(el("h1", undefined, step.question));
+    // The question, and the reading shown once it is answered, are about the
+    // circuit as the step set it: a switch flipped on the drawing goes back.
+    const held = Object.entries(step.set ?? {}).filter(([name]) => circuit.isSwitch(name));
+    if (held.length > 0) {
+        syncStep = () => {
+            for (const [name, value] of held)
+                circuit.set(name, value);
+        };
+    }
     const row = el("label", "number-answer");
     const input = el("input");
     input.inputMode = "decimal";
