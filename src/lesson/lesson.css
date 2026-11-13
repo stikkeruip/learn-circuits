@@ -127,8 +127,9 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
   width: 100%;
   height: 100%;
   border: 0;
-  /* Display only: the lesson changes the circuit through its own controls.
-     A lesson with switches to click would turn this back on. */
+  /* Display only: nothing in it can be clicked, dragged or edited. The
+     lesson changes the circuit through its own controls, and the screen
+     around the frame passes the pointer's position on for the probe. */
   pointer-events: none;
 }
 /* The glass: lifts CircuitJS1's black to the screen's green-black, adds the
@@ -146,6 +147,52 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
   background-size: 20px 20px;
   mix-blend-mode: screen;
 }
+/* The probe: point at a part (src/lesson/main.ts). The frame ignores the
+   mouse; the screen around it takes it. A tag on the screen, as in the Bench
+   mock-up's "NODE A · 6.20V". */
+.crt { cursor: crosshair; }
+.probe {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  max-width: 240px;
+  padding: 5px 9px 6px;
+  color: var(--phos-bright);
+  background: rgba(11, 20, 14, 0.94);
+  border: 1.5px solid var(--phos);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(141, 247, 138, 0.22);
+  pointer-events: none;
+}
+.probe-title {
+  margin: 0 0 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--phos);
+}
+.probe-rows { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 0 14px; margin: 0; }
+.probe-rows dt { font-family: var(--font-mono); font-size: 11px; color: var(--phos-mid); }
+.probe-rows dd { min-width: 6ch; margin: 0; font-family: var(--font-screen); font-size: 21px; line-height: 1.05; text-align: right; white-space: nowrap; }
+.probe-hint {
+  position: absolute;
+  z-index: 3;
+  left: 12px;
+  bottom: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--phos-low);
+  pointer-events: none;
+}
+.crt.probing .probe-hint { visibility: hidden; }
+
 .crt-glass {
   z-index: 2;
   background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0 1.5px, transparent 1.5px 4px);

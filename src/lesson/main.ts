@@ -10,12 +10,13 @@
 import "../ui/theme.css";
 import "./lesson.css";
 import * as LZString from "lz-string";
-import type { CircuitEngine } from "../engine";
+import type { CircuitEngine, Probe } from "../engine";
 import { lessons } from "../lessons";
 import { phosphorOptions } from "../ui/crt";
 import { LessonCircuit } from "./circuit";
 import { formatValue, isClose, parseAnswer } from "./format";
 import { benchUrl, jobNumber, lessonUrl, nextLesson } from "./links";
+import { describePart, describeTerminal } from "./probe";
 import { ProgressStore } from "./progress";
 import type { ChoiceStep, ExploreStep, NumberStep, ReadStep, Step } from "./types";
 
@@ -42,7 +43,8 @@ const primary = $<HTMLButtonElement>("primary");
 // CircuitJS1's own address options: just the drawing, in phosphor colours.
 // Nothing can be clicked or edited in it either, because the frame ignores
 // the mouse (lesson.css); its editable=false option is not used, as it puts a
-// padlock on the drawing.
+// padlock on the drawing. Pointing at a part still tells you about it: see
+// "probe" below.
 const simOptions = new URLSearchParams({
     hideSidebar: "true",
     hideMenu: "true",
@@ -210,10 +212,85 @@ function fitDrawing(): void {
     app.ui.repaint();
 }
 
+// ---- probe -----------------------------------------------------------------
+
+// Point at a part or a wire (tap it, on a touch screen) to read what the
+// simulator knows about it. The frame itself still ignores the mouse, so
+// nothing in it can be clicked, dragged or edited: the page hands the
+// position to the engine, which finds and highlights what is there the way
+// CircuitJS1 does for its own mouse.
+const screen = frame.parentElement!;
+const probeBox = $("probe");
+const probeTitle = probeBox.querySelector<HTMLElement>(".probe-title")!;
+const probeRows = probeBox.querySelector<HTMLElement>(".probe-rows")!;
+$("probeHint").textContent = matchMedia("(hover: hover)").matches ? "Point at a part to read it" : "Tap a part to read it";
+
+/** What is probed, and where the pointer is on the screen (CSS px from its inner top-left). */
+let probed: { found: Probe; x: number; y: number } | null = null;
+let probeLabels = "";
+
+function probeAt(event: PointerEvent): void {
+    const f = frame.getBoundingClientRect();
+    const found = engine.probe(event.clientX - f.left, event.clientY - f.top);
+    const s = screen.getBoundingClientRect();
+    probed = found && { found, x: event.clientX - s.left - screen.clientLeft, y: event.clientY - s.top - screen.clientTop };
+    showProbe();
+}
+
+function endProbe(): void {
+    probed = null;
+    engine.endProbe();
+    showProbe();
+}
+
+function showProbe(): void {
+    probeBox.hidden = probed == null;
+    screen.classList.toggle("probing", probed != null);
+    if (probed == null)
+        return;
+    const { found: { element, terminal }, x, y } = probed;
+    const hiddenUnit = hiddenQuantity != null ? lesson.quantities[hiddenQuantity].unit : null;
+    const info = element.info();
+    const view = terminal == null
+        ? describePart(info, hiddenUnit)
+        : describeTerminal(info[0] ?? "", formatValue(element.voltage(terminal), "V"), hiddenUnit);
+
+    // Rebuild only when it shows other readings; values change every frame.
+    const labels = [view.title, ...view.readings.map(r => r.label)].join("|");
+    if (labels !== probeLabels) {
+        probeLabels = labels;
+        probeTitle.textContent = view.title;
+        probeRows.replaceChildren(...view.readings.flatMap(r => [el("dt", undefined, r.label), el("dd")]));
+    }
+    const values = probeRows.querySelectorAll("dd");
+    view.readings.forEach((r, i) => setText(values[i], r.value));
+
+    // Beside the pointer, inside the screen.
+    const gap = 16, edge = 6;
+    const w = probeBox.offsetWidth, h = probeBox.offsetHeight;
+    const width = screen.clientWidth, height = screen.clientHeight;
+    const left = x + gap + w <= width - edge ? x + gap : Math.max(edge, x - gap - w);
+    const top = y + gap + h <= height - edge ? y + gap : Math.max(edge, y - gap - h);
+    probeBox.style.transform = `translate(${left}px, ${top}px)`;
+}
+
+screen.addEventListener("pointermove", probeAt);
+screen.addEventListener("pointerdown", probeAt);
+screen.addEventListener("pointerleave", event => {
+    if (event.pointerType === "mouse")
+        endProbe();
+});
+// A touch probe stays until the next tap, on the screen or anywhere else.
+document.addEventListener("pointerdown", event => {
+    if (probed != null && !screen.contains(event.target as Node))
+        endProbe();
+});
+
 // Measured values change only when the simulator has run, so refresh after each of its frames.
 engine.on("frame", () => {
     fitDrawing();
     updateReadouts();
+    showProbe();
 });
 
 // ---- footer ----------------------------------------------------------------

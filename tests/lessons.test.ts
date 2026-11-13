@@ -8,6 +8,7 @@ import { LessonCircuit } from "../src/lesson/circuit";
 import * as LZString from "lz-string";
 import { formatValue, isClose, parseAnswer } from "../src/lesson/format";
 import { benchUrl, jobNumber, nextLesson } from "../src/lesson/links";
+import { describePart, describeTerminal } from "../src/lesson/probe";
 import { lessons } from "../src/lessons";
 
 let engine: CircuitEngine;
@@ -94,6 +95,33 @@ describe.each(lessons)("lesson $id", lesson => {
         expect(LZString.decompressFromEncodedURIComponent(params.get("ctz")!)).toBe(lesson.circuit);
     });
 
+    it("never shows a number question's answer on the probe", () => {
+        const circuit = load();
+        for (const step of lesson.steps) {
+            if (step.kind !== "number")
+                continue;
+            circuit.setAll(step.set);
+            engine.step(2);
+            const unit = lesson.quantities[step.solveFor].unit;
+            for (const element of engine.elements) {
+                const info = element.info();
+                const views = [
+                    describePart(info, unit),
+                    ...element.posts.map((_, i) => describeTerminal(info[0], formatValue(element.voltage(i), "V"), unit)),
+                ];
+                for (const { title, readings } of views) {
+                    for (const { label, value } of readings) {
+                        const where = `"${step.question}": ${title}, ${label} = ${value}`;
+                        const shown = parseAnswer(value, unit);
+                        expect(shown == null || !isClose(Math.abs(shown), step.answer), where).toBe(true);
+                        // Power gives it away too (P = V × I).
+                        expect(value.endsWith("W") || value.endsWith(unit) ? value : "?", where).toBe("?");
+                    }
+                }
+            }
+        }
+    });
+
     it("has a valid answer for every choice question", () => {
         for (const step of lesson.steps) {
             if (step.kind !== "choice")
@@ -119,6 +147,45 @@ describe("course order", () => {
             for (const [field, text] of Object.entries(lesson.job))
                 expect(text.trim(), `${lesson.id} job.${field}`).not.toBe("");
         }
+    });
+});
+
+describe("the probe", () => {
+    const resistor = ["resistor", "I = 2 A", "Vd = 12 V", "R = 6 Ω", "P = 24 W"];
+
+    it("names CircuitJS1's readings for a beginner", () => {
+        expect(describePart(resistor, null)).toEqual({
+            title: "resistor",
+            readings: [
+                { label: "I · current", value: "2 A" },
+                { label: "V · across it", value: "12 V" },
+                { label: "R · resistance", value: "6 Ω" },
+                { label: "P · power", value: "24 W" },
+            ],
+        });
+    });
+
+    it("leaves out CircuitJS1's working-out and keeps unknown readings as they are", () => {
+        const view = describePart(["voltage source", "I = 2 A", "(R = 6 Ω)", "Vce = 0.2 V", "closed"], null);
+        expect(view.readings).toEqual([
+            { label: "I · current", value: "2 A" },
+            { label: "Vce", value: "0.2 V" },
+            { label: "closed", value: "" },
+        ]);
+    });
+
+    it("hides readings in the unit a question asks for, and power", () => {
+        const values = (unit: string) => describePart(resistor, unit).readings.map(r => r.value);
+        expect(values("A")).toEqual(["?", "12 V", "6 Ω", "?"]);
+        expect(values("V")).toEqual(["2 A", "?", "6 Ω", "?"]);
+        expect(values("Ω")).toEqual(["2 A", "12 V", "?", "?"]);
+        expect(describePart(["resistor", "I = 500 mA"], "A").readings[0].value).toBe("?");
+    });
+
+    it("reads a terminal's voltage, hidden while a voltage is asked for", () => {
+        expect(describeTerminal("wire", "12 V", null)).toEqual({ title: "wire · end", readings: [{ label: "V · voltage", value: "12 V" }] });
+        expect(describeTerminal("wire", "12 V", "V").readings[0].value).toBe("?");
+        expect(describeTerminal("wire", "12 V", "A").readings[0].value).toBe("12 V");
     });
 });
 

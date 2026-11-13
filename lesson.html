@@ -21,6 +21,9 @@
           <!-- The simulator, display only: the lesson changes the circuit through its own controls. -->
           <iframe id="circuitFrame" title="Circuit simulation" tabindex="-1"></iframe>
           <div class="crt-glass" aria-hidden="true"></div>
+          <!-- The probe: what is under the pointer (src/lesson/probe.ts). The readouts below say the same for screen readers. -->
+          <div id="probe" class="probe" aria-hidden="true" hidden><p class="probe-title"></p><dl class="probe-rows"></dl></div>
+          <p id="probeHint" class="probe-hint" aria-hidden="true"></p>
         </div>
         <div id="readouts" class="readouts"><span class="loading">Warming up the monitor…</span></div>
       </section>

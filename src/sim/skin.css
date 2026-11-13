@@ -1,0 +1,252 @@
+/* Repair Shop '84 over CircuitJS1's own controls: menus, toolbar, side
+   panel, dialogs and pop-ups take the bench look (cream, ink outlines, hard
+   shadows, keycaps, Space Mono labels). Loaded after CircuitJS1's style.css,
+   which is not changed; many of its controls set their colours inline, hence
+   the !important rules. The sliders are drawn on canvas and get their look
+   from src/sim/skin.ts. */
+
+@import "../ui/tokens.css";
+
+/* ---- menu bar ---- */
+
+.gwt-MenuBar-horizontal {
+  background: var(--panel);
+  border: 0;
+  border-bottom: 1.5px solid var(--panel-dim);
+}
+td.gwt-MenuItem {
+  padding: 5px 12px;
+  vertical-align: middle;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px !important;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+td.gwt-MenuItem.open { background: var(--tint-selected); }
+@media (hover: hover) {
+  td.gwt-MenuItem:hover { background: var(--tint-selected); }
+}
+
+/* ---- drop-down and right-click menus ---- */
+
+.menuDropdown, .elmContextMenu {
+  padding: 4px;
+  min-width: 200px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.menuItem { padding: 4px 8px; font-size: 14px; border-radius: 5px; }
+.menuItem:hover, .hasSubmenu.open { background: var(--tint-selected); }
+@media (hover: hover) {
+  .hasSubmenu:hover { background: var(--tint-selected); }
+}
+.menuItem.menuItemDisabled, .menuItem.menuItemDisabled:hover { color: var(--disabled-text); background: none; }
+.menuItem i { color: var(--mono-label); }
+.menuSeparator { height: 2px; margin: 4px 6px; background: var(--panel-dim); }
+.menuSubhead, .shortcutHint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--mono-label);
+}
+.menuSubhead { padding: 6px 8px 2px; text-transform: uppercase; }
+.checkMark { color: var(--ink); font-weight: 700; }
+
+/* ---- toolbar: undo, zoom and the parts most used ---- */
+
+.mainToolbar {
+  background: var(--panel) !important;
+  border: 0 !important;
+  border-bottom: 2.5px solid var(--ink) !important;
+  padding: 2px 6px !important;
+}
+.mainToolbar > span, .palette-container > span {
+  color: var(--ink) !important;
+  border-radius: 6px;
+}
+.mainToolbar > span:hover, .palette-container > span:hover { background: var(--tint-selected); }
+/* The part being placed: CircuitJS1 marks it with an inline background. */
+.mainToolbar > span[style*="background-color"] {
+  background: var(--amber) !important;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.palette-container {
+  padding: 4px;
+  gap: 2px;
+  background: var(--panel) !important;
+  border: 2px solid var(--ink) !important;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+/* ---- side panel: run / stop, speeds and the circuit's own sliders ---- */
+
+.verticalPanel {
+  color: var(--ink);
+  font-family: var(--font-ui);
+  background: var(--panel);
+  /* Its width is set by CircuitJS1 (128-166 px); a thin scrollbar leaves the
+     sliders the most room when the panel scrolls. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) var(--panel);
+}
+/* The ink edge between the screen and the panel. The panel's own border
+   would squeeze its sliders, which are drawn exactly as wide as it is. */
+.canvasWrapper { box-shadow: 2.5px 0 0 var(--ink); }
+
+.verticalPanel > div:first-child { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 6px 4px; }
+.topButton, .topButton-red {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 7px 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  font-stretch: 105%;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.topButton strong, .topButton-red strong { font-weight: 900; }
+.topButton:hover { background: #fff; }
+.topButton:active, .topButton-red:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+/* Run / stop shows the state it is in: green while running, red when stopped. */
+.topButton + .topButton { color: var(--live-ink); background: var(--live); }
+.topButton-red { color: var(--fault-ink); background: var(--fault); }
+
+.verticalPanel .topSpace {
+  margin-top: 12px;
+  padding: 0 6px 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--mono-label);
+}
+.verticalPanel .topSpace.disabled { color: var(--disabled-edge); }
+/* The circuit's name, under "Current circuit". */
+.verticalPanel > div:not([class]):not(:first-child) { padding: 0 6px; font-size: 14px; font-weight: 800; }
+.verticalPanel iframe { background: transparent; }
+
+/* ---- the screen ---- */
+
+/* Bench only (sim.html?crt=true, see skin.ts): CircuitJS1's black becomes the
+   monitor's green-black with its dot grid, as in the lessons. Over the white
+   background of CircuitJS1's printable mode this layer does nothing. */
+html.crt .canvasWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--crt);
+  background-image: radial-gradient(var(--crt-grid) 1.2px, transparent 1.6px);
+  background-size: 20px 20px;
+  mix-blend-mode: screen;
+}
+
+/* ---- dialogs (edit a part, options, export ...) ---- */
+
+dialog.circuitDialog {
+  padding: 16px 18px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  background: var(--panel);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--radius-card);
+  box-shadow: var(--panel-shadow);
+}
+dialog.circuitDialog::backdrop { background: rgba(34, 30, 25, 0.35); }
+.circuitDialog > h1, .circuitDialog > h2, .circuitDialog > h3 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 900;
+  font-stretch: 125%;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.circuitDialog button, .chbut {
+  padding: 6px 12px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--ink);
+  cursor: pointer;
+}
+.circuitDialog button:hover, .chbut:hover { background: #fff; }
+.circuitDialog button:active, .chbut:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+.circuitDialog button:disabled { color: var(--disabled-text); border-color: var(--disabled-edge); box-shadow: 0 3px 0 var(--disabled-edge); }
+.chbut-white { color: var(--panel); background: var(--ink); }
+.chbut.chsel { outline: 3px solid var(--amber); outline-offset: 1px; }
+.circuitDialog input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),
+.circuitDialog select, .circuitDialog textarea {
+  padding: 4px 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+.circuitDialog input[type=checkbox], .circuitDialog input[type=radio], .circuitDialog input[type=range] { accent-color: var(--signal); }
+.circuitDialog :focus-visible { outline: 3px solid var(--amber); outline-offset: 1px; }
+.expand-but { color: var(--panel); background: var(--ink); border-radius: 3px; }
+
+/* ---- small pop-ups ---- */
+
+/* Wheel over a part to change its value. */
+.scrollValuePopup {
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.scrollValuePopup-label.selected { border-color: var(--ink); }
+.scrollValuePopup-label.off1 { color: var(--mono-label); }
+.scrollValuePopup-label.off2 { color: var(--disabled-edge); }
+
+.command-palette {
+  background: var(--panel);
+  border: 2.5px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--panel-shadow);
+  overflow: hidden;
+}
+.command-palette-input { font-family: var(--font-mono); color: var(--ink); background: #fff; border-bottom: 2px solid var(--ink); }
+.command-palette-section-label { font-family: var(--font-mono); color: var(--mono-label); }
+.command-palette-item { font-family: var(--font-ui); color: var(--ink); }
+.command-palette-item-selected { color: var(--ink); background: var(--tint-selected); }
+.command-palette-item-hint, .command-palette-item-selected .command-palette-item-hint { font-family: var(--font-mono); color: var(--mono-label); }
+
+.toast { font-family: var(--font-mono); font-size: 13px; color: var(--panel); background: var(--ink); border-radius: 6px; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25); }
+
+/* ---- phones: CircuitJS1 folds the menus behind ☰ and the panel behind a tab ---- */
+
+@media only screen and (max-width: 600px) {
+  .gwt-MenuBar-horizontal > table { background: var(--panel); border-bottom: 2.5px solid var(--ink); }
+  .menuDropdown .menuDropdown { background: var(--panel-dim); border-top: 2px solid var(--ink); }
+  .triggerLabel { background: var(--panel); border: 2px solid var(--ink); border-right: 0; }
+  .toptriggerlabel { color: var(--ink); }
+}

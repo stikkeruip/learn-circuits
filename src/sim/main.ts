@@ -10,7 +10,7 @@ import "circuitjs/Graphics";
 import "circuitjs/Color";
 import { CirSim } from "circuitjs/CirSim";
 import "circuitjs/SimulationManager";
-import "circuitjs/UIManager";
+import { Scrollbar } from "circuitjs/UIManager";
 import "circuitjs/ScopeManager";
 import "circuitjs/CircuitLoader";
 import { JSInterface } from "circuitjs/JSInterface";
@@ -19,11 +19,15 @@ import { Locale } from "circuitjs/Locale";
 import * as LZString from "lz-string";
 import "circuitjs/canvas2svg.js";
 import { CircuitEngine } from "../engine";
+import { applyScreen, skinSliders } from "./skin";
 
 async function boot(): Promise<CircuitEngine> {
     // CircuitJS1 reads both of these from window (links and SVG export).
     (window as any).LZString = LZString;
     HookRegistry.createJSInterface = (app: any) => new JSInterface(app);
+    // The shop's look over its controls (skin.ts, skin.css).
+    skinSliders(Scrollbar);
+    applyScreen();
 
     await Locale.load();
     const app = new CirSim();

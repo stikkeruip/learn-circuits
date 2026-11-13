@@ -15,6 +15,13 @@ export type EngineEvent =
     /** When the simulator stops with a problem; see CircuitEngine.error. */
     | "error";
 
+/** What CircuitEngine.probe() found at a point of the drawing. */
+export interface Probe {
+    element: CircuitElement;
+    /** The terminal the point is on, or null for the element's body. */
+    terminal: number | null;
+}
+
 export interface EngineError {
     /** CircuitJS1's message, e.g. "Singular matrix!" or "Voltage source/wire loop with no resistance!". */
     message: string;
@@ -281,6 +288,40 @@ export class CircuitEngine {
             return null;
         const culprit = this.app.stopElm;
         return { message, element: culprit != null ? this.#handle(culprit) : null };
+    }
+
+    // ---- pointing at the drawing ---------------------------------------
+
+    /**
+     * What is drawn at a point, found the way CircuitJS1 finds what the mouse
+     * is over, and highlighted the same way, but without any mouse event
+     * reaching it: nothing can be clicked, dragged or edited. x and y are CSS
+     * pixels from the top-left of the simulator's page. `terminal` is set when
+     * the point is on one of the element's terminals. Needs the full app.
+     */
+    probe(x: number, y: number): Probe | null {
+        const mouse = this.#mouse();
+        // It only reads the position and the Shift key from the event.
+        mouse.mouseSelect({ clientX: x, clientY: y, shiftKey: false } as MouseEvent);
+        const raw = mouse.getMouseElm();
+        if (raw == null)
+            return null;
+        return { element: this.#handle(raw), terminal: mouse.mousePost >= 0 ? mouse.mousePost : null };
+    }
+
+    /** Take away the highlight left by probe(), as when the mouse leaves CircuitJS1's canvas. */
+    endProbe(): void {
+        const mouse = this.#mouse();
+        mouse.mouseCursorX = -1;
+        mouse.mousePost = -1;
+        mouse.clearMouseElm();
+        this.app.repaint();
+    }
+
+    #mouse() {
+        if (this.#headless)
+            throw new Error("probe() needs the full simulator (sim.html); there is no drawing without it");
+        return this.app.mouse;
     }
 
     // ---- events ---------------------------------------------------------

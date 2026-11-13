@@ -57,6 +57,8 @@ for (const [name, value] of Object.entries(PHOSPHOR_COLOURS)) {
     if (!query.has(name) && saved == null)
         query.set(name, value);
 }
+// The monitor look over the circuit (src/sim/skin.ts).
+query.set("crt", "true");
 const simLoaded = new Promise<CircuitEngine>(resolve => {
     frame.addEventListener("load", () => resolve((frame.contentWindow as any).engineReady), { once: true });
 });

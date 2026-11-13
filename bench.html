@@ -25,12 +25,20 @@
       <a class="button secondary small" href="sim.html">Simulator only</a>
     </div>
   </header>
-  <p class="bench-hint">Pick a part from the toolbar or the Draw menu, then drag on the screen to place it. Right-click a part to edit or delete it.</p>
   <p id="fromNote" class="from-note" hidden></p>
 
-  <iframe id="sim" title="Circuit simulator"></iframe>
+  <main class="floor">
+    <!-- The bench monitor: CircuitJS1's own editor, in the shop's look (src/sim/skin.css). -->
+    <section class="monitor" aria-labelledby="monitorTitle">
+      <div class="monitor-head">
+        <h2 id="monitorTitle" class="mono">Ohmwork bench monitor · Model 84</h2>
+        <p class="bench-hint">Pick a part from the toolbar or the Draw menu, then drag on the screen to place it. Right-click a part to edit or delete it.</p>
+      </div>
+      <iframe id="sim" title="Circuit simulator"></iframe>
+    </section>
 
-  <div id="tablePanel"><table id="elements"></table></div>
+    <section id="tablePanel" class="panel parts" aria-label="Parts table"><table id="elements"></table></section>
+  </main>
 
   <script type="module" src="/src/bench/main.ts"></script>
 </body>

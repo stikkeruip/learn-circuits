@@ -1,0 +1,37 @@
+/* Repair Shop '84: fonts and design tokens (guide §12 in docs/design/).
+   Shared by our pages (through theme.css) and by the skin over CircuitJS1's
+   own controls (src/sim/skin.css). */
+
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+@import "@fontsource/vt323/400.css";
+
+:root {
+  color-scheme: light;
+  /* bench */
+  --ink: #221E19;        --ink-deep: #0E0C0A;     --panel: #FBF6EA;      --backdrop: #EDE3CF;
+  --panel-dim: #E6DCC6;  --manila: #EBD9A6;       --pegboard: #D9C9A6;   --bezel: #D9CDB4;
+  --metal: #B9B0A0;      --text-2: #4A433A;       --mono-label: #6B6255; --mono-manila: #6B5A33;
+  --hairline: #8A7F6A;   --disabled-edge: #A99C82; --disabled-text: #7D725F;
+  /* accents */
+  --signal: #F26B1D;     --signal-press: #E05E14; --amber: #F7A823;      --copper: #C9773E;
+  --brown: #7A4A2A;      --gold: #C9A227;         --live: #2F9E44;       --live-ink: #08200D;
+  --fault: #C9321F;      --fault-fill: #D63A2A;   --fault-ink: #FFF4E8;  --neon: #FF8A4C;
+  --tint-correct: #DFF3D5; --tint-correct-ink: #1D5A28;
+  --tint-wrong: #FBE0D8;   --tint-wrong-ink: #8E2015;  --tint-selected: #FDE7B8;
+  /* screen */
+  --crt: #0B140E;        --crt-grid: #163020;     --crt-panel: #0F1A14;
+  --phos: #8DF78A;       --phos-bright: #D8FFC9;  --phos-mid: #A2C89B;   --phos-low: #517456;
+  --phos-gnd: #417049;   --phos-dim: #5FA86C;     --phos-dot: #F2FFE8;   --phos-bloom: #B8FF9F;
+  /* shape */
+  --radius-key: 10px;    --radius-card: 14px;     --radius-bezel: 22px;  --radius-ticket: 4px;
+  --outline: 2.5px solid var(--ink);
+  --panel-shadow: 6px 6px 0 var(--ink);
+  --key-shadow: 0 5px 0 var(--ink), inset 0 3px 0 rgba(255, 255, 255, 0.3);
+  --key-shadow-pressed: 0 1px 0 var(--ink), inset 0 3px 4px rgba(0, 0, 0, 0.2);
+  /* type */
+  --font-ui: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-screen: "VT323", ui-monospace, monospace;
+}

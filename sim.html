@@ -6,9 +6,11 @@
   <!-- CircuitJS1's own stylesheet and icon font, unmodified. -->
   <link rel="stylesheet" href="/circuitjs1/ts/style.css">
   <link rel="stylesheet" href="/circuitjs/font/fontello.css">
-  <!-- CircuitJS1 sets no page background and assumes the browser's white one. -->
+  <!-- Our shop look over its controls, after its own stylesheet. -->
+  <link rel="stylesheet" href="/src/sim/skin.css">
+  <!-- CircuitJS1 sets no page background and assumes the browser's white one; ours is the bench panel. -->
   <style>
-    html { background: #fff; }
+    html { background: #FBF6EA; }
     /* The simulator is a drawing and controls, not text: a drag or Ctrl+A
        must not paint it with the browser's selection blue. Fields you type
        in keep normal selection. */
