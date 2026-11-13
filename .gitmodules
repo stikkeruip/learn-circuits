@@ -1,0 +1,3 @@
+[submodule "circuitjs1"]
+	path = circuitjs1
+	url = https://github.com/pfalstad/circuitjs1.git

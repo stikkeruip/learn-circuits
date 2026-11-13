@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>learn-circuits</title>
+  <style>
+    /* Deliberately plain. The simulator in the frame is CircuitJS1's own interface. */
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; font: 14px/1.4 system-ui, sans-serif; background: #fff; color: #111; }
+    header { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; padding: 6px 12px; border-bottom: 1px solid #ccc; }
+    header h1 { font-size: 15px; margin: 0; }
+    header .hint { color: #555; }
+    #sim { flex: 1 1 0; min-height: 0; width: 100%; border: 0; }
+    #tablePanel { flex: none; max-height: 40vh; overflow: auto; border-top: 1px solid #ccc; }
+    body.no-table #tablePanel { display: none; }
+    table { border-collapse: collapse; font-family: ui-monospace, monospace; font-size: 12px; }
+    th, td { border: 1px solid #ddd; padding: 2px 8px; text-align: right; white-space: nowrap; }
+    th { position: sticky; top: 0; background: #f4f4f4; }
+    th:nth-child(-n+2), td:nth-child(-n+2), td:last-child, th:last-child { text-align: left; }
+    tr.hover td { background: #fff3e0; }
+    td input[type=number] { width: 9ch; }
+    td label { margin-right: 8px; }
+  </style>
+</head>
+<body class="no-table">
+  <header>
+    <h1>learn-circuits</h1>
+    <label><input id="showTable" type="checkbox"> Show table</label>
+    <span class="hint">Pick a part from the toolbar or the Draw menu, then drag on the canvas to place it. Right-click a part to edit or delete it.</span>
+    <a href="sim.html">Simulator only</a>
+  </header>
+
+  <iframe id="sim" title="Circuit simulator"></iframe>
+
+  <div id="tablePanel"><table id="elements"></table></div>
+
+  <script type="module" src="/src/demo/main.ts"></script>
+</body>
+</html>
