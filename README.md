@@ -12,8 +12,10 @@ API on top of it; lessons and our own visuals come later.
 | `src/engine/` | Our wrapper: a small typed API over CircuitJS1's simulation. Works with no user interface (`create()`) or on top of the full editor (`attach()`). |
 | `sim.html` + `src/sim/` | The simulator page: CircuitJS1's own interface (symbols, current animation, menus, drag-to-build editing, scopes) started from the clone, with the engine attached as `window.engine`. |
 | `index.html` + `src/demo/` | The main page: the simulator in a frame, plus an optional live table of every component, read through the engine. |
+| `lesson.html` + `src/lesson/` | The lesson player: one lesson a step at a time (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. |
+| `src/lessons/` | The lessons, as data in the format of `src/lesson/types.ts`. So far one: Ohm's law (`lesson.html?id=ohms-law`). |
 | `iframe.html` | An empty page CircuitJS1's side panel asks for. |
-| `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). |
+| `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). `lessons.test.ts` loads every lesson into the engine and checks each stated answer against the simulator. |
 | `tests/comparison/` | Seven hand-written circuits and a script that compares our results with Falstad's live site. On 2026-11-13 every number matched to the last bit; see its README. |
 
 ## Running
@@ -36,7 +38,8 @@ npm run dev
 Opens the app at http://localhost:5180. Pick a part from the toolbar or the
 Draw menu and drag on the canvas to place it; right-click a part to edit or
 delete it; the Circuits menu holds the examples. http://localhost:5180/sim.html
-is the simulator on its own. Both accept CircuitJS1's own address options, e.g.
+is the simulator on its own, and http://localhost:5180/lesson.html?id=ohms-law
+is the Ohm's law lesson. Both accept CircuitJS1's own address options, e.g.
 `?startCircuit=lrc.txt`, `?hideSidebar=true`, `?hideMenu=true`,
 `?whiteBackground=true`, `?running=false`, `?editable=false`.
 

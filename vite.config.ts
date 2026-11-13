@@ -57,6 +57,7 @@ export default defineConfig({
       input: {
         index: path.resolve(root, 'index.html'),
         sim: path.resolve(root, 'sim.html'),
+        lesson: path.resolve(root, 'lesson.html'),
         iframe: path.resolve(root, 'iframe.html'),
       },
       output: {

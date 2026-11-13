@@ -5,6 +5,8 @@
 // real editor.
 
 import type { CircuitElement, CircuitEngine, ElementParam } from "../engine";
+import { lessonUrl, nextLesson } from "../lesson/links";
+import { lessons } from "../lessons";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const frame = $<HTMLIFrameElement>("sim");
@@ -21,6 +23,20 @@ const circuit = query.get("circuit");
 if (circuit != null) {
     query.delete("circuit");
     query.set("startCircuit", circuit);
+}
+
+// Opened from the end of a lesson (?from=<lesson id>, with the lesson's
+// circuit in ?ctz=): say so, and link on to the next lesson.
+const fromLesson = lessons.find(l => l.id === query.get("from"));
+query.delete("from");
+if (fromLesson != null) {
+    const note = $("fromLesson");
+    const next = nextLesson(fromLesson);
+    const link = document.createElement("a");
+    link.href = lessonUrl(next ?? fromLesson);
+    link.textContent = next != null ? `Next lesson: ${next.title} →` : `Replay “${fromLesson.title}”`;
+    note.append(`This is the circuit from the lesson “${fromLesson.title}”. Change anything you like. `, link);
+    note.hidden = false;
 }
 const simLoaded = new Promise<CircuitEngine>(resolve => {
     frame.addEventListener("load", () => resolve((frame.contentWindow as any).engineReady), { once: true });

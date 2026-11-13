@@ -1,0 +1,114 @@
+// The lesson format. A lesson is one circuit plus a short run of steps that
+// set its values, let the learner turn its knobs, and ask questions about it.
+//
+// Lessons are plain data (see src/lessons/). The simulator is the source of
+// truth for every measured number: tests/lessons.test.ts loads each lesson
+// into the engine and checks that every answer agrees with it.
+
+export interface Lesson {
+    /** Used in the address: lesson.html?id=<id>. */
+    id: string;
+    title: string;
+    /**
+     * The circuit, in CircuitJS1's text format (the line format is described
+     * in tests/comparison/circuits.ts). Values set by steps replace the ones
+     * written here.
+     */
+    circuit: string;
+    /** Names for parts of the circuit, so quantities can refer to them. */
+    parts: Record<string, PartRef>;
+    /** What the learner sees and changes, in the order the readouts appear. */
+    quantities: Record<string, Quantity>;
+    steps: Step[];
+}
+
+export interface PartRef {
+    /** CircuitJS1 element type, with or without "Elm": "Resistor", "VoltageElm". */
+    type: string;
+    /** Which one of that type, counting from 0 in circuit order (default 0). */
+    nth?: number;
+}
+
+interface QuantityBase {
+    /** "Current" */
+    label: string;
+    /** "I", as written in formulas. */
+    symbol: string;
+    /** "A" */
+    unit: string;
+    /** A key of Lesson.parts. */
+    part: string;
+}
+
+/**
+ * A setting of a part (steps and sliders can change it, e.g. a battery's
+ * "Voltage") or something the simulator measures (e.g. the current through
+ * a resistor). Settings are matched by name like CircuitElement.setParam().
+ */
+export type Quantity = QuantityBase & ({ setting: string } | { measure: "voltage" | "current" | "power" });
+
+export type Step = ReadStep | ExploreStep | ChoiceStep | NumberStep;
+
+interface StepBase {
+    /**
+     * Values for settings when the step starts, by quantity name. A step can
+     * come round again after a mistake, so give every value the step relies on.
+     */
+    set?: Record<string, number>;
+}
+
+// Text fields: paragraphs are separated by a blank line, **bold** is bold, and
+// {name} shows the live value of a quantity, e.g. "It is now {current}."
+
+/** Something to read, with the circuit running alongside. */
+export interface ReadStep extends StepBase {
+    kind: "read";
+    title: string;
+    text: string;
+    /** Shown large below the text. Symbols of quantities are coloured to match their readouts. */
+    formula?: string;
+    /** Text below the formula. */
+    note?: string;
+}
+
+/** The learner moves sliders until the circuit reaches a goal. */
+export interface ExploreStep extends StepBase {
+    kind: "explore";
+    title: string;
+    text: string;
+    controls: Control[];
+    /** Values the learner must reach before continuing, by quantity name. */
+    goal: Record<string, number>;
+    /** Shown once the goal is reached. */
+    success: string;
+}
+
+export interface Control {
+    /** A quantity that is a setting. */
+    quantity: string;
+    min: number;
+    max: number;
+    step: number;
+}
+
+export interface ChoiceStep extends StepBase {
+    kind: "choice";
+    question: string;
+    options: string[];
+    /** Index into options. */
+    answer: number;
+    /** Shown after answering, right or wrong. */
+    explain: string;
+}
+
+/** The learner works out a value. Its readout and the circuit's labels stay hidden until they answer. */
+export interface NumberStep extends StepBase {
+    kind: "number";
+    question: string;
+    /** The quantity to work out; the answer is in its unit. */
+    solveFor: string;
+    answer: number;
+    explain: string;
+    /** Accepted relative error (default 0.01, i.e. 1%). */
+    tolerance?: number;
+}
