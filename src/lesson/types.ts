@@ -9,6 +9,8 @@ export interface Lesson {
     /** Used in the address: lesson.html?id=<id>. */
     id: string;
     title: string;
+    /** One sentence on what the lesson teaches, shown on the home page. */
+    summary: string;
     /**
      * The circuit, in CircuitJS1's text format (the line format is described
      * in tests/comparison/circuits.ts). Values set by steps replace the ones

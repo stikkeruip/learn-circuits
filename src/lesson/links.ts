@@ -1,5 +1,5 @@
-// Where a lesson leads: the next lesson in the course, and the sandbox (the
-// full simulator on the main page) opened on the lesson's circuit.
+// Where a lesson leads: the next lesson in the course, and the Bench (the full
+// simulator, bench.html) opened on the lesson's circuit.
 
 import * as LZString from "lz-string";
 import { lessons } from "../lessons";
@@ -16,10 +16,10 @@ export function nextLesson(lesson: Lesson): Lesson | null {
 }
 
 /**
- * The main page with the lesson's circuit loaded, through CircuitJS1's own
- * ?ctz= option (compressed circuit text). ?from= lets that page say which
- * lesson the circuit came from and link on.
+ * The Bench with the lesson's circuit loaded, through CircuitJS1's own ?ctz=
+ * option (compressed circuit text). ?from= lets the Bench say which lesson the
+ * circuit came from and link on.
  */
-export function sandboxUrl(lesson: Lesson): string {
-    return "./?" + new URLSearchParams({ from: lesson.id, ctz: LZString.compressToEncodedURIComponent(lesson.circuit) });
+export function benchUrl(lesson: Lesson): string {
+    return "bench.html?" + new URLSearchParams({ from: lesson.id, ctz: LZString.compressToEncodedURIComponent(lesson.circuit) });
 }

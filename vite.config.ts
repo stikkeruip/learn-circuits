@@ -30,8 +30,8 @@ function circuitjsAboutPage(): Plugin {
 }
 
 export default defineConfig({
-  // Several separate pages (index, sim, iframe). Unknown addresses must give
-  // "not found" rather than the main page, which CircuitJS1 would then load
+  // Several separate pages (home, bench, lesson, sim, iframe). Unknown
+  // addresses must give "not found" rather than the home page, which CircuitJS1 would then load
   // inside its own panels.
   appType: 'mpa',
   plugins: [circuitjsAboutPage()],
@@ -56,6 +56,7 @@ export default defineConfig({
     rolldownOptions: {
       input: {
         index: path.resolve(root, 'index.html'),
+        bench: path.resolve(root, 'bench.html'),
         sim: path.resolve(root, 'sim.html'),
         lesson: path.resolve(root, 'lesson.html'),
         iframe: path.resolve(root, 'iframe.html'),

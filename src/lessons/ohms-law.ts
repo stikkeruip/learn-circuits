@@ -15,6 +15,7 @@ w 352 320 128 320 0`;
 export const ohmsLaw: Lesson = {
     id: "ohms-law",
     title: "Ohm's law",
+    summary: "How voltage and resistance set the current, and the formula that ties all three together.",
     circuit,
     parts: {
         battery: { type: "Voltage" },

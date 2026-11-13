@@ -1,8 +1,8 @@
 # learn-circuits
 
-A Duolingo-style app for learning circuits. So far this repo holds the
-simulator (Paul Falstad's full editor, running from his source) and our engine
-API on top of it; lessons and our own visuals come later.
+A Duolingo-style app for learning circuits: short lessons built around a live
+circuit, and a Bench to build your own. The simulator is Paul Falstad's full
+editor, running from his source, with our engine API on top of it.
 
 ## What is here
 
@@ -11,9 +11,11 @@ API on top of it; lessons and our own visuals come later.
 | `circuitjs1/` | Paul Falstad's [CircuitJS1](https://github.com/pfalstad/circuitjs1) simulator, unmodified, as a git submodule pinned to one commit (GPL-2.0). All circuit maths lives here. |
 | `src/engine/` | Our wrapper: a small typed API over CircuitJS1's simulation. Works with no user interface (`create()`) or on top of the full editor (`attach()`). |
 | `sim.html` + `src/sim/` | The simulator page: CircuitJS1's own interface (symbols, current animation, menus, drag-to-build editing, scopes) started from the clone, with the engine attached as `window.engine`. |
-| `index.html` + `src/demo/` | The main page: the simulator in a frame, plus an optional live table of every component, read through the engine. |
+| `index.html` + `src/home/` | The home page: the lessons in order, which are done and which is next, and the way into the Bench. |
+| `bench.html` + `src/bench/` | The Bench: the full simulator in a frame, to build anything, plus an optional live table of every component, read through the engine. A lesson's circuit opens here from the end of the lesson or from the home page. |
 | `lesson.html` + `src/lesson/` | The lesson player: one lesson a step at a time (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. Which lessons the learner has finished is kept in the browser's `localStorage` by `src/lesson/progress.ts`; there is no server or account yet. |
 | `src/lessons/` | The lessons, as data in the format of `src/lesson/types.ts`. So far one: Ohm's law (`lesson.html?id=ohms-law`). |
+| `src/ui/theme.css` | Colours, type and buttons shared by the home and lesson pages. |
 | `iframe.html` | An empty page CircuitJS1's side panel asks for. |
 | `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). `lessons.test.ts` loads every lesson into the engine and checks each stated answer against the simulator. |
 | `tests/comparison/` | Seven hand-written circuits and a script that compares our results with Falstad's live site. On 2026-11-13 every number matched to the last bit; see its README. |
@@ -35,11 +37,13 @@ npm install
 npm run dev
 ```
 
-Opens the app at http://localhost:5180. Pick a part from the toolbar or the
-Draw menu and drag on the canvas to place it; right-click a part to edit or
-delete it; the Circuits menu holds the examples. http://localhost:5180/sim.html
-is the simulator on its own, and http://localhost:5180/lesson.html?id=ohms-law
-is the Ohm's law lesson. Both accept CircuitJS1's own address options, e.g.
+Opens the home page at http://localhost:5180. The Bench is
+http://localhost:5180/bench.html: pick a part from the toolbar or the Draw menu
+and drag on the canvas to place it; right-click a part to edit or delete it;
+the Circuits menu holds the examples. http://localhost:5180/sim.html is the
+simulator on its own, and http://localhost:5180/lesson.html?id=ohms-law is the
+Ohm's law lesson. The Bench and the simulator accept CircuitJS1's own address
+options, e.g.
 `?startCircuit=lrc.txt`, `?hideSidebar=true`, `?hideMenu=true`,
 `?whiteBackground=true`, `?running=false`, `?editable=false`.
 
@@ -58,7 +62,7 @@ import { CircuitEngine } from "./src/engine";
 
 const engine = CircuitEngine.create();      // no user interface; one per page (CircuitJS1 keeps global state)
 // On the simulator page the same API is already there as window.engine
-// (made with CircuitEngine.attach(app)); from the main page it is
+// (made with CircuitEngine.attach(app)); from the Bench it is
 // frame.contentWindow.engine.
 engine.load(circuitText);                   // CircuitJS1 text or XML export
 

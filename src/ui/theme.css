@@ -1,0 +1,65 @@
+/* Shared by the app's own pages (home, lesson): colours, type and buttons.
+   Light only: the simulator they show draws on white. */
+
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --ink: #1e2533;
+  --muted: #5d6879;
+  --line: #e2e6ed;
+  --surface: #f5f7fa;
+  --green: #2f9e44;
+  --green-dark: #237a34;
+  --green-soft: #e8f6eb;
+  --red: #e03131;
+  --red-dark: #b02525;
+  --red-soft: #fdeeee;
+  --blue: #1c7ed6;
+  --blue-dark: #0b4f96;
+  --blue-soft: #e8f2fc;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.hidden { display: none !important; }
+
+/* ---- buttons (a <button> or a link) ---- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  padding: 14px 28px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.button.primary { color: #fff; background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
+.button.primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-dark); }
+.button.secondary {
+  padding: 12px 26px;
+  color: var(--blue-dark);
+  background: #fff;
+  border: 2px solid var(--line);
+  box-shadow: 0 4px 0 var(--line);
+}
+.button.secondary:hover { background: var(--surface); }
+.button.secondary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+.button:disabled { color: #98a1b0; background: var(--line); box-shadow: none; cursor: default; }
+
+.link { color: var(--blue); font-weight: 700; }
+
+.button:focus-visible, .link:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }

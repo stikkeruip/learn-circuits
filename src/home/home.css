@@ -1,0 +1,188 @@
+/* The home page. Colours, type and buttons: src/ui/theme.css. */
+
+body { background: var(--surface); }
+
+/* ---- top bar ---- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+  background: #fff4d6;
+  border-radius: 10px;
+}
+.bar-link {
+  padding: 8px 14px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  text-decoration: none;
+  border-radius: 10px;
+}
+.bar-link:hover { background: #fff; }
+
+/* ---- layout: lessons, and the Bench beside them on wide screens ---- */
+
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+}
+@media (min-width: 860px) {
+  .home { grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr); align-items: start; }
+  .bench { position: sticky; top: 16px; }
+}
+
+.panel {
+  padding: 20px;
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 18px;
+}
+.panel h2 { margin: 0; font-size: 22px; line-height: 1.25; font-weight: 800; }
+
+/* ---- the course ---- */
+
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.count { color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.course-bar {
+  height: 14px;
+  margin-top: 12px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.course-fill { width: 0; height: 100%; background: var(--green); border-radius: inherit; }
+.course-note { margin: 12px 0 0; color: var(--muted); }
+
+.path { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 16px; }
+.lesson { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; }
+/* The line joining one lesson to the next. */
+.lesson:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 44px;
+  bottom: -16px;
+  width: 2px;
+  background: var(--line);
+}
+.lesson.done:not(:last-child)::before { background: var(--green); }
+
+.node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--muted);
+  background: #fff;
+  border: 3px solid var(--line);
+  border-radius: 50%;
+}
+.lesson.done .node { color: #fff; background: var(--green); border-color: var(--green); }
+.lesson.next .node { color: var(--green-dark); border-color: var(--green); box-shadow: 0 0 0 5px var(--green-soft); }
+.lesson.soon .node { border-style: dashed; }
+
+.lesson-card { min-width: 0; padding-top: 2px; }
+.lesson.next .lesson-card {
+  padding: 16px;
+  border: 2px solid var(--green);
+  border-radius: var(--radius);
+  background: #fff;
+}
+.status {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lesson.done .status, .lesson.next .status { color: var(--green-dark); }
+.lesson h3 { margin: 2px 0 4px; font-size: 19px; line-height: 1.3; }
+.lesson h3 a { color: inherit; text-decoration: none; }
+.lesson h3 a:hover { text-decoration: underline; }
+.lesson h3 a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+.summary { margin: 0; color: var(--muted); }
+.lesson.soon .summary { padding-top: 10px; }
+.meta { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.lesson-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.button.small { min-width: 0; padding: 8px 16px; font-size: 14px; box-shadow: 0 3px 0 var(--line); }
+
+/* ---- the Bench ---- */
+
+.bench-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 170px;
+  margin-bottom: 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.bench-art .wire, .bench-art .part { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.bench-art .part { stroke-width: 4; }
+.bench-art .current {
+  fill: none;
+  stroke: #f2b705;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 0 18;
+  animation: flow 0.9s linear infinite;
+}
+.bench-art text { font: 700 14px system-ui, sans-serif; fill: var(--muted); }
+@keyframes flow { to { stroke-dashoffset: -18; } }
+
+.bench > p { margin: 6px 0 16px; color: var(--muted); }
+.bench > .button { width: 100%; }
+.bench h3 {
+  margin: 24px 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.circuits { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.circuits a {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+}
+.circuits a:hover { background: var(--surface); }
+.circuits a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.circuits .arrow { color: var(--blue-dark); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bench-art .current { animation: none; }
+}

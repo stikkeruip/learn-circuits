@@ -7,7 +7,7 @@ import { CircuitEngine } from "../src/engine";
 import { LessonCircuit } from "../src/lesson/circuit";
 import * as LZString from "lz-string";
 import { formatValue, isClose, parseAnswer } from "../src/lesson/format";
-import { nextLesson, sandboxUrl } from "../src/lesson/links";
+import { benchUrl, nextLesson } from "../src/lesson/links";
 import { lessons } from "../src/lessons";
 
 let engine: CircuitEngine;
@@ -88,8 +88,8 @@ describe.each(lessons)("lesson $id", lesson => {
         }
     });
 
-    it("opens its own circuit in the sandbox", () => {
-        const params = new URLSearchParams(sandboxUrl(lesson).split("?")[1]);
+    it("opens its own circuit on the Bench", () => {
+        const params = new URLSearchParams(benchUrl(lesson).split("?")[1]);
         expect(params.get("from")).toBe(lesson.id);
         expect(LZString.decompressFromEncodedURIComponent(params.get("ctz")!)).toBe(lesson.circuit);
     });

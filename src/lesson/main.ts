@@ -7,13 +7,14 @@
 // Check button, and a footer that turns green or red. A question answered
 // wrongly comes back at the end of the lesson until it is answered right.
 
+import "../ui/theme.css";
 import "./lesson.css";
 import * as LZString from "lz-string";
 import type { CircuitEngine } from "../engine";
 import { lessons } from "../lessons";
 import { LessonCircuit } from "./circuit";
 import { formatValue, isClose, parseAnswer } from "./format";
-import { lessonUrl, nextLesson, sandboxUrl } from "./links";
+import { benchUrl, lessonUrl, nextLesson } from "./links";
 import { ProgressStore } from "./progress";
 import type { ChoiceStep, ExploreStep, NumberStep, ReadStep } from "./types";
 
@@ -429,22 +430,22 @@ function showComplete(): void {
         el("div", "badge", "⚡"),
         el("h1", undefined, "Lesson complete!"),
         el("p", undefined, `You finished “${lesson.title}”. ` + (next != null
-            ? "Play with this circuit in the sandbox, or carry on to the next lesson."
-            : "That's the last lesson so far. Play with this circuit in the sandbox: change any part, add new ones.")),
+            ? "Try this circuit on the Bench, or carry on to the next lesson."
+            : "That's the last lesson so far. Take this circuit to the Bench: change any part, add new ones.")),
         statsRow,
         again,
     );
     promptView.append(box);
     clearFooter();
-    // The next lesson is the main way on; without one, the sandbox is.
-    const sandbox = sandboxUrl(lesson);
+    // The next lesson is the main way on; without one, the Bench is.
+    const bench = benchUrl(lesson);
     if (next != null) {
-        const link = el("a", "button secondary", "Open in sandbox");
-        link.href = sandbox;
+        const link = el("a", "button secondary", "Open on the Bench");
+        link.href = bench;
         primary.before(link);
         setPrimary("Next lesson", true, () => { location.href = lessonUrl(next); });
     } else {
-        setPrimary("Open in sandbox", true, () => { location.href = sandbox; });
+        setPrimary("Open on the Bench", true, () => { location.href = bench; });
     }
     primary.focus();
 }

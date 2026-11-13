@@ -4,42 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>learn-circuits</title>
-  <style>
-    /* Deliberately plain. The simulator in the frame is CircuitJS1's own interface. */
-    html, body { height: 100%; margin: 0; }
-    body { display: flex; flex-direction: column; font: 14px/1.4 system-ui, sans-serif; background: #fff; color: #111; }
-    header { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; padding: 6px 12px; border-bottom: 1px solid #ccc; }
-    header h1 { font-size: 15px; margin: 0; }
-    header .hint { color: #555; }
-    header #lessons a { margin-left: 6px; }
-    header #lessons a.next { font-weight: 600; }
-    header .from { flex-basis: 100%; padding: 4px 8px; background: #e8f6eb; border-radius: 4px; }
-    #sim { flex: 1 1 0; min-height: 0; width: 100%; border: 0; }
-    #tablePanel { flex: none; max-height: 40vh; overflow: auto; border-top: 1px solid #ccc; }
-    body.no-table #tablePanel { display: none; }
-    table { border-collapse: collapse; font-family: ui-monospace, monospace; font-size: 12px; }
-    th, td { border: 1px solid #ddd; padding: 2px 8px; text-align: right; white-space: nowrap; }
-    th { position: sticky; top: 0; background: #f4f4f4; }
-    th:nth-child(-n+2), td:nth-child(-n+2), td:last-child, th:last-child { text-align: left; }
-    tr.hover td { background: #fff3e0; }
-    td input[type=number] { width: 9ch; }
-    td label { margin-right: 8px; }
-  </style>
 </head>
-<body class="no-table">
-  <header>
-    <h1>learn-circuits</h1>
-    <label><input id="showTable" type="checkbox"> Show table</label>
-    <span class="hint">Pick a part from the toolbar or the Draw menu, then drag on the canvas to place it. Right-click a part to edit or delete it.</span>
-    <a href="sim.html">Simulator only</a>
-    <span id="lessons">Lessons:</span>
-    <span id="fromLesson" class="from" hidden></span>
+<body>
+  <header class="bar">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">⚡</span>learn-circuits</a>
+    <a class="bar-link" href="bench.html">Bench</a>
   </header>
 
-  <iframe id="sim" title="Circuit simulator"></iframe>
+  <main class="home">
+    <section class="panel course" aria-labelledby="lessonsTitle">
+      <div class="panel-head">
+        <h2 id="lessonsTitle">Lessons</h2>
+        <span id="courseCount" class="count"></span>
+      </div>
+      <div id="courseBar" class="course-bar" role="progressbar" aria-label="Lessons done" aria-valuemin="0" aria-valuenow="0">
+        <div id="courseFill" class="course-fill"></div>
+      </div>
+      <p id="courseNote" class="course-note" hidden></p>
+      <ol id="path" class="path"></ol>
+    </section>
 
-  <div id="tablePanel"><table id="elements"></table></div>
+    <section class="panel bench" aria-labelledby="benchTitle">
+      <!-- A battery and a resistor, with current flowing round: what the Bench draws. -->
+      <svg class="bench-art" viewBox="0 0 260 140" aria-hidden="true">
+        <path class="wire" d="M50 62 V24 H210 V40 M210 100 V116 H50 V76" />
+        <path class="current" d="M50 62 V24 H210 V116 H50 V76" />
+        <path class="part" d="M34 62 H66 M42 76 H58" />
+        <path class="part" d="M210 40 L222 45 L198 55 L222 65 L198 75 L222 85 L198 95 L210 100" />
+        <text x="74" y="74">12 V</text>
+        <text x="232" y="74">6 Ω</text>
+      </svg>
+      <h2 id="benchTitle">Bench</h2>
+      <p>The full circuit simulator. Build any circuit you like, change any part, and watch the current flow.</p>
+      <a class="button secondary" href="bench.html">Open the Bench</a>
+      <h3>Start from a lesson's circuit</h3>
+      <ul id="lessonCircuits" class="circuits"></ul>
+    </section>
+  </main>
 
-  <script type="module" src="/src/demo/main.ts"></script>
+  <script type="module" src="/src/home/main.ts"></script>
 </body>
 </html>
