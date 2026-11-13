@@ -173,21 +173,35 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
 .probe-rows { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 0 14px; margin: 0; }
 .probe-rows dt { font-family: var(--font-mono); font-size: 11px; color: var(--phos-mid); }
 .probe-rows dd { min-width: 6ch; margin: 0; font-family: var(--font-screen); font-size: 21px; line-height: 1.05; text-align: right; white-space: nowrap; }
-.probe-hint {
+
+/* Recentre: a small key in the screen's top right corner, there only while
+   the view is zoomed or moved away from the fit. */
+.recentre {
   position: absolute;
-  z-index: 3;
-  left: 12px;
-  bottom: 8px;
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--phos-low);
-  pointer-events: none;
+  z-index: 4;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--phos);
+  background: rgba(11, 20, 14, 0.85);
+  border: 1.5px solid var(--phos-low);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
 }
-.crt.probing .probe-hint { visibility: hidden; }
+.recentre.shown { opacity: 1; visibility: visible; transition: opacity 0.25s ease; }
+.recentre:hover { color: var(--phos-bright); border-color: var(--phos); }
+.recentre:focus-visible { outline: 2px solid var(--phos-bright); outline-offset: 2px; }
+.recentre svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: reduce) {
+  .recentre, .recentre.shown { transition: none; }
+}
 
 .crt-glass {
   z-index: 2;

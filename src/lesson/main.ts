@@ -57,7 +57,10 @@ const engineReady = new Promise<CircuitEngine>(resolve => {
         // panel even when those are hidden; a lesson uses neither.
         const doc = frame.contentDocument!;
         const style = doc.createElement("style");
-        style.textContent = ".triggerLabel, .toptriggerlabel { display: none !important; }";
+        // The drawing is dragged to move the view (a hand), and switches are
+        // clicked (a pointer: see probeAt).
+        style.textContent = ".triggerLabel, .toptriggerlabel { display: none !important; }"
+            + " canvas.cursorPointer { cursor: grab; } canvas.cursorPointer:active { cursor: grabbing; }";
         doc.head.append(style);
         resolve((frame.contentWindow as any).engineReady);
     }, { once: true });
@@ -191,32 +194,105 @@ function updateReadouts(): void {
 
 // ---- zoom ------------------------------------------------------------------
 
-// CircuitJS1 caps its zoom and, in a narrow window, keeps room free for
-// oscilloscope panels, so a small circuit is drawn small. Fit it to the frame
-// instead. Fit again when CircuitJS1's own zoom has replaced ours (it centres
-// the circuit by itself after loading and after a resize), and when the
-// screen changes size: the monitor grows and shrinks with what is around it.
-let fitted: { transform: number[]; width: number; height: number } | null = null;
+// The view is the learner's: the wheel or a pinch zooms, a drag moves it
+// (engine.editable = false makes a drag move the view). The circuit starts
+// fitted to the screen, and the Recentre key, which fades in once the view
+// has been zoomed or moved, fits it again. When the screen changes size (the
+// monitor grows and shrinks with what is around it), a fitted circuit is
+// fitted anew and a moved view keeps what was in its middle in the middle.
+// The fit is ours, not CircuitJS1's: its own caps the zoom and, in a narrow
+// window, keeps room free for oscilloscope panels, so a small circuit would
+// be drawn small.
+const recentre = $<HTMLButtonElement>("recentre");
+const frameDoc = frame.contentDocument!;
+/** The fit for the screen's current size, applied or not. */
+let fit: { transform: number[]; width: number; height: number } | null = null;
 
-function fitDrawing(): void {
+/** Measure the screen and work out the fit for it. */
+function measureFit(): typeof fit {
     const app = engine.app;
-    const t = app.transform;
+    if (app.ui.elmList == null)
+        return null;
+    app.ui.setCircuitArea();
     const area = app.circuitArea;
-    if (fitted != null && area != null && area.width === fitted.width && area.height === fitted.height
-        && t.every((v, i) => v === fitted!.transform[i]))
-        return;
     const bounds = app.ui.getCircuitBounds();
     if (bounds == null || area == null || area.width === 0 || area.height === 0)
-        return;
-    // Margins leave room for the values CircuitJS1 writes beside the parts.
-    const scale = Math.min(area.width / (bounds.width + 96), area.height / (bounds.height + 72), 3);
-    t[0] = t[3] = scale;
-    t[1] = t[2] = 0;
-    t[4] = (area.width - bounds.width * scale) / 2 - bounds.x * scale;
-    t[5] = (area.height - bounds.height * scale) / 2 - bounds.y * scale;
-    fitted = { transform: [...t], width: area.width, height: area.height };
-    app.ui.repaint();
+        return null;
+    // Margins leave room for the values CircuitJS1 writes beside the parts;
+    // 2.5 is as far as its own zoom goes, so zooming in never jumps out.
+    const scale = Math.min(area.width / (bounds.width + 96), area.height / (bounds.height + 72), 2.5);
+    return {
+        transform: [scale, 0, 0, scale,
+            (area.width - bounds.width * scale) / 2 - bounds.x * scale,
+            (area.height - bounds.height * scale) / 2 - bounds.y * scale],
+        width: area.width,
+        height: area.height,
+    };
 }
+
+/**
+ * Set by the learner's own zooming and dragging on the screen, cleared by a
+ * fit. Only then is a view that differs from the fit theirs: a change the
+ * simulator makes by itself is never mistaken for one.
+ */
+let viewTouched = false;
+frameDoc.addEventListener("wheel", () => { viewTouched = true; }, { passive: true });
+frameDoc.addEventListener("pointermove", event => {
+    if (event.buttons !== 0)
+        viewTouched = true;
+});
+
+/** True while the view is the learner's: zoomed or moved away from the fit. */
+function viewMoved(): boolean {
+    const t = engine.app.transform;
+    return viewTouched && fit != null && t.some((v, i) => Math.abs(v - fit!.transform[i]) > 1e-6);
+}
+
+/** Fit the circuit to the screen. */
+function fitDrawing(): void {
+    fit = measureFit();
+    if (fit == null)
+        return;
+    viewTouched = false;
+    engine.app.transform.splice(0, 6, ...fit.transform);
+    engine.app.ui.repaint();
+}
+
+/** The screen may have changed size: fit anew, or keep the learner's view where it was, its middle in the middle. */
+function screenResized(): void {
+    const before = fit;
+    const moved = viewMoved();
+    const after = measureFit();
+    if (after == null)
+        return;
+    if (!moved || before == null) {
+        fitDrawing();
+        return;
+    }
+    const t = engine.app.transform;
+    t[4] += (after.width - before.width) / 2;
+    t[5] += (after.height - before.height) / 2;
+    fit = after;
+    engine.app.ui.repaint();
+}
+
+// CircuitJS1 centres the circuit through this one method (UIManager): after
+// loading, and for a second after every resize. Ours takes its place, on this
+// page's simulator only, so a view the learner has moved stays theirs.
+engine.app.ui.centerCircuit = screenResized;
+fitDrawing();
+
+/** Once a frame: notice a change of screen size, and offer the key while the view is moved. */
+function keepView(): void {
+    const area = engine.app.circuitArea;
+    if (fit == null || area == null || area.width !== fit.width || area.height !== fit.height)
+        screenResized();
+    const moved = viewMoved();
+    recentre.classList.toggle("shown", moved);
+    recentre.tabIndex = moved ? 0 : -1;
+}
+
+recentre.addEventListener("click", fitDrawing);
 
 // ---- probe -----------------------------------------------------------------
 
@@ -224,11 +300,9 @@ function fitDrawing(): void {
 // simulator knows about it. The engine finds what is there the way CircuitJS1
 // finds what its mouse is over, and highlights it the same way.
 const screen = frame.parentElement!;
-const frameDoc = frame.contentDocument!;
 const probeBox = $("probe");
 const probeTitle = probeBox.querySelector<HTMLElement>(".probe-title")!;
 const probeRows = probeBox.querySelector<HTMLElement>(".probe-rows")!;
-$("probeHint").textContent = matchMedia("(hover: hover)").matches ? "Point at a part to read it" : "Tap a part to read it";
 
 /** What is probed, and where the pointer is on the screen (CSS px from its inner top-left). */
 let probed: { found: Probe; x: number; y: number } | null = null;
@@ -236,8 +310,18 @@ let probeLabels = "";
 
 /** For pointer events inside the frame: their position is the frame's own. */
 function probeAt(event: PointerEvent): void {
+    // A move with a button held is a drag in CircuitJS1 (of the view, or a
+    // selection box): no probe while it lasts, so as not to get in its way.
+    if (event.type === "pointermove" && event.buttons !== 0) {
+        if (probed != null) {
+            probed = null;
+            showProbe();
+        }
+        return;
+    }
     const found = engine.probe(event.clientX, event.clientY);
     probed = found && { found, x: event.clientX + frame.offsetLeft, y: event.clientY + frame.offsetTop };
+    engine.app.ui.cv.style.cursor = found?.element.isSwitch && event.buttons === 0 ? "pointer" : "";
     showProbe();
 }
 
@@ -249,7 +333,6 @@ function endProbe(): void {
 
 function showProbe(): void {
     probeBox.hidden = probed == null;
-    screen.classList.toggle("probing", probed != null);
     if (probed == null)
         return;
     const { found: { element, terminal }, x, y } = probed;
@@ -302,7 +385,7 @@ let syncStep: (() => void) | null = null;
 
 // Measured values change only when the simulator has run, so refresh after each of its frames.
 engine.on("frame", () => {
-    fitDrawing();
+    keepView();
     updateReadouts();
     syncStep?.();
     showProbe();

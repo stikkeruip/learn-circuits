@@ -23,7 +23,10 @@
           <div class="crt-glass" aria-hidden="true"></div>
           <!-- The probe: what is under the pointer (src/lesson/probe.ts). The readouts below say the same for screen readers. -->
           <div id="probe" class="probe" aria-hidden="true" hidden><p class="probe-title"></p><dl class="probe-rows"></dl></div>
-          <p id="probeHint" class="probe-hint" aria-hidden="true"></p>
+          <!-- Fades in once the view has been zoomed or moved. -->
+          <button id="recentre" class="recentre" type="button" tabindex="-1" title="Recentre the circuit" aria-label="Recentre the circuit">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15" /><circle cx="12" cy="12" r="2.2" /></svg>
+          </button>
         </div>
         <div id="readouts" class="readouts"><span class="loading">Warming up the monitor…</span></div>
       </section>

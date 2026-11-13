@@ -4,6 +4,7 @@ import { CirSim } from "circuitjs/CirSim";
 import { CircuitLoader } from "circuitjs/CircuitLoader";
 import { Graphics } from "circuitjs/Graphics";
 import type { SimulationManager } from "circuitjs/SimulationManager";
+import type { MouseManager } from "circuitjs/MouseManager";
 import { CircuitElement } from "./CircuitElement";
 
 export type EngineEvent =
@@ -296,12 +297,14 @@ export class CircuitEngine {
     /**
      * Whether the circuit can be changed through CircuitJS1's own interface
      * (it can, at first). When false, it can still be used: switches flipped,
-     * push buttons pressed, parts pointed at. It cannot be changed: no part
-     * added, moved, rewired, deleted or edited. That is CircuitJS1's own
-     * "Disable Editing" mode, without the padlock it draws for it, and with
-     * the keyboard switched off too, as that mode leaves CircuitJS1's command
-     * palette open, from which editing could be turned back on. The engine's
-     * own methods still change the circuit. Needs the full app.
+     * push buttons pressed, parts pointed at, and the view zoomed (wheel,
+     * pinch) and moved (a drag, which would otherwise select). It cannot be
+     * changed: no part added, moved, rewired, deleted or edited. That is
+     * CircuitJS1's own "Disable Editing" mode, without the padlock it draws
+     * for it, and with the keyboard switched off too, as that mode leaves
+     * CircuitJS1's command palette open, from which editing could be turned
+     * back on. The engine's own methods still change the circuit. Needs the
+     * full app.
      */
     get editable(): boolean { return this.#editable; }
     set editable(on: boolean) {
@@ -312,6 +315,13 @@ export class CircuitEngine {
         this.#editable = on;
         this.app.menus.noEditCheckItem.setState(!on);
         hidePadlock(!on);
+        // CircuitJS1's "Drag All" mouse mode: a drag moves the view. Clicks on
+        // switches are handled before any drag starts, so they still work.
+        const mouse = this.app.mouse;
+        const modes = mouse.constructor as typeof MouseManager;
+        if (!on)
+            this.#mouseModeWhileEditable = mouse.mouseMode;
+        this.app.ui.setMouseMode(on ? this.#mouseModeWhileEditable : modes.MODE_DRAG_ALL);
         for (const type of ["keydown", "keypress", "keyup"])
             if (on)
                 window.removeEventListener(type, swallowKey, true);
@@ -321,6 +331,7 @@ export class CircuitEngine {
     }
 
     #editable = true;
+    #mouseModeWhileEditable = 0;
 
     // ---- pointing at the drawing ---------------------------------------
 
@@ -329,10 +340,16 @@ export class CircuitEngine {
      * is over, and highlighted the same way, but without any mouse event
      * reaching it: nothing can be clicked, dragged or edited. x and y are CSS
      * pixels from the top-left of the simulator's page. `terminal` is set when
-     * the point is on one of the element's terminals. Needs the full app.
+     * the point is on one of the element's terminals. While CircuitJS1's own
+     * mouse is dragging (the view, a selection box), it finds nothing and
+     * leaves the drag alone: finding resets the drag's bookkeeping. Needs the
+     * full app.
      */
     probe(x: number, y: number): Probe | null {
         const mouse = this.#mouse();
+        // Private in MouseManager, which has no accessor for it.
+        if ((mouse as unknown as { mouseDragging: boolean }).mouseDragging)
+            return null;
         // It only reads the position and the Shift key from the event.
         mouse.mouseSelect({ clientX: x, clientY: y, shiftKey: false } as MouseEvent);
         const raw = mouse.getMouseElm();
