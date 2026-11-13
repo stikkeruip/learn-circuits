@@ -6,6 +6,7 @@
 
 import type { CircuitElement, CircuitEngine, ElementParam } from "../engine";
 import { lessonUrl, nextLesson } from "../lesson/links";
+import { ProgressStore } from "../lesson/progress";
 import { lessons } from "../lessons";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -23,6 +24,22 @@ const circuit = query.get("circuit");
 if (circuit != null) {
     query.delete("circuit");
     query.set("startCircuit", circuit);
+}
+
+// ---- lessons, and how far the learner is (kept in this browser) ----------------
+
+const progress = new ProgressStore();
+const course = progress.courseStatus(lessons.map(l => l.id));
+$("lessons").textContent = `Lessons (${course.done} of ${course.total} done):`;
+for (const lesson of lessons) {
+    const link = document.createElement("a");
+    link.href = lessonUrl(lesson);
+    const done = progress.isCompleted(lesson.id);
+    link.textContent = lesson.title + (done ? " ✓" : "");
+    link.title = done ? "Finished" : lesson.id === course.next ? "Next lesson" : "Not finished yet";
+    if (lesson.id === course.next)
+        link.className = "next";
+    $("lessons").append(link);
 }
 
 // Opened from the end of a lesson (?from=<lesson id>, with the lesson's

@@ -14,6 +14,7 @@ import { lessons } from "../lessons";
 import { LessonCircuit } from "./circuit";
 import { formatValue, isClose, parseAnswer } from "./format";
 import { lessonUrl, nextLesson, sandboxUrl } from "./links";
+import { ProgressStore } from "./progress";
 import type { ChoiceStep, ExploreStep, NumberStep, ReadStep } from "./types";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -226,6 +227,8 @@ const queue = lesson.steps.map((_, i) => i);
 let position = 0;
 const completed = new Set<number>();
 const stats = { attempts: 0, right: 0, started: Date.now() };
+/** Which lessons are finished, kept in this browser. */
+const learnerProgress = new ProgressStore();
 
 function updateProgress(): void {
     const percent = Math.round(100 * completed.size / lesson.steps.length);
@@ -405,6 +408,8 @@ function showComplete(): void {
     answerView.replaceChildren();
     const seconds = Math.round((Date.now() - stats.started) / 1000);
     const accuracy = stats.attempts === 0 ? 100 : Math.round(100 * stats.right / stats.attempts);
+    learnerProgress.recordCompletion(lesson.id);
+    const course = learnerProgress.courseStatus(lessons.map(l => l.id));
     const box = el("div", "complete");
     const stat = (label: string, value: string) => {
         const s = el("div", "stat");
@@ -415,7 +420,7 @@ function showComplete(): void {
     statsRow.append(
         stat("Accuracy", accuracy + "%"),
         stat("Time", `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`),
-        stat("Steps", String(lesson.steps.length)),
+        stat("Lessons done", `${course.done} of ${course.total}`),
     );
     const next = nextLesson(lesson);
     const again = el("a", "link", "Practice this lesson again");

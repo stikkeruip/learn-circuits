@@ -12,7 +12,7 @@ API on top of it; lessons and our own visuals come later.
 | `src/engine/` | Our wrapper: a small typed API over CircuitJS1's simulation. Works with no user interface (`create()`) or on top of the full editor (`attach()`). |
 | `sim.html` + `src/sim/` | The simulator page: CircuitJS1's own interface (symbols, current animation, menus, drag-to-build editing, scopes) started from the clone, with the engine attached as `window.engine`. |
 | `index.html` + `src/demo/` | The main page: the simulator in a frame, plus an optional live table of every component, read through the engine. |
-| `lesson.html` + `src/lesson/` | The lesson player: one lesson a step at a time (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. |
+| `lesson.html` + `src/lesson/` | The lesson player: one lesson a step at a time (read, move a slider, multiple choice, work out a number), with the simulator in a frame driving every reading. A wrongly answered question comes back at the end. Which lessons the learner has finished is kept in the browser's `localStorage` by `src/lesson/progress.ts`; there is no server or account yet. |
 | `src/lessons/` | The lessons, as data in the format of `src/lesson/types.ts`. So far one: Ohm's law (`lesson.html?id=ohms-law`). |
 | `iframe.html` | An empty page CircuitJS1's side panel asks for. |
 | `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). `lessons.test.ts` loads every lesson into the engine and checks each stated answer against the simulator. |
