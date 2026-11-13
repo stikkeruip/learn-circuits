@@ -82,8 +82,8 @@ export const kirchhoff: Lesson = {
             kind: "choice",
             set: { voltage: 12, r3: 3 },
             question: "A second loop runs through R1 and on through R3. R1 drops 6 V of the 12 V. What is across R3?",
-            options: ["6 V", "3 V", "12 V"],
-            answer: 0,
+            options: ["3 V", "6 V", "12 V"],
+            answer: 1,
             explain: "Round that loop too the drops must come to 12 V, so 6 V across R1 leaves 6 V for R3. R2 and R3 join the same two points, so they always have the same voltage across them. That is all parallel means.",
         },
         {
@@ -114,8 +114,8 @@ export const kirchhoff: Lesson = {
             kind: "choice",
             set: { voltage: 12, r3: 3 },
             question: "His readings at one junction: 5 A in, 2 A out one way, 2 A out the other. What do you make of them?",
-            options: ["A reading is wrong", "1 A is used up there", "Junctions lose a little"],
-            answer: 0,
+            options: ["1 A is used up there", "Junctions lose a little", "A reading is wrong"],
+            answer: 2,
             explain: "Current in equals current out, every time. 5 A can't turn into 4 A, so one of the three readings is wrong, or there is a third way out that he never measured.",
         },
         {

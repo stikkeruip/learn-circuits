@@ -87,8 +87,8 @@ export const ohmsLaw: Lesson = {
             kind: "choice",
             set: { voltage: 12, resistance: 6 },
             question: "Which of these gives the current?",
-            options: ["I = V ÷ R", "I = V × R", "I = R ÷ V"],
-            answer: 0,
+            options: ["I = V × R", "I = R ÷ V", "I = V ÷ R"],
+            answer: 2,
             explain: "Divide both sides of V = I × R by R. Here: 12 V ÷ 6 Ω = 2 A.",
         },
         {
@@ -104,8 +104,8 @@ export const ohmsLaw: Lesson = {
             kind: "choice",
             set: { voltage: 12, resistance: 1 },
             question: "A bare wire has almost no resistance. What happens if one joins the two sides of the battery?",
-            options: ["A huge current flows", "No current flows", "Nothing changes"],
-            answer: 0,
+            options: ["No current flows", "A huge current flows", "Nothing changes"],
+            answer: 1,
             explain: "I = V ÷ R: the less resistance, the more current, and a wire has next to none. Wires overheat and the battery is ruined. That is a **short circuit**, and why every loop needs a load.",
         },
         {

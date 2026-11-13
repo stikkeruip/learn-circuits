@@ -138,6 +138,14 @@ describe.each(lessons)("lesson $id", lesson => {
             expect(step.options[step.answer], step.question).toBeDefined();
         }
     });
+
+    // Options are shown in the order written, so a right answer that is always
+    // in one place can be picked without reading the question.
+    it("moves the right answer about between its choice questions", () => {
+        const places = lesson.steps.filter(s => s.kind === "choice").map(s => s.answer);
+        if (places.length >= 2)
+            expect(new Set(places).size, `right answers at ${places.join(", ")}`).toBeGreaterThan(1);
+    });
 });
 
 describe("course order", () => {

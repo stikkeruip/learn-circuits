@@ -88,8 +88,8 @@ export const parallel: Lesson = {
             kind: "choice",
             set: { voltage: 12, r1: 6, r2: 2, switch: 1 },
             question: "Add a third branch across the battery. What happens to the battery's current?",
-            options: ["It goes up", "It goes down", "No change"],
-            answer: 0,
+            options: ["It goes down", "It goes up", "No change"],
+            answer: 1,
             explain: "Every branch is one more path, and the battery feeds them all. That is why a parallel circuit as a whole has less resistance than any one of its branches.",
         },
         {

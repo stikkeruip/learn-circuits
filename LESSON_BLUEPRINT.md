@@ -297,7 +297,8 @@ lesson is a job a customer brings in.
 1. `npm run typecheck`
 2. `npm test`. For every lesson it checks that the circuit loads, that every
    name and `{reading}` exists, that every `set` is a setting, that each
-   `number` answer is the simulator's, that explore goals can be reached, and
+   `number` answer is the simulator's, that explore goals can be reached, that
+   the right answer is not in the same place in every choice question, and
    that the job's story is filled in.
 3. Play it from start to finish at `lesson.html?id=<id>`, at full width and
    at phone width (375 px). Tests cannot see text that overflows, a long
