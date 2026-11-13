@@ -6,6 +6,7 @@ import { Graphics } from "circuitjs/Graphics";
 import type { SimulationManager } from "circuitjs/SimulationManager";
 import type { MouseManager } from "circuitjs/MouseManager";
 import { CircuitElement } from "./CircuitElement";
+import { installViewerSelection } from "./viewerSelection";
 
 export type EngineEvent =
     /** After every simulated timestep. */
@@ -297,9 +298,9 @@ export class CircuitEngine {
     /**
      * Whether the circuit can be changed through CircuitJS1's own interface
      * (it can, at first). When false, it can still be used: switches flipped,
-     * push buttons pressed, parts pointed at, and the view zoomed (wheel,
-     * pinch) and moved (a drag, which would otherwise select). It cannot be
-     * changed: no part added, moved, rewired, deleted or edited. That is
+     * push buttons pressed, parts pointed at and selected (Ctrl-click,
+     * Ctrl-drag), and the view zoomed (wheel, pinch) and moved (a drag). It
+     * cannot be changed: no part added, moved, rewired, deleted or edited. That is
      * CircuitJS1's own "Disable Editing" mode, without the padlock it draws
      * for it, and with the keyboard switched off too, as that mode leaves
      * CircuitJS1's command palette open, from which editing could be turned
@@ -322,6 +323,13 @@ export class CircuitEngine {
         if (!on)
             this.#mouseModeWhileEditable = mouse.mouseMode;
         this.app.ui.setMouseMode(on ? this.#mouseModeWhileEditable : modes.MODE_DRAG_ALL);
+        // Ctrl-click and Ctrl-drag select parts (viewerSelection.ts).
+        if (on) {
+            this.#stopViewerSelection?.();
+            this.#stopViewerSelection = null;
+        } else {
+            this.#stopViewerSelection = installViewerSelection(this.app);
+        }
         for (const type of ["keydown", "keypress", "keyup"])
             if (on)
                 window.removeEventListener(type, swallowKey, true);
@@ -332,6 +340,7 @@ export class CircuitEngine {
 
     #editable = true;
     #mouseModeWhileEditable = 0;
+    #stopViewerSelection: (() => void) | null = null;
 
     // ---- pointing at the drawing ---------------------------------------
 
