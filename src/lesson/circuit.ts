@@ -1,4 +1,5 @@
-// A lesson's circuit, by name: "set the voltage to 9", "read the current".
+// A lesson's circuit, by name: "set the voltage to 9", "read the current",
+// "close the switch".
 // Works on any CircuitEngine, the one inside the simulator frame on the
 // lesson page or a headless one in the tests, and goes only through the
 // engine's API, so every change is made the way CircuitJS1's edit dialog
@@ -22,6 +23,8 @@ export class LessonCircuit {
             const part = this.part(q.part, `quantity "${name}"`);
             if ("setting" in q)
                 part.param(q.setting);  // throws, listing the available settings, if there is no such one
+            else if ("switch" in q && !part.isSwitch)
+                throw new Error(`Lesson "${lesson.id}": quantity "${name}" is a switch, but part "${q.part}" (${part.type}) is not`);
         }
     }
 
@@ -39,17 +42,26 @@ export class LessonCircuit {
         return q;
     }
 
+    /** True for what a step can set: a setting or a switch. */
     isSetting(name: string): boolean {
-        return "setting" in this.quantity(name);
+        const q = this.quantity(name);
+        return "setting" in q || "switch" in q;
+    }
+
+    isSwitch(name: string): boolean {
+        return "switch" in this.quantity(name);
     }
 
     /**
-     * A setting's value as set, or the simulator's latest measurement. Signs
-     * are dropped: which way the current flows is shown by the animation.
+     * A setting's value as set, a switch's position (1 closed, 0 open), or the
+     * simulator's latest measurement. Signs are dropped: which way the current
+     * flows is shown by the animation.
      */
     read(name: string): number {
         const q = this.quantity(name);
         const part = this.part(q.part);
+        if ("switch" in q)
+            return part.position === 0 ? 1 : 0;     // CircuitJS1 counts the other way: its position 0 is closed
         if ("setting" in q)
             return Number(part.param(q.setting));
         switch (q.measure) {
@@ -61,9 +73,15 @@ export class LessonCircuit {
 
     set(name: string, value: number): void {
         const q = this.quantity(name);
+        const part = this.part(q.part);
+        if ("switch" in q) {
+            if (value !== 0 && value !== 1)
+                throw new RangeError(`Lesson "${this.lesson.id}": switch "${name}" is 1 (closed) or 0 (open), not ${value}`);
+            part.setPosition(value === 1 ? 0 : 1);
+            return;
+        }
         if (!("setting" in q))
             throw new Error(`Lesson "${this.lesson.id}": "${name}" is measured by the simulator and cannot be set`);
-        const part = this.part(q.part);
         if (Number(part.param(q.setting)) !== value)
             part.setParam(q.setting, value);
     }

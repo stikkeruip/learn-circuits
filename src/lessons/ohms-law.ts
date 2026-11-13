@@ -17,9 +17,9 @@ export const ohmsLaw: Lesson = {
     title: "Ohm's law",
     summary: "How voltage and resistance set the current, and the formula that ties all three together.",
     job: {
-        title: "First day on the bench",
+        title: "Three numbers",
         customer: "Rita, who runs the shop",
-        request: "Before you touch a customer's set, show me you know your Ohm's law. Battery, resistor, meter. Go on.",
+        request: "Now the meter. Every fault you'll ever chase comes down to three numbers: volts, amps and ohms. Show me how they fit together.",
         thanks: "Good. You'll do. The customers start coming in tomorrow.",
     },
     circuit,
@@ -37,8 +37,8 @@ export const ohmsLaw: Lesson = {
             kind: "read",
             title: "Meet the circuit",
             set: { voltage: 12, resistance: 6 },
-            text: "A **battery** pushes electric charge around a loop of wire. The **resistor** pushes back, limiting how much gets through.\n\n"
-                + "The moving dots are the **current**: how much charge flows past each second. Right now it is {current}.",
+            text: "The same loop as before, with a **resistor** where the lamp was: a part made to hold the current back by a set amount.\n\n"
+                + "The battery pushes charge round the loop, and the resistor pushes back. The **current** is how much charge gets past each second. Right now it is {current}.",
         },
         {
             kind: "explore",
@@ -90,6 +90,23 @@ export const ohmsLaw: Lesson = {
             options: ["I = V ÷ R", "I = V × R", "I = R ÷ V"],
             answer: 0,
             explain: "Divide both sides of V = I × R by R. Here: 12 V ÷ 6 Ω = 2 A.",
+        },
+        {
+            kind: "explore",
+            title: "Take the resistance away",
+            set: { voltage: 12, resistance: 6 },
+            text: "Keep the battery at 12 V and drag the resistance down to **1 Ω**, as low as this resistor goes.",
+            controls: [{ quantity: "resistance", min: 1, max: 24, step: 1 }],
+            goal: { resistance: 1 },
+            success: "Now look at the current: {current}.",
+        },
+        {
+            kind: "choice",
+            set: { voltage: 12, resistance: 1 },
+            question: "A bare wire has almost no resistance. What happens if one joins the two sides of the battery?",
+            options: ["A huge current flows", "No current flows", "Nothing changes"],
+            answer: 0,
+            explain: "I = V ÷ R: the less resistance, the more current, and a wire has next to none. Wires overheat and the battery is ruined. That is a **short circuit**, and why every loop needs a load.",
         },
         {
             kind: "number",

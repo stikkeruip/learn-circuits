@@ -127,10 +127,8 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
   width: 100%;
   height: 100%;
   border: 0;
-  /* Display only: nothing in it can be clicked, dragged or edited. The
-     lesson changes the circuit through its own controls, and the screen
-     around the frame passes the pointer's position on for the probe. */
-  pointer-events: none;
+  /* Switches can be flipped on it; nothing can be added, moved or edited
+     (engine.editable = false in src/lesson/main.ts). */
 }
 /* The glass: lifts CircuitJS1's black to the screen's green-black, adds the
    dot grid and scanlines, and darkens the edges. */
@@ -147,10 +145,8 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
   background-size: 20px 20px;
   mix-blend-mode: screen;
 }
-/* The probe: point at a part (src/lesson/main.ts). The frame ignores the
-   mouse; the screen around it takes it. A tag on the screen, as in the Bench
-   mock-up's "NODE A · 6.20V". */
-.crt { cursor: crosshair; }
+/* The probe: point at a part (src/lesson/main.ts). A tag on the screen, as
+   in the Bench mock-up's "NODE A · 6.20V". */
 .probe {
   position: absolute;
   z-index: 3;
@@ -301,7 +297,8 @@ main { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-dire
 .job-ticket { margin-top: 16px; font-size: 15px; line-height: 1.6; }
 .job-ticket p { margin: 0; color: var(--ink); }
 .job-ticket .who { margin-top: 6px; color: var(--mono-manila); }
-.job-ticket .stamp { position: absolute; top: 10px; right: 14px; }
+/* In the top right corner, with the customer's words flowing round it. */
+.job-ticket .stamp { float: right; margin: 2px 0 6px 14px; }
 
 /* ---- footer ---- */
 

@@ -51,27 +51,44 @@ export interface PartRef {
 interface QuantityBase {
     /** "Current" */
     label: string;
-    /** "I", as written in formulas. */
-    symbol: string;
-    /** "A" */
-    unit: string;
     /** A key of Lesson.parts. */
     part: string;
 }
 
+interface NumberQuantity extends QuantityBase {
+    /** "I", as written in formulas. */
+    symbol: string;
+    /** "A" */
+    unit: string;
+}
+
+/**
+ * A switch. It reads "Closed" or "Open"; as a number, in a step's `set` or an
+ * explore step's `goal`, 1 is closed (the loop is made) and 0 is open.
+ */
+export interface SwitchQuantity extends QuantityBase {
+    switch: true;
+    symbol?: undefined;
+    unit?: undefined;
+}
+
 /**
  * A setting of a part (steps and sliders can change it, e.g. a battery's
- * "Voltage") or something the simulator measures (e.g. the current through
- * a resistor). Settings are matched by name like CircuitElement.setParam().
+ * "Voltage"), something the simulator measures (e.g. the current through
+ * a resistor), or a switch (steps and a key can flip it). Settings are
+ * matched by name like CircuitElement.setParam().
  */
-export type Quantity = QuantityBase & ({ setting: string } | { measure: "voltage" | "current" | "power" });
+export type Quantity =
+    | (NumberQuantity & ({ setting: string } | { measure: "voltage" | "current" | "power" }))
+    | SwitchQuantity;
 
 export type Step = ReadStep | ExploreStep | ChoiceStep | NumberStep;
 
 interface StepBase {
     /**
-     * Values for settings when the step starts, by quantity name. A step can
-     * come round again after a mistake, so give every value the step relies on.
+     * Values for settings and switches when the step starts, by quantity name.
+     * A step can come round again after a mistake, so give every value the
+     * step relies on.
      */
     set?: Record<string, number>;
 }
@@ -90,7 +107,7 @@ export interface ReadStep extends StepBase {
     note?: string;
 }
 
-/** The learner moves sliders until the circuit reaches a goal. */
+/** The learner moves sliders and flips switches until the circuit reaches a goal. */
 export interface ExploreStep extends StepBase {
     kind: "explore";
     title: string;
@@ -102,12 +119,20 @@ export interface ExploreStep extends StepBase {
     success: string;
 }
 
-export interface Control {
+export type Control = SliderControl | SwitchControl;
+
+export interface SliderControl {
     /** A quantity that is a setting. */
     quantity: string;
     min: number;
     max: number;
     step: number;
+}
+
+/** A key that opens and closes a switch. */
+export interface SwitchControl {
+    /** A quantity that is a switch. */
+    quantity: string;
 }
 
 export interface ChoiceStep extends StepBase {

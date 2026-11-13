@@ -2,6 +2,7 @@
 import { createHeadlessApp } from "./headlessApp";
 import { CirSim } from "circuitjs/CirSim";
 import { CircuitLoader } from "circuitjs/CircuitLoader";
+import { Graphics } from "circuitjs/Graphics";
 import type { SimulationManager } from "circuitjs/SimulationManager";
 import { CircuitElement } from "./CircuitElement";
 
@@ -290,6 +291,37 @@ export class CircuitEngine {
         return { message, element: culprit != null ? this.#handle(culprit) : null };
     }
 
+    // ---- editing ----------------------------------------------------------
+
+    /**
+     * Whether the circuit can be changed through CircuitJS1's own interface
+     * (it can, at first). When false, it can still be used: switches flipped,
+     * push buttons pressed, parts pointed at. It cannot be changed: no part
+     * added, moved, rewired, deleted or edited. That is CircuitJS1's own
+     * "Disable Editing" mode, without the padlock it draws for it, and with
+     * the keyboard switched off too, as that mode leaves CircuitJS1's command
+     * palette open, from which editing could be turned back on. The engine's
+     * own methods still change the circuit. Needs the full app.
+     */
+    get editable(): boolean { return this.#editable; }
+    set editable(on: boolean) {
+        if (this.#headless)
+            throw new Error("editable needs the full simulator (sim.html); there is no interface to edit through without it");
+        if (on === this.#editable)
+            return;
+        this.#editable = on;
+        this.app.menus.noEditCheckItem.setState(!on);
+        hidePadlock(!on);
+        for (const type of ["keydown", "keypress", "keyup"])
+            if (on)
+                window.removeEventListener(type, swallowKey, true);
+            else
+                window.addEventListener(type, swallowKey, true);  // before CircuitJS1's own, on document
+        this.app.repaint();
+    }
+
+    #editable = true;
+
     // ---- pointing at the drawing ---------------------------------------
 
     /**
@@ -470,4 +502,28 @@ function withoutDisplayItems(circuit: string): string {
         .split(/\r?\n|\r/)
         .filter(line => !/^(o|&|38)\s/.test(line))
         .join("\n");
+}
+
+/** While editing is off (CircuitEngine.editable), keys never reach CircuitJS1. */
+function swallowKey(event: Event): void {
+    event.stopImmediatePropagation();
+}
+
+let padlockHidden = false;
+let ownDrawLock: Graphics["drawLock"] | null = null;
+
+/**
+ * CircuitJS1 draws a padlock on the circuit while editing is disabled
+ * (Graphics.drawLock). Leave it out while the engine has turned editing off;
+ * in this window only, as the Bench's simulator is a page of its own.
+ */
+function hidePadlock(hidden: boolean): void {
+    padlockHidden = hidden;
+    if (ownDrawLock != null)
+        return;
+    const own = ownDrawLock = Graphics.prototype.drawLock;
+    Graphics.prototype.drawLock = function (this: Graphics, x: number, y: number) {
+        if (!padlockHidden)
+            own.call(this, x, y);
+    };
 }

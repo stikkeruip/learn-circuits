@@ -41,10 +41,7 @@ const primary = $<HTMLButtonElement>("primary");
 // ---- start the simulator ---------------------------------------------------
 
 // CircuitJS1's own address options: just the drawing, in phosphor colours.
-// Nothing can be clicked or edited in it either, because the frame ignores
-// the mouse (lesson.css); its editable=false option is not used, as it puts a
-// padlock on the drawing. Pointing at a part still tells you about it: see
-// "probe" below.
+// The circuit can be used but not changed: see engine.editable below.
 const simOptions = new URLSearchParams({
     hideSidebar: "true",
     hideMenu: "true",
@@ -68,6 +65,10 @@ const engineReady = new Promise<CircuitEngine>(resolve => {
 frame.src = "sim.html?" + simOptions;
 
 const engine = await engineReady;
+// Switches flip and buttons press, on the drawing as on the Bench, but no part
+// can be added, moved, rewired, deleted or edited. (CircuitJS1's own
+// editable=false option is not used: it puts a padlock on the drawing.)
+engine.editable = false;
 const circuit = new LessonCircuit(engine, lesson);
 
 // ---- small helpers ---------------------------------------------------------
@@ -108,7 +109,10 @@ const quantityNames = Object.keys(lesson.quantities);
 const quantitySymbols = new Set(quantityNames.map(name => lesson.quantities[name].symbol));
 
 function format(name: string): string {
-    return formatValue(circuit.read(name), lesson.quantities[name].unit);
+    const q = lesson.quantities[name];
+    if ("switch" in q)
+        return circuit.read(name) === 1 ? "Closed" : "Open";
+    return formatValue(circuit.read(name), q.unit);
 }
 
 /** Lesson text: paragraphs at blank lines, **bold**, and {quantity} as a live reading. */
@@ -164,8 +168,10 @@ for (const name of quantityNames) {
     const q = lesson.quantities[name];
     const root = el("div", "readout");
     const value = el("span", "value");
-    const label = el("span", "label mono", q.symbol);
-    label.append(el("span", "name", ` · ${q.label}`));
+    // A switch has no symbol: its name stands in the symbol's place.
+    const label = el("span", "label mono", q.symbol ?? q.label);
+    if (q.symbol != null)
+        label.append(el("span", "name", ` · ${q.label}`));
     root.append(label, value);
     readoutsView.append(root);
     readouts.set(name, { root, value });
@@ -215,11 +221,10 @@ function fitDrawing(): void {
 // ---- probe -----------------------------------------------------------------
 
 // Point at a part or a wire (tap it, on a touch screen) to read what the
-// simulator knows about it. The frame itself still ignores the mouse, so
-// nothing in it can be clicked, dragged or edited: the page hands the
-// position to the engine, which finds and highlights what is there the way
-// CircuitJS1 does for its own mouse.
+// simulator knows about it. The engine finds what is there the way CircuitJS1
+// finds what its mouse is over, and highlights it the same way.
 const screen = frame.parentElement!;
+const frameDoc = frame.contentDocument!;
 const probeBox = $("probe");
 const probeTitle = probeBox.querySelector<HTMLElement>(".probe-title")!;
 const probeRows = probeBox.querySelector<HTMLElement>(".probe-rows")!;
@@ -229,11 +234,10 @@ $("probeHint").textContent = matchMedia("(hover: hover)").matches ? "Point at a 
 let probed: { found: Probe; x: number; y: number } | null = null;
 let probeLabels = "";
 
+/** For pointer events inside the frame: their position is the frame's own. */
 function probeAt(event: PointerEvent): void {
-    const f = frame.getBoundingClientRect();
-    const found = engine.probe(event.clientX - f.left, event.clientY - f.top);
-    const s = screen.getBoundingClientRect();
-    probed = found && { found, x: event.clientX - s.left - screen.clientLeft, y: event.clientY - s.top - screen.clientTop };
+    const found = engine.probe(event.clientX, event.clientY);
+    probed = found && { found, x: event.clientX + frame.offsetLeft, y: event.clientY + frame.offsetTop };
     showProbe();
 }
 
@@ -274,22 +278,29 @@ function showProbe(): void {
     probeBox.style.transform = `translate(${left}px, ${top}px)`;
 }
 
-screen.addEventListener("pointermove", probeAt);
-screen.addEventListener("pointerdown", probeAt);
-screen.addEventListener("pointerleave", event => {
-    if (event.pointerType === "mouse")
+frameDoc.addEventListener("pointermove", probeAt);
+frameDoc.addEventListener("pointerdown", probeAt);
+frameDoc.addEventListener("pointerout", event => {
+    if (event.relatedTarget == null && event.pointerType === "mouse")   // out of the frame
         endProbe();
 });
 // A touch probe stays until the next tap, on the screen or anywhere else.
-document.addEventListener("pointerdown", event => {
-    if (probed != null && !screen.contains(event.target as Node))
+document.addEventListener("pointerdown", () => {
+    if (probed != null)
         endProbe();
 });
+
+/**
+ * The step's own keeping up with the circuit, which the learner can change
+ * on the drawing too: a switch clicked there, say. Set by the step shown.
+ */
+let syncStep: (() => void) | null = null;
 
 // Measured values change only when the simulator has run, so refresh after each of its frames.
 engine.on("frame", () => {
     fitDrawing();
     updateReadouts();
+    syncStep?.();
     showProbe();
 });
 
@@ -375,6 +386,7 @@ function showJob(): void {
 function showStep(): void {
     const index = queue[position];
     const step = lesson.steps[index];
+    syncStep = null;
     circuit.setAll(step.set);
     hiddenQuantity = step.kind === "number" ? step.solveFor : null;
     circuit.setLabels(hiddenQuantity == null);
@@ -433,9 +445,19 @@ function showExplore(step: ExploreStep, index: number): void {
         reached = true;
         showFeedback(true, praise(), richText(step.success));
         setPrimary("Continue", true, undefined, "go");
+        // Enter on a switch's key would flip it back; from here it continues.
+        if (document.activeElement instanceof HTMLButtonElement)
+            primary.focus();
     };
+    const syncs: (() => void)[] = [];
     for (const control of step.controls) {
         const q = lesson.quantities[control.quantity];
+        if (!("min" in control)) {
+            const key = switchKey(control.quantity, checkGoal);
+            answerView.append(key.row);
+            syncs.push(key.sync);
+            continue;
+        }
         const row = el("label", "control");
         const output = el("output", "live", format(control.quantity));
         const head = el("span", "control-head");
@@ -457,6 +479,40 @@ function showExplore(step: ExploreStep, index: number): void {
     }
     setPrimary("Continue", false, () => next(index, true));
     checkGoal();
+    // A switch can be flipped on the drawing as well as with its key.
+    syncStep = () => {
+        for (const sync of syncs)
+            sync();
+        checkGoal();
+    };
+}
+
+/**
+ * A switch to flip: its name and position, and a key that says what pressing
+ * it does. sync() brings them up to date after a click on the drawing.
+ */
+function switchKey(name: string, changed: () => void): { row: HTMLElement; sync: () => void } {
+    const q = lesson.quantities[name];
+    const row = el("div", "control");
+    const output = el("output", "live", format(name));
+    const head = el("span", "control-head");
+    head.append(el("span", undefined, q.label), output);
+    const key = el("button", "button secondary");
+    key.type = "button";
+    const action = () => `${circuit.read(name) === 1 ? "Open" : "Close"} the ${q.label.toLowerCase()}`;
+    key.textContent = action();
+    const sync = () => {
+        setText(key, action());
+        setText(output, format(name));
+    };
+    key.addEventListener("click", () => {
+        circuit.set(name, circuit.read(name) === 1 ? 0 : 1);
+        sync();
+        updateReadouts();
+        changed();
+    });
+    row.append(head, key);
+    return { row, sync };
 }
 
 function showChoice(step: ChoiceStep, index: number): void {

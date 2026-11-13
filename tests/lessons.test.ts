@@ -46,8 +46,11 @@ describe.each(lessons)("lesson $id", lesson => {
             for (const name of texts.flatMap(placeholders))
                 expect(names.has(name), `${where} shows {${name}}`).toBe(true);
             if (step.kind === "explore") {
-                for (const c of step.controls)
-                    expect(circuit.isSetting(c.quantity), `${where} has a slider for "${c.quantity}"`).toBe(true);
+                for (const c of step.controls) {
+                    expect(circuit.isSetting(c.quantity), `${where} has a control for "${c.quantity}"`).toBe(true);
+                    // A slider (with a range) changes a setting; a key (without one) flips a switch.
+                    expect(circuit.isSwitch(c.quantity), `${where}: "${c.quantity}" is a switch`).toBe(!("min" in c));
+                }
             }
             if (step.kind === "number")
                 expect(names.has(step.solveFor), `${where} asks for "${step.solveFor}"`).toBe(true);
@@ -74,14 +77,20 @@ describe.each(lessons)("lesson $id", lesson => {
         }
     });
 
-    it("has explore goals that its sliders can reach", () => {
+    it("has explore goals that its sliders and switches can reach", () => {
         for (const step of lesson.steps) {
             if (step.kind !== "explore")
                 continue;
             for (const [name, value] of Object.entries(step.goal)) {
                 const control = step.controls.find(c => c.quantity === name);
-                expect(control, `"${step.title}" has a slider for ${name}`).toBeDefined();
-                const { min, max, step: by } = control!;
+                expect(control, `"${step.title}" has a control for ${name}`).toBeDefined();
+                if (!("min" in control!)) {
+                    expect([0, 1], `"${step.title}": switch ${name} is 1 (closed) or 0 (open)`).toContain(value);
+                    // The step must not start with its goal already reached.
+                    expect(step.set?.[name], `"${step.title}" starts with switch ${name} the other way`).toBe(1 - value);
+                    continue;
+                }
+                const { min, max, step: by } = control;
                 expect(value).toBeGreaterThanOrEqual(min);
                 expect(value).toBeLessThanOrEqual(max);
                 expect(Number.isInteger(Math.round((value - min) / by * 1e9) / 1e9), `${name} = ${value} is on the slider's steps`).toBe(true);
@@ -186,6 +195,27 @@ describe("the probe", () => {
         expect(describeTerminal("wire", "12 V", null)).toEqual({ title: "wire · end", readings: [{ label: "V · voltage", value: "12 V" }] });
         expect(describeTerminal("wire", "12 V", "V").readings[0].value).toBe("?");
         expect(describeTerminal("wire", "12 V", "A").readings[0].value).toBe("12 V");
+    });
+});
+
+describe("a switch in a lesson", () => {
+    it("reads 1 closed and 0 open, and makes and breaks the loop", () => {
+        const lesson = lessons.find(l => l.id === "closed-loop")!;
+        engine.load(lesson.circuit);
+        const circuit = new LessonCircuit(engine, lesson);
+
+        circuit.set("switch", 1);
+        engine.step(3000);  // the lamp's filament warms up: 3 simulated seconds
+        expect(circuit.read("switch")).toBe(1);
+        expect(circuit.read("current")).toBeCloseTo(2, 3);
+
+        circuit.set("switch", 0);
+        engine.step(2);
+        expect(circuit.read("switch")).toBe(0);
+        expect(circuit.read("current")).toBe(0);
+        expect(engine.error).toBeNull();
+
+        expect(() => circuit.set("switch", 2)).toThrow(RangeError);
     });
 });
 
