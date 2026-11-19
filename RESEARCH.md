@@ -476,8 +476,9 @@ None of these is written. Each section is what to start from.
 **Build the job round**
 
 - Height above the floor as the picture, said once.
-- The two fault signs from Part 1, now measured: full volts across a part that
-  should be passing current, and no volts across a switch that is on.
+- End on a fault found by readings at test points. The two fault signs from
+  Part 1 are now measured: full volts across a part that should be passing
+  current, and no volts across a switch that is on.
 - The stepping-round-a-loop exercise left out of №0007.
 
 ### №0010 The real battery
@@ -714,30 +715,58 @@ None of these is written. Each section is what to start from.
 - Test points on a dead supply: mains at the fuse and nothing after it. Mains
   in and 0.5 V out of the transformer. Find each fault.
 
-### №0017 Coils and relays
+### №0017 Coils
 
-**This is two ideas, and should be two jobs.** Kuphaldt's relay worksheet
-teaches the relay as a switch worked by a current, in steady DC, with no
-mention of how a coil behaves over time. A relay job needs only №0005, and
-sets up the transistor: a small current switching a large one. The coil's
-slowness, and the spike when it is switched off, is a separate job that leans
-on №0012.
+This and №0018 were one job, "Coils and relays", which was two ideas. This
+one is how a coil behaves over time.
 
 **Sources**
 
-- Kuphaldt, [relays](https://www.ibiblio.org/kuphaldt/socratic/output/relay1.pdf), [inductors](https://www.ibiblio.org/kuphaldt/socratic/output/inds.pdf) and time constants 1 (above)
+- Kuphaldt, [inductors](https://www.ibiblio.org/kuphaldt/socratic/output/inds.pdf) and time constants 1 (above)
 - OpenStax, [College Physics 2e 23.10](https://openstax.org/books/college-physics-2e/pages/23-10-rl-circuits)
-- Electronics-Tutorials, [relay switch circuits](https://www.electronics-tutorials.ws/blog/relay-switch-circuit.html)
+- Electronics-Tutorials, [the inductor](https://www.electronics-tutorials.ws/inductor/inductor.html)
 
 **How they teach it**
 
-- The coil: it does not hold current back, it holds back *changes* in current.
+- A coil does not hold current back, it holds back *changes* in current.
   Current cannot start or stop at once. The time constant is L ÷ R, and the
   63% rule is the capacitor's over again.
 - The surprise for learners: a bigger resistor makes a capacitor slower and a
   coil faster.
-- The relay as two circuits that never touch: the coil, and the contacts it
-  pulls. Normally open, normally closed.
+- On a steady current a coil is only a length of wire: it reads a low
+  resistance on the meter.
+- Switch a coil off and its current has nowhere to go, so the voltage across
+  it leaps. By the textbook formula, a 0.5 H coil that loses 4 A in 10 ms makes
+  200 V.
+
+**Exercises to adapt** (Kuphaldt, CC BY 1.0)
+
+- 75 mH and a time constant of 20 µs: 3.75 kΩ.
+- The current in a 5 H coil rises by 4.5 A every second: 22.5 V across it.
+- A lamp in series with a coil: how does it come on? (Slowly. With a bigger
+  coil, more slowly.)
+
+**Build the job round**
+
+- Set it beside №0012: the same curve, with current where the voltage was.
+- Show the kick at switch-off on the trace, then fit a diode across the coil
+  and watch it go. That is the diode fitted across every relay coil.
+
+### №0018 Relays
+
+**Sources**
+
+- Kuphaldt, [relays](https://www.ibiblio.org/kuphaldt/socratic/output/relay1.pdf) and time constants 1 (above)
+- Electronics-Tutorials, [relay switch circuits](https://www.electronics-tutorials.ws/blog/relay-switch-circuit.html)
+
+**How they teach it**
+
+- Kuphaldt teaches the relay as a switch worked by a current, in steady DC,
+  with no word about how a coil behaves over time.
+- Two circuits that never touch: the coil, and the contacts it pulls.
+  Normally open, normally closed.
+- A diode goes across the coil of a relay worked from DC, to take the kick
+  when it is switched off.
 
 **Exercises to adapt** (Kuphaldt, CC BY 1.0)
 
@@ -747,10 +776,17 @@ on №0012.
 - An alarm loop with a broken wire. Wired one way the break goes unnoticed.
   Wired through a relay's normally closed contact, the break sounds the alarm.
 - A relay lets go late once a lamp is wired across its coil. Why? (The lamp
-  gives the coil's current somewhere to go on flowing.) The way in to the
-  diode fitted across every relay coil.
+  gives the coil's current somewhere to go on flowing.) The diode from №0017
+  does the same.
 
-### №0018 The transistor as a switch
+**Build the job round**
+
+- The coil's circuit first: Ohm's law says whether it pulls in. Then the
+  contacts' circuit: which lamp is lit with the coil off?
+- It sets up №0019: a small current switching a large one. The transistor
+  does the same with nothing that moves.
+
+### №0019 The transistor as a switch
 
 **Sources**
 
@@ -777,7 +813,7 @@ on №0012.
 - A lamp that never lights: 24 V at one test point, and 23.5 V across the
   transistor whether the button is pressed or not. What could it be? Kuphaldt.
 
-### №0019 The transistor as an amplifier
+### №0020 The transistor as an amplifier
 
 **Sources**
 
@@ -808,15 +844,17 @@ on №0012.
 **Leave out of a first job:** capacitors, frequency, and every other way of
 wiring a transistor.
 
-## What this changes in the plan
+## What this changed in the plan
 
 1. **№0008 comes next, and can open on something seen**: two equal branches
    acting as half. The formula follows from №0005 in one line.
-2. **№0017 should be split** into a relay job and a coil job.
-3. **Part 2 needs a job on fault-finding by voltage**, or №0009 should be that
-   job. Every source that teaches repair teaches the two signs: the full
-   supply across an open part, and nothing across a shorted one.
-4. **№0010 is a divider** and should be taught as one.
+2. **"Coils and relays" was two ideas and is now two jobs**: coils (№0017)
+   and relays (№0018). The transistor jobs moved to №0019 and №0020.
+3. **№0009 ends on fault-finding by voltage.** Every source that teaches
+   repair teaches the two signs: the full supply across an open part, and
+   nothing across a shorted one. №0004 and №0007 already ask about them, so
+   №0009 measures them, and no separate job repeats them.
+4. **№0010 is taught as a voltage divider.**
 5. **Nothing in the course covers energy over time** (E = P × t, the unit on
    an electricity bill). OpenStax treats it as part of power. It is not
    needed for repair work, so it is left out on purpose until someone

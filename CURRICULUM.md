@@ -177,24 +177,23 @@ part at a time.
 
 [`RESEARCH.md`](RESEARCH.md) has a section for each of these: how other
 courses teach it, exercises to adapt, and what to build the job round. Read
-it before writing one. It also argues for three changes to this table, not
-yet made: split №0017 into a relay job and a coil job, make №0009 the job
-that teaches fault-finding by voltage, and teach №0010 as a voltage divider.
+it before writing one.
 
 | № | Lesson | New idea | Needs |
 |---|---|---|---|
 | 0008 | Combining resistors | Resistances in parallel: 1/R = 1/R1 + 1/R2. Boiling a mixed network down to one resistance, a step at a time | №0005, №0007 |
-| 0009 | Voltage at a point | Voltage is always between two points. Ground as the point everything is measured from. Meter across a part for volts, in line for amps | №0007 |
-| 0010 | The real battery | Internal resistance: why a tired battery reads full with nothing connected and sags under load | №0006 |
+| 0009 | Voltage at a point | Voltage is always between two points. Ground as the point everything is measured from. Meter across a part for volts, in line for amps. The fault is found by readings at test points: the full supply across an open part, 0 V across a shorted one | №0007 |
+| 0010 | The real battery | Internal resistance, taught as a voltage divider: the resistance inside the battery is R1 and the set is R2. Why a tired battery reads full with nothing connected and sags under load | №0006 |
 | 0011 | The loaded divider | Whatever is connected to Vout is a branch across R2, so it pulls Vout down | №0006, №0008 |
 | 0012 | Capacitors | A part that stores charge. Charging and discharging through a resistor. The time constant, R × C | №0002 |
 | 0013 | Diodes | Current one way only. The forward drop of about 0.7 V | №0007 |
 | 0014 | LEDs | A diode that lights. Working out its series resistor | №0013, №0003 |
 | 0015 | Alternating current | Voltage that swings both ways. Frequency, peak and RMS | №0009 |
 | 0016 | The power supply | Diode and capacitor together turn AC into steady DC. Ripple, and the hum of a worn-out capacitor | №0012, №0013, №0015 |
-| 0017 | Coils and relays | The inductor resists changes in current. A coil as a magnet that works a switch | №0012 |
-| 0018 | The transistor as a switch | A small current turns a large one on and off | №0013, №0009 |
-| 0019 | The transistor as an amplifier | A small change in makes a large change out | №0018, №0006 |
+| 0017 | Coils | The inductor resists changes in current: it cannot start or stop at once. The time constant, L ÷ R. The kick when a coil is switched off, and the diode across it that takes the kick | №0012, №0013 |
+| 0018 | Relays | A coil as a magnet that works a switch: a small current in one circuit switches a large one in another. Normally open and normally closed contacts | №0005, №0017 |
+| 0019 | The transistor as a switch | A small current turns a large one on and off, as the relay did, with nothing that moves | №0013, №0009, №0018 |
+| 0020 | The transistor as an amplifier | A small change in makes a large change out | №0019, №0006 |
 
 ### What the lesson player lacks for Part 2
 
@@ -204,8 +203,9 @@ that teaches fault-finding by voltage, and teach №0010 as a voltage divider.
   questions about a moment or a settled state.
 - **Readings at a point** (№0009). Measures are taken across or through a
   two-ended part. Voltage at a point against ground is not a quantity yet.
-- **Three-legged parts** (№0018, №0019). A transistor has three currents and
-  three voltages, so a measure needs to say which.
+- **Parts with more than two ends** (№0018, №0019, №0020). A relay has a
+  coil and a set of contacts, and a transistor has three currents and three
+  voltages, so a measure needs to say which.
 - **Peak and RMS** (№0015, №0016). There is no averaged reading.
 
 ## Adding a job
