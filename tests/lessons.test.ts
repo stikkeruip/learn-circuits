@@ -190,6 +190,12 @@ describe("the probe", () => {
         ]);
     });
 
+    it("shows a voltmeter's reading and none of its statistics over time", () => {
+        const view = describePart(["voltmeter", "Vd = 12 V", "Vmax = 12 V", "V(rms) = 0 V", "Duty cycle = 1"], null);
+        expect(view.readings).toEqual([{ label: "V · across it", value: "12 V" }]);
+        expect(describePart(["voltmeter", "Vd = 12 V", "Duty cycle = 1"], "V").readings).toEqual([{ label: "V · across it", value: "?" }]);
+    });
+
     it("hides readings in the unit a question asks for, and power", () => {
         const values = (unit: string) => describePart(resistor, unit).readings.map(r => r.value);
         expect(values("A")).toEqual(["?", "12 V", "6 Ω", "?"]);

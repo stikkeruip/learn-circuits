@@ -29,6 +29,15 @@ const NAMES: Record<string, [symbol: string, name: string]> = {
 };
 
 /**
+ * Parts whose summary is cut down to the readings named here. CircuitJS1's
+ * voltmeter also lists its statistics over time (max, min, RMS, period, duty
+ * cycle), which mean nothing in a steady circuit and are not taught yet.
+ */
+const ONLY: Record<string, string[]> = {
+    voltmeter: ["Vd"],
+};
+
+/**
  * Whether a reading would give away the value a question asks for, of which
  * `hiddenUnit` is the unit ("A"), or null when no question is open. Readings
  * in that unit would, and so would power, from which it can be worked out.
@@ -51,6 +60,9 @@ export function describePart(info: string[], hiddenUnit: string | null): ProbeVi
         if (line === "" || (line.startsWith("(") && line.endsWith(")")))
             continue;
         const match = /^([^=]+?)\s*=\s*(.+)$/.exec(line);
+        const only = ONLY[title];
+        if (only != null && (match == null || !only.includes(match[1])))
+            continue;
         if (match == null) {
             readings.push({ label: line, value: "" });   // a state, e.g. "closed"
             continue;

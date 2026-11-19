@@ -58,8 +58,8 @@ wrong answers:
 | The battery gives a fixed current | "Add a branch and the others get less" | №0005 |
 | Sequential reasoning | "A change only affects what comes after it" | №0001 (switch after the lamp), №0007 (R3 moves R2's current) |
 | Local reasoning | "Current splits equally at a junction" | №0005 (path of least resistance) |
-| Judging by the drawing | "They look side by side, so they are parallel" | №0007, and №0008 when written |
-| One resistor "is" the total | Treating an equivalent resistance as a real part | №0008 when written |
+| Judging by the drawing | "They look side by side, so they are parallel" | №0007, №0008 (which two combine first) |
+| One resistor "is" the total | Treating an equivalent resistance as a real part | №0008 |
 
 The loop rule is the hardest item of all in DIRECT, harder than the junction
 rule. Go slowly there.
@@ -250,7 +250,7 @@ on a rating, and it is at thirteen steps.
 
 - "Guaranteed or only happens to be": the lesson's own steps (even the
   resistors up, then make them unequal) show it without the words.
-- The heater on a long lead. A fine story for №0010 or №0011, where a hidden
+- The heater on a long lead. A fine story for a later job, where a hidden
   resistance is the whole point.
 
 ### №0005 Parallel circuits
@@ -338,7 +338,7 @@ on a rating, and it is at thirteen steps.
 
 **Left out, and why**
 
-- What a load does to the output: that is №0011.
+- What a load does to the output: that is №0009.
 - The uneven strip of a volume control: true, but a second idea.
 
 ### №0007 Kirchhoff's laws
@@ -381,12 +381,8 @@ on a rating, and it is at thirteen steps.
 **Left out, and why**
 
 - Stepping the meter round the loop: it needs a reading at a point, which the
-  player cannot take yet. It belongs to №0009.
+  player cannot take yet. It belongs to №0011.
 - Signs and assumed directions.
-
-## Part 2: the planned jobs
-
-None of these is written. Each section is what to start from.
 
 ### №0008 Combining resistors
 
@@ -416,7 +412,7 @@ None of these is written. Each section is what to start from.
   the sum of the reciprocals (0.5 given as the answer). Pairing two parts
   that only look in series, when a branch joins between them.
 
-**Exercises to adapt**
+**Exercises found**
 
 - 100 Ω, 100 Ω and 50 Ω side by side: 50 Ω, then 25 Ω. Kuphaldt.
 - Two 3.3 kΩ side by side: 1.65 kΩ. Three: 1.1 kΩ. Four: 825 Ω. Kuphaldt.
@@ -427,18 +423,128 @@ None of these is written. Each section is what to start from.
   (100 Ω and 250 Ω, then 350 Ω and 200 Ω): 198.7 Ω, 120.8 mA, 8.63 V and 15.4 V.
   Use other values.
 
-**Build the job round**
+**Taken into the lesson**
 
 - The circuit of №0007: 2 Ω, then 6 Ω beside 3 Ω, on 12 V. The pair is 2 Ω, the
   whole is 4 Ω, and the battery supplies 3 A: readings the learner has already
   seen and can now predict.
-- See it first. Start with R3 equal to R2 and watch the pair behave as half.
-- One "which two can be combined first?" question before any sum.
-- Work back out at the end and check against both of Kirchhoff's laws.
-- The player cannot swap a pair for one resistor on the screen. The lesson
-  has to say it in words, or the player has to learn to.
+- See it first: make R3 equal to R2 and watch the pair act as half. After
+  Kuphaldt's meter question.
+- The formula as product over sum, with where it comes from said in words
+  (each branch takes V ÷ R, and the battery supplies the sum), as OpenStax
+  derives it.
+- *Which two can be combined first?* before any sum, and an estimate whose
+  wrong answers are the series rule and the average.
+- *A 3 Ω is fitted and 2 Ω is wanted. What goes beside it?* After Kuphaldt.
+- Working back out to every reading, checked against both of Kirchhoff's
+  laws, as *Lessons in Electric Circuits* does.
 
-### №0009 Voltage at a point
+**Left out, and why**
+
+- The reciprocal form of the rule, 1/R = 1/R1 + 1/R2, and more than two
+  resistors side by side: the two-resistor rule, used twice, covers them.
+- Swapping a pair for one resistor on the screen: the player cannot. The
+  lesson says it in words.
+
+### №0009 The loaded divider
+
+**Sources**
+
+- Kuphaldt, Voltage divider circuits worksheet (above)
+- Spinning Numbers, [voltage divider design](https://spinningnumbers.org/a/voltage-divider-design.html)
+- *Lessons in Electric Circuits*, [voltmeter impact on the measured circuit](https://www.allaboutcircuits.com/textbook/direct-current/chpt-8/voltmeter-impact-measured-circuit)
+
+**How they teach it**
+
+- The load is a branch across R2, so the bottom of the divider is now R2 and
+  the load side by side, which is less than R2.
+- The rule of thumb is worded three ways in three places: the load should be
+  ten times R2, ten times R1 and R2 side by side, or should take a tenth of
+  the divider's current. **Pick one and test it.** Ten times R2 is the easiest
+  to say, and gives a sag of about 4% for a half-way divider.
+- A meter is a load too: 24 V across two 250 MΩ resistors should read 12 V on
+  each, and a 10 MΩ meter reads 0.9 V.
+
+**Exercises found**
+
+- This course's own divider, 9 V on 2 kΩ and 1 kΩ, gives 3 V. With a 1 kΩ load:
+  1.8 V. With 10 kΩ: 2.81 V. With 100 kΩ: 2.98 V.
+- Two dividers on 50 V, one of 22 kΩ pairs and one of 47 kΩ pairs. Both give
+  25 V. Which holds up better under the same load, and what does the other
+  have going for it? Kuphaldt.
+- A 5 kΩ control on 10 V feeding a 1 kΩ load: 0 V, 1.29 V, 2.22 V, 3.87 V and
+  10 V at the quarter points. No longer even. Kuphaldt.
+- A load goes across R2. What happens to the voltage across R1? (It rises.)
+
+**Taken into the lesson**
+
+- A switch that brings the load in, and a slider for its size: 3 V falls to
+  1.8 V under 1 kΩ, and comes back to 2.81 V under 10 kΩ.
+- The rule of thumb in one wording: a load of ten times R2 or more barely
+  moves Vout.
+- *What did the voltage across R1 do?* It rose. After Kuphaldt.
+- A meter is a load too, but a very light one, so it reads an output as if
+  nothing were connected. That is the fault: a lead that reads 6 V on the
+  meter and gives a cassette player almost nothing.
+
+**Left out, and why**
+
+- The two dividers of different stiffness, and what a stiff one costs in
+  wasted current: a second idea.
+- The loaded volume control. It needs the wiper as a setting.
+
+### №0010 The real battery
+
+**Sources**
+
+- Kuphaldt, [Ideal and real sources](https://www.ibiblio.org/kuphaldt/socratic/model/mod_idealsource.pdf) (CC BY 4.0)
+- OpenStax, [College Physics 2e 21.2](https://openstax.org/books/college-physics-ap-courses-2e/pages/21-2-electromotive-force-terminal-voltage) and [University Physics vol. 2, 10.1](https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force)
+- Carleton SERC, [a PhET activity on internal resistance](https://serc.carleton.edu/19605.1146)
+
+**How they teach it**
+
+- OpenStax opens with headlamps dimming as a battery runs down, then models
+  the battery as a perfect source with a resistor hidden inside it.
+- Kuphaldt gives tables of real readings first. A car battery: 13.50 V with
+  nothing connected, 12.80 V at 20 A, 11.75 V at 50 A (about 0.035 Ω inside). A
+  dying 6 V dry cell: 6.33 V open, 5.33 V across 15 kΩ, 4.48 V across 6.8 kΩ
+  (about 2.8 kΩ inside).
+- His point for a repair shop: a battery wears out in two ways, and a meter
+  with nothing else connected sees only one of them. Test it under load.
+
+**Exercises found**
+
+- 14.8 V with nothing connected and 13.5 V across 50 Ω: 0.27 A flows, 1.3 V is
+  lost inside, so 4.8 Ω. What would a 20 Ω load get? (11.9 V.) Kuphaldt.
+- The dying dry cell above: find the resistance inside, and the most current
+  it could ever give (about 2.3 mA). Kuphaldt.
+- Why does a voltage check alone not tell a good cell from a worn one?
+
+**Taken into the lesson**
+
+- The puzzle first: the batteries read 12 V on the meter, and the television
+  is dead.
+- It is a voltage divider: the resistance inside is R1, the set is R2. The
+  learner already owns the rule.
+- A slider for the hidden resistance, a switch for the set, and a meter on
+  the drawing that draws no current.
+- *Why does the worn battery read full with nothing connected?* After
+  Kuphaldt's question on why a voltage check alone tells nothing.
+- Internal resistance from two readings, after Kuphaldt's 14.8 V and 13.5 V
+  exercise, and his advice to test a battery under load.
+
+**Left out, and why**
+
+- The word "EMF", and a battery's voltage falling as it runs down: the
+  lesson keeps to the one thing a meter alone cannot see.
+- The most current a battery could ever give (short it and all its voltage
+  is lost inside): a good question for a later job on fuses or faults.
+
+## Part 2: the planned jobs
+
+None of these is written. Each section is what to start from.
+
+### №0011 Voltage at a point
 
 **Sources**
 
@@ -480,75 +586,6 @@ None of these is written. Each section is what to start from.
   Part 1 are now measured: full volts across a part that should be passing
   current, and no volts across a switch that is on.
 - The stepping-round-a-loop exercise left out of №0007.
-
-### №0010 The real battery
-
-**Sources**
-
-- Kuphaldt, [Ideal and real sources](https://www.ibiblio.org/kuphaldt/socratic/model/mod_idealsource.pdf) (CC BY 4.0)
-- OpenStax, [College Physics 2e 21.2](https://openstax.org/books/college-physics-ap-courses-2e/pages/21-2-electromotive-force-terminal-voltage) and [University Physics vol. 2, 10.1](https://openstax.org/books/university-physics-volume-2/pages/10-1-electromotive-force)
-- Carleton SERC, [a PhET activity on internal resistance](https://serc.carleton.edu/19605.1146)
-
-**How they teach it**
-
-- OpenStax opens with headlamps dimming as a battery runs down, then models
-  the battery as a perfect source with a resistor hidden inside it.
-- Kuphaldt gives tables of real readings first. A car battery: 13.50 V with
-  nothing connected, 12.80 V at 20 A, 11.75 V at 50 A (about 0.035 Ω inside). A
-  dying 6 V dry cell: 6.33 V open, 5.33 V across 15 kΩ, 4.48 V across 6.8 kΩ
-  (about 2.8 kΩ inside).
-- His point for a repair shop: a battery wears out in two ways, and a meter
-  with nothing else connected sees only one of them. Test it under load.
-
-**Exercises to adapt**
-
-- 14.8 V with nothing connected and 13.5 V across 50 Ω: 0.27 A flows, 1.3 V is
-  lost inside, so 4.8 Ω. What would a 20 Ω load get? (11.9 V.) Kuphaldt.
-- The dying dry cell above: find the resistance inside, and the most current
-  it could ever give (about 2.3 mA). Kuphaldt.
-- Why does a voltage check alone not tell a good cell from a worn one?
-
-**Build the job round**
-
-- The puzzle first: the battery reads fine on the meter, and the radio is dead.
-- It is a voltage divider: the resistance inside is R1, the set is R2. The
-  learner already owns the rule.
-- A slider for the hidden resistance, a switch for the load.
-
-### №0011 The loaded divider
-
-**Sources**
-
-- Kuphaldt, Voltage divider circuits worksheet (above)
-- Spinning Numbers, [voltage divider design](https://spinningnumbers.org/a/voltage-divider-design.html)
-- *Lessons in Electric Circuits*, [voltmeter impact on the measured circuit](https://www.allaboutcircuits.com/textbook/direct-current/chpt-8/voltmeter-impact-measured-circuit)
-
-**How they teach it**
-
-- The load is a branch across R2, so the bottom of the divider is now R2 and
-  the load side by side, which is less than R2.
-- The rule of thumb is worded three ways in three places: the load should be
-  ten times R2, ten times R1 and R2 side by side, or should take a tenth of
-  the divider's current. **Pick one and test it.** Ten times R2 is the easiest
-  to say, and gives a sag of about 4% for a half-way divider.
-- A meter is a load too: 24 V across two 250 MΩ resistors should read 12 V on
-  each, and a 10 MΩ meter reads 0.9 V.
-
-**Exercises to adapt**
-
-- This course's own divider, 9 V on 2 kΩ and 1 kΩ, gives 3 V. With a 1 kΩ load:
-  1.8 V. With 10 kΩ: 2.81 V. With 100 kΩ: 2.98 V.
-- Two dividers on 50 V, one of 22 kΩ pairs and one of 47 kΩ pairs. Both give
-  25 V. Which holds up better under the same load, and what does the other
-  have going for it? Kuphaldt.
-- A 5 kΩ control on 10 V feeding a 1 kΩ load: 0 V, 1.29 V, 2.22 V, 3.87 V and
-  10 V at the quarter points. No longer even. Kuphaldt.
-- A load goes across R2. What happens to the voltage across R1? (It rises.)
-
-**Build the job round**
-
-- A switch that brings the load in, and a slider for its size.
-- The fault: a reading that is right until the next stage is plugged in.
 
 ### №0012 Capacitors
 
@@ -846,14 +883,16 @@ wiring a transistor.
 
 ## What this changed in the plan
 
-1. **№0008 comes next, and can open on something seen**: two equal branches
-   acting as half. The formula follows from №0005 in one line.
+1. **№0008 opens on something seen**: two equal branches acting as half. The
+   formula follows from №0005 in one line. The loaded divider and the real
+   battery were written straight after it, as №0009 and №0010, ahead of
+   voltage at a point (№0011): the lesson player can carry them as it is.
 2. **"Coils and relays" was two ideas and is now two jobs**: coils (№0017)
    and relays (№0018). The transistor jobs moved to №0019 and №0020.
-3. **№0009 ends on fault-finding by voltage.** Every source that teaches
+3. **№0011 ends on fault-finding by voltage.** Every source that teaches
    repair teaches the two signs: the full supply across an open part, and
    nothing across a shorted one. №0004 and №0007 already ask about them, so
-   №0009 measures them, and no separate job repeats them.
+   №0011 measures them, and no separate job repeats them.
 4. **№0010 is taught as a voltage divider.**
 5. **Nothing in the course covers energy over time** (E = P × t, the unit on
    an electricity bill). OpenStax treats it as part of power. It is not

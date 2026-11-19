@@ -22,7 +22,7 @@ Read these, in this order:
 4. The existing lesson nearest in shape to yours. Good models:
    `ohms-law.ts` (one part, sliders), `closed-loop.ts` (a switch),
    `parallel.ts` (branches, a switch and sliders), `voltage-divider.ts`
-   (kilohms and milliamps).
+   (kilohms and milliamps), `real-battery.ts` (a meter on the drawing).
 
 Then settle four things before writing a line:
 
@@ -94,6 +94,7 @@ must be written as two wires that end there.
 | `w x1 y1 x2 y2 0` | Wire |
 | `s x1 y1 x2 y2 0 1 false` | Switch. Here `1` is open and `0` is closed |
 | `181 x1 y1 x2 y2 0 300 24.015 12 0.4 0.4` | Lamp: see `closed-loop.ts` before using one |
+| `p x1 y1 x2 y2 2 0 0 0` | Voltmeter between two points, drawn as a circle marked V. It draws no current. See `real-battery.ts` before using one |
 | `x 229 130 251 133 4 18 R1` | A name written on the drawing, in 18 px text |
 
 More line types are listed at the top of `tests/comparison/circuits.ts`.
@@ -119,7 +120,8 @@ it:
 ## 4. Parts and quantities
 
 **`parts`** gives names to elements. `type` is the CircuitJS1 type
-(`"Voltage"`, `"Resistor"`, `"Switch"`, `"Lamp"`), and `nth` counts elements of
+(`"Voltage"`, `"Resistor"`, `"Switch"`, `"Lamp"`, `"Probe"` for the
+voltmeter), and `nth` counts elements of
 that type from 0 in the order the circuit text lists them.
 
 **`quantities`** is what the learner sees. Their order is the order of the
@@ -153,7 +155,7 @@ to go on in the bottom right corner. Both boxes are sized by the window alone,
 so nothing a step says or asks can move or resize the monitor. A step that is
 longer than the sheet scrolls inside the sheet. That keeps the monitor still,
 but it hides the top of the question, so write to the lengths given below: at
-1024 × 768 no step of the seven lessons scrolls.
+1024 × 768 no step of the ten lessons scrolls.
 
 **Always give `set` in full**, on every step, with every value the step relies
 on. A wrongly answered question comes back at the end of the job, alone, so no
@@ -291,7 +293,10 @@ lesson is a job a customer brings in.
 - Nothing later than 1984: radios, televisions, cassette players, record
   players, car and caravan electrics, torches, fairy lights.
 - A new name for each customer. Used so far: Rita, Mr. Okafor, Mrs. Papadaki,
-  Lena, Ines.
+  Lena, Ines, Tomasz, Mrs. Adeyemi, Mr. Castellano.
+- A new set for each customer too. Used so far: a kitchen radio, a string of
+  lights, a camper van, a portable radio, a hi-fi amplifier, a cassette
+  player, a portable television.
 
 ## 8. Voice
 
@@ -320,6 +325,10 @@ lesson is a job a customer brings in.
 4. Answer one question wrongly on purpose, and check that it reads right
    when it comes back at the end.
 
+When a script or an agent plays a lesson, a click flips a switch only if it
+lands on the middle third of the switch's arm, on the side the arm leans to.
+A click elsewhere on the switch shows its readings and flips nothing.
+
 ## 10. Finish
 
 - Add the job's entry to `CURRICULUM.md`: its row, its section, and its new
@@ -335,5 +344,7 @@ and `CURRICULUM.md` lists which planned jobs wait on each.
 - The voltage at a point, measured against ground.
 - A reading on a part with more than two ends.
 - Peak or RMS readings.
+- A number answer that is only nearly round, such as a diode's drop of about
+  0.7 V. The tests hold every answer to the simulator's value.
 - More than one circuit in a lesson, or a change of circuit part-way.
 - The learner adding, moving or editing parts. That is what the Bench is for.
