@@ -23,6 +23,7 @@ engine API on top of it. The look and story are in [`docs/design/`](docs/design/
 | `src/ui/` | The Repair Shop '84 look shared by our pages: `tokens.css` (colours, fonts), `theme.css` (keycaps, tickets) and `crt.ts` (the phosphor colours CircuitJS1 draws the circuit in, set through its own address options). |
 | `docs/design/` | The style guide and mock-ups the look comes from, and what of them is built. |
 | `iframe.html` | An empty page CircuitJS1's side panel asks for. |
+| `wrangler.jsonc` | How Cloudflare serves the built site: `dist/` as static files at `learn-circuits.uipko.com`, with no server code. See Deploying. |
 | `tests/` | Physics checks, plus a run of all 373 CircuitJS1 example circuits through the engine (no user interface). `lessons.test.ts` loads every lesson into the engine and checks each stated answer against the simulator. |
 | `tests/comparison/` | Seven hand-written circuits and a script that compares our results with Falstad's live site. On 2026-11-13 every number matched to the last bit; see its README. |
 
@@ -60,6 +61,29 @@ npm test
 ```bash
 npm run typecheck
 ```
+
+## Deploying
+
+The site is static: `npm run build` writes it to `dist/`, and
+[`wrangler.jsonc`](wrangler.jsonc) tells Cloudflare Workers to serve that
+folder at https://learn-circuits.uipko.com. Cloudflare builds and deploys the
+`main` branch on every push (Workers Builds, connected to the GitHub
+repository in the Cloudflare dashboard). Its build command fetches the
+simulator first: `git submodule update --init && npm run build`.
+
+To see the built site as Cloudflare serves it, redirects and "not found"
+included:
+
+```bash
+npm run build
+```
+
+```bash
+npx wrangler dev
+```
+
+Cloudflare serves `lesson.html` as `/lesson` and redirects the first to the
+second, keeping the query. Links in the code keep the `.html`.
 
 ## Using the engine
 

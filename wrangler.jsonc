@@ -1,0 +1,21 @@
+// Cloudflare Workers: the built site (dist/) is served as static files. There
+// is no Worker code. Cloudflare builds and deploys the main branch on every
+// push (Workers Builds, set up in the Cloudflare dashboard).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard, or the build fails.
+  "name": "learn-circuits",
+  "compatibility_date": "2026-11-19",
+  // No usage data from Wrangler to Cloudflare.
+  "send_metrics": false,
+  "assets": {
+    // An address that matches no file gives "404 Not Found" (the default),
+    // never the home page: CircuitJS1 would load that inside its own panels.
+    "directory": "./dist"
+  },
+  // The one public address. Cloudflare makes the DNS record for it.
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "learn-circuits.uipko.com", "custom_domain": true }
+  ]
+}
