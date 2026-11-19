@@ -82,6 +82,15 @@ export const voltageDivider: Lesson = {
             success: "Vout is {vout}. R2 is a sixth of the resistance, and gets a sixth of the voltage.",
         },
         {
+            kind: "explore",
+            title: "A bigger battery",
+            set: { voltage: 9, r1: 2000, r2: 1000 },
+            text: "R1 is back at 2 kΩ, so Vout is a third of the battery's 9 V. Guess first: what share will it be of twice the voltage? Then drag the battery up to **18 V**.",
+            controls: [{ quantity: "voltage", min: 3, max: 18, step: 3 }],
+            goal: { voltage: 18 },
+            success: "Vout is {vout}: twice as much, and still a third. The resistors set the share, whatever the battery gives.",
+        },
+        {
             kind: "read",
             title: "The divider rule",
             set: { voltage: 9, r1: 2000, r2: 1000 },
@@ -119,6 +128,14 @@ export const voltageDivider: Lesson = {
             set: { voltage: 9, r1: 2000, r2: 1000 },
             text: "A volume control is a voltage divider in a single part: a strip of resistance with a sliding contact, the **wiper**. The strip above the wiper is R1, and the strip below it is R2. Turn the knob, and one grows as the other shrinks.\n\n"
                 + "The signal goes in across the whole strip and comes out at the wiper.",
+        },
+        {
+            kind: "number",
+            set: { voltage: 8, r1: 3000, r2: 1000 },
+            question: "A 4 kΩ strip has 8 V across it. The wiper sits a quarter of the way up, so R2 is 1 kΩ and R1 is 3 kΩ. What comes out at the wiper?",
+            solveFor: "vout",
+            answer: 2,
+            explain: "Vout = 8 V × 1 kΩ ÷ 4 kΩ = 2 V. A quarter of the way up the strip, a quarter of the voltage.",
         },
         {
             kind: "choice",

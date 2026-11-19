@@ -76,6 +76,14 @@ export const closedLoop: Lesson = {
             explain: "One loop, one current: {current} at every point. The lamp doesn't use current up. It takes energy from the charge passing through, and the charge carries on round.",
         },
         {
+            kind: "choice",
+            set: { switch: 1 },
+            question: "Leave the lamp lit all night and by morning it is dim. What has the battery run out of?",
+            options: ["Charge", "Energy", "Current"],
+            answer: 1,
+            explain: "The battery doesn't make charge, and it holds no store of current. The charge is in the wires all along: the battery only pushes it round, and pushing takes energy. A flat battery has none left to push with.",
+        },
+        {
             kind: "explore",
             title: "Open the switch",
             set: { switch: 1 },
@@ -91,6 +99,14 @@ export const closedLoop: Lesson = {
             options: ["No, none", "Yes, a little", "Yes, as before"],
             answer: 0,
             explain: "A gap anywhere stops the current everywhere. Charge moves only when it has a complete loop to move round. A loop with a gap in it is an **open circuit**.",
+        },
+        {
+            kind: "choice",
+            set: { switch: 0 },
+            question: "Suppose the switch were in the bottom wire instead, after the lamp. Would opening it still put the lamp out?",
+            options: ["It would only dim", "No, the lamp stays lit", "Yes, just the same"],
+            answer: 2,
+            explain: "A gap stops the current wherever it is. Current doesn't set out from the battery and reach the lamp first: the whole loop starts and stops together.",
         },
         {
             kind: "read",

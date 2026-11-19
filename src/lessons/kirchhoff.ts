@@ -87,6 +87,14 @@ export const kirchhoff: Lesson = {
             explain: "Round that loop too the drops must come to 12 V, so 6 V across R1 leaves 6 V for R3. R2 and R3 join the same two points, so they always have the same voltage across them. That is all parallel means.",
         },
         {
+            kind: "choice",
+            set: { voltage: 12, r3: 6 },
+            question: "You changed only R3, yet the current through R2 went up, from 1 A to 1.2 A. Why?",
+            options: ["Its voltage rose", "It took R3's leftovers", "R2's resistance fell"],
+            answer: 0,
+            explain: "R1 now carries less current, so it drops less: {v1}, not 6 V. That leaves {v2} for the branches, and more voltage pushes more current through R2.",
+        },
+        {
             kind: "number",
             set: { voltage: 24, r3: 3 },
             question: "6 A flows in through R1, and 2 A of it goes down R2. What current flows through R3?",
@@ -109,6 +117,14 @@ export const kirchhoff: Lesson = {
             solveFor: "voltage",
             answer: 10,
             explain: "V = V1 + V2 = 4 V + 6 V = 10 V",
+        },
+        {
+            kind: "choice",
+            set: { voltage: 12, r3: 3 },
+            question: "A battery reads 12 V, but the lamp at the end of a long lead gets only 10 V. Where are the other 2 V?",
+            options: ["Used up by the lamp", "Across the wiring", "Nowhere: meters drift"],
+            answer: 1,
+            explain: "Round a loop the drops must come to the rise, so the other 2 V is across something else in it: a corroded joint, a dirty switch, a thin lead. Voltage across a joint marks it as bad.",
         },
         {
             kind: "choice",

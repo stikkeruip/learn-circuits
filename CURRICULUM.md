@@ -50,9 +50,11 @@ Every job follows the same rules:
   round the loop and is not used up; closed circuit and open circuit.
 - **The learner:** closes the switch (the lamp lights, 2 A flows), then opens
   it (the current stops in every wire).
-- **Checks:** where the current is biggest (the same all round); whether
-  current flows in the far wire with the switch open (none); the likeliest
-  fault when a good lamp on a good battery stays dark (a gap in the loop).
+- **Checks:** where the current is biggest (the same all round); what a flat
+  battery has run out of (energy, not charge or current); whether current
+  flows in the far wire with the switch open (none); whether a switch after
+  the lamp would still put it out (yes); the likeliest fault when a good lamp
+  on a good battery stays dark (a gap in the loop).
 - **Hands on:** 12 V and 2 A, the numbers №0002 starts from.
 
 ### №0002 Three numbers: Ohm's law
@@ -66,7 +68,8 @@ Every job follows the same rules:
   the resistance to 12 Ω (the current halves), and takes the resistance down
   to 1 Ω (12 A).
 - **Checks:** one number question for each form of the law: I from V and R,
-  V from I and R, R from V and I.
+  V from I and R, R from V and I. Then one in two steps: the current on 18 V,
+  from a reading taken on 6 V (the resistance stays what it was).
 
 ### №0003 The smell of burning: power
 
@@ -92,9 +95,11 @@ Every job follows the same rules:
 - **The learner:** makes R1 equal to R2 (6 V each), then raises R2 to 10 Ω
   (12 Ω in all, 1 A).
 - **Checks:** the current from two resistances; V2 from V and V1; R2 from V, I
-  and R1; six equal lamps on 12 V (2 V each).
+  and R1; six equal lamps on 12 V (2 V each); what the meter reads across the
+  dead lamp (the full supply).
 - **The fault:** one burnt-out lamp opens the only path, so the whole string
-  goes dark.
+  goes dark. With no current the good lamps drop nothing, so the meter finds
+  the dead one: it has the whole supply across it.
 
 ### №0005 The fuse that keeps blowing: parallel circuits
 
@@ -106,8 +111,9 @@ Every job follows the same rules:
   added branch raises the battery's current; the fuse.
 - **The learner:** closes the switch (I1 stays at 2 A, R2 takes 3 A of its
   own), then lowers R2 to 2 Ω (6 A in that branch, 8 A from the battery).
-- **Checks:** the battery's current from two branches; I2 from I and I1; R2
-  from V, I and I1.
+- **Checks:** whether all the current takes the easier branch (no: both carry
+  some); the battery's current from two branches; I2 from I and I1; R2 from V,
+  I and I1; what a gap in one branch does to the others (nothing).
 - **The fault:** 2 A + 3 A + 4 A = 9 A through an 8 A fuse. The cool box needs
   a circuit of its own.
 - **Left out:** the formula for resistances in parallel. See Part 2, №0008.
@@ -123,9 +129,11 @@ Every job follows the same rules:
   on their size; Vout = V × R2 ÷ (R1 + R2); the volume control as a divider
   with a sliding contact, the wiper.
 - **The learner:** sets R1 to 1 kΩ (half: 4.5 V), then to 5 kΩ (a sixth:
-  1.5 V).
+  1.5 V), then doubles the battery to 18 V (Vout doubles, and is still a
+  third).
 - **Checks:** Vout for two pairs of resistors; the battery's voltage from
-  Vout; which way the wiper moves for more volume.
+  Vout; Vout with the wiper a quarter of the way up the strip; which way the
+  wiper moves for more volume.
 - **The fault:** a worn strip makes poor contact with the wiper.
 
 ### №0007 The numbers that don't add up: Kirchhoff's laws
@@ -138,9 +146,11 @@ Every job follows the same rules:
   using both laws to catch a wrong reading.
 - **The learner:** changes R3 to 6 Ω and sees that the junction still
   balances (2.4 A in, 1.2 A and 1.2 A out).
-- **Checks:** the voltage across R3 from a second loop; I3 from I1 and I2; V2
-  from V and V1; V from V1 and V2; two sets of pencilled readings that do not
-  balance.
+- **Checks:** the voltage across R3 from a second loop; why a change to R3
+  alone moves the current in R2 (R1 drops less, so the branches get more);
+  I3 from I1 and I2; V2 from V and V1; V from V1 and V2; where the 2 V missing
+  between a battery and its lamp have gone (across the wiring); two sets of
+  pencilled readings that do not balance.
 - **The fault:** not in the set. A reading was wrong: measure again before
   changing a part.
 
@@ -164,6 +174,12 @@ A proposed order. Nothing here is fixed: change it when a better one turns up.
 
 The first four jobs fill gaps Part 1 leaves, and the rest bring in one new
 part at a time.
+
+[`RESEARCH.md`](RESEARCH.md) has a section for each of these: how other
+courses teach it, exercises to adapt, and what to build the job round. Read
+it before writing one. It also argues for three changes to this table, not
+yet made: split №0017 into a relay job and a coil job, make №0009 the job
+that teaches fault-finding by voltage, and teach №0010 as a voltage divider.
 
 | № | Lesson | New idea | Needs |
 |---|---|---|---|
@@ -197,7 +213,8 @@ part at a time.
 [`LESSON_BLUEPRINT.md`](LESSON_BLUEPRINT.md) says how to write one, in full.
 In short:
 
-1. Write the lesson in `src/lessons/`, in the format of
+1. Read the job's section in [`RESEARCH.md`](RESEARCH.md). Then write the
+   lesson in `src/lessons/`, in the format of
    [`src/lesson/types.ts`](src/lesson/types.ts), and put it in its place in
    `src/lessons/index.ts`.
 2. Run `npm test`: it checks every answer against the simulator, and that

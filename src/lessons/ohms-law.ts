@@ -132,5 +132,13 @@ export const ohmsLaw: Lesson = {
             answer: 24,
             explain: "R = V ÷ I = 12 V ÷ 0.5 A = 24 Ω",
         },
+        {
+            kind: "number",
+            set: { voltage: 18, resistance: 12 },
+            question: "On 6 V, a resistor passes 0.5 A. What current will the same resistor pass on 18 V?",
+            solveFor: "current",
+            answer: 1.5,
+            explain: "R = V ÷ I = 6 V ÷ 0.5 A = 12 Ω, and it is still 12 Ω on 18 V: I = 18 V ÷ 12 Ω = 1.5 A",
+        },
     ],
 };

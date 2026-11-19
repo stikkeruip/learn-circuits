@@ -134,5 +134,13 @@ export const series: Lesson = {
             answer: 2,
             explain: "One path, so one gap stops the current everywhere: an open circuit, as on your first day. Find the dead lamp, fit a new one, and the whole string lights.",
         },
+        {
+            kind: "choice",
+            set: { voltage: 12, r1: 2, r2: 4 },
+            question: "Forty lamps, all dark. You put the meter across each one in turn. What does it read across the dead one?",
+            options: ["0 V", "The full supply", "Its usual share"],
+            answer: 1,
+            explain: "No current flows, so the good lamps drop nothing: V = I × R, and I is 0. The voltages must still add up to the supply, so all of it sits across the gap. That is how you find the dead lamp without pulling out all forty.",
+        },
     ],
 };

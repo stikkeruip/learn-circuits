@@ -87,6 +87,14 @@ export const parallel: Lesson = {
         {
             kind: "choice",
             set: { voltage: 12, r1: 6, r2: 2, switch: 1 },
+            question: "R2 is the easier path now: 2 Ω against 6 Ω. Does all the current take the path of least resistance?",
+            options: ["No: both carry some", "Yes, all of it", "No: it splits equally"],
+            answer: 0,
+            explain: "Every branch with a voltage across it carries current: I = V ÷ R. The easier path takes more, not all: {i2} through R2, and {i1} through R1.",
+        },
+        {
+            kind: "choice",
+            set: { voltage: 12, r1: 6, r2: 2, switch: 1 },
             question: "Add a third branch across the battery. What happens to the battery's current?",
             options: ["It goes down", "It goes up", "No change"],
             answer: 1,
@@ -122,6 +130,14 @@ export const parallel: Lesson = {
             set: { voltage: 12, r1: 6, r2: 4, switch: 1 },
             text: "In a set, a car or a house, nearly everything is wired in parallel: each thing gets the full voltage, and can be switched by itself. The price is that the currents add up in the wire they share.\n\n"
                 + "A **fuse** guards that wire. It is a thin link that melts, and opens the circuit, when more than its rated current flows. Lena's camper has one 8 A fuse for everything.",
+        },
+        {
+            kind: "choice",
+            set: { voltage: 12, r1: 6, r2: 4, switch: 1 },
+            question: "The lamp in the camper burns out, and leaves a gap in its branch. What happens to the fan?",
+            options: ["It stops too", "It runs as before", "It gets more current"],
+            answer: 1,
+            explain: "Each branch is a path of its own across the battery, so a gap in one stops only that one. The fan still has the full 12 V and takes the current it always did. The string of lights had one path, so one gap stopped it all.",
         },
         {
             kind: "choice",

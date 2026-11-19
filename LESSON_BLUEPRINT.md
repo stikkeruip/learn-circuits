@@ -14,9 +14,12 @@ Read these, in this order:
 1. [`CURRICULUM.md`](CURRICULUM.md): which job comes next, what it may rely
    on, and which terms are already taught. A lesson may use a term only if an
    earlier job brought it in, or if it brings the term in itself.
-2. [`src/lesson/types.ts`](src/lesson/types.ts): the format. It is short, and
+2. [`RESEARCH.md`](RESEARCH.md), the section for your job: how other courses
+   teach the topic, what learners get wrong, and exercises worth adapting.
+   Take the idea of a question from there, never its wording.
+3. [`src/lesson/types.ts`](src/lesson/types.ts): the format. It is short, and
    it is the authority if this file and it disagree.
-3. The existing lesson nearest in shape to yours. Good models:
+4. The existing lesson nearest in shape to yours. Good models:
    `ohms-law.ts` (one part, sliders), `closed-loop.ts` (a switch),
    `parallel.ts` (branches, a switch and sliders), `voltage-divider.ts`
    (kilohms and milliamps).
