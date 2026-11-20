@@ -176,6 +176,13 @@ export class CircuitElement {
     /** True for elements driven by a slider in CircuitJS1, such as a potentiometer. */
     get hasSlider(): boolean { return this.raw.slider != null && typeof this.raw.position === "number" && !this.isSwitch; }
 
+    /** Where the slider stands: 0 at one end, 1 at the other, in hundredths. */
+    get sliderPosition(): number {
+        if (!this.hasSlider)
+            throw new Error(`${this.type} (${this.id}) has no slider`);
+        return this.raw.slider.getValue() / 100;
+    }
+
     /** Move a potentiometer's wiper: 0 is one end, 1 the other. */
     setSlider(fraction: number): void {
         if (!this.hasSlider)

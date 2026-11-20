@@ -515,6 +515,8 @@ function showStep(): void {
     const step = lesson.steps[index];
     syncStep = null;
     circuit.setAll(step.set);
+    if (step.reset)
+        engine.reset();     // as at switch-on: capacitors empty, a blown fuse whole
     hiddenQuantity = step.kind === "number" ? step.solveFor : null;
     circuit.setLabels(hiddenQuantity == null);
     for (const view of readouts.values())

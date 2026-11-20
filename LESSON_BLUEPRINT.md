@@ -22,7 +22,14 @@ Read these, in this order:
 4. The existing lesson nearest in shape to yours. Good models:
    `ohms-law.ts` (one part, sliders), `closed-loop.ts` (a switch),
    `parallel.ts` (branches, a switch and sliders), `voltage-divider.ts`
-   (kilohms and milliamps), `real-battery.ts` (a meter on the drawing).
+   (kilohms and milliamps), `real-battery.ts` (a meter on the drawing, and a
+   fault drawn as a resistor inside the part).
+5. For a job about a part (a fuse, a diode, a relay): section 6a, and the
+   written part job nearest to yours. Good models: `fuse.ts` (a part that
+   remembers: `reset` and `settle`), `thermistor.ts` (a slider of the part's
+   own, and two fault switches), `capacitor.ts` and `coil.ts` (readings that
+   take time), `diode.ts` and `led.ts` ("about" answers), `relay.ts`,
+   `transistor.ts` and `mosfet.ts` (parts with three ends or more).
 
 Then settle four things before writing a line:
 
@@ -97,7 +104,25 @@ must be written as two wires that end there.
 | `p x1 y1 x2 y2 2 0 0 0` | Voltmeter between two points, drawn as a circle marked V. It draws no current. See `real-battery.ts` before using one |
 | `x 229 130 251 133 4 18 R1` | A name written on the drawing, in 18 px text |
 
-More line types are listed at the top of `tests/comparison/circuits.ts`.
+The part jobs added these. Each lesson's own comment explains its line in
+full.
+
+| Line | What it is |
+|---|---|
+| `404 x1 y1 x2 y2 0 0.001 27 0 false` | Fuse: 1 mΩ, I²t 27, no heat yet, not blown. It blows once the current stays above √(I²t ÷ 3), here 3 A, and stays blown until a step has `reset: true`. See `fuse.ts` |
+| `350 x1 y1 x2 y2 0 10000 4000 0 100 0.2525 Temperature` | Thermistor: 10 kΩ at 25 °C, 4 kΩ at 50 °C, its slider from 0 to 100 °C and standing at 25 °C. See `thermistor.ts` |
+| `c x1 y1 x2 y2 0 0.0001 0 0` | Capacitor: 100 µF, empty now, and empty after a reset. See `capacitor.ts` |
+| `d x1 y1 x2 y2 2 default` | Diode, its arrow from (x1, y1) to (x2, y2). It drops about 0.6 V. See `diode.ts` |
+| `162 x1 y1 x2 y2 2 default-led 1 0 0 0.02` | LED: red, at full brightness on the drawing at 20 mA. It drops about 1.8 V. See `led.ts` |
+| `z x1 y1 x2 y2 2 default-zener` | Zener diode, 5.6 V, its arrow from (x1, y1) to (x2, y2): draw it pointing up to use it in reverse. See `zener.ts` |
+| `l x1 y1 x2 y2 2 4 0 0 0` | Coil: 4 H, no current now. A plain switch that opens its only loop shows no kick: give its current a path. See `coil.ts` |
+| `178 x1 y1 x2 y2 22 1 0.2 0 1e-9 1000000 0.075 120 0.03 0.005 0` | Relay with five ends: common, normally closed, normally open, and the coil's two. A 120 Ω coil that pulls in at 75 mA. See `relay.ts` |
+| `t x1 y1 x2 y2 0 1 0 0 100 default` | NPN transistor, gain 100: base at (x1, y1), collector above and emitter below at x2. See `transistor.ts` |
+| `f x1 y1 x2 y2 0 3 0.228310502283105` | N-channel MOSFET, threshold 3 V: gate at (x1, y1), drain above and source below at x2. See `mosfet.ts` |
+
+More line types are listed at the top of `tests/comparison/circuits.ts`, and
+each part's own are read in order by the constructor of its class in
+`circuitjs1/ts/`.
 
 In the `$` line, change only two numbers:
 
@@ -105,6 +130,16 @@ In the `$` line, change only two numbers:
   are milliamps. It is one setting for the whole circuit, so keep a lesson in
   one range.
 - **Voltage for full colour** (fifth): the battery's usual voltage.
+
+A circuit in which something takes time (a capacitor filling, a fuse
+melting, a coil's current building) sets two more:
+
+- **Timestep** (second), in seconds, and **speed** (third): the simulator
+  runs 160 × the speed in timesteps every real second. 1 ms and 6.25 is real
+  time (`capacitor.ts`). Choose them so that what the learner should watch
+  takes one to five real seconds. A reading that is there and gone in under a
+  quarter of a second will be missed: `coil.ts` runs at a seventh of real
+  time so that its kick can be seen.
 
 Lay the circuit out as the others are, so the course looks like one hand drew
 it:
@@ -121,15 +156,16 @@ it:
 
 **`parts`** gives names to elements. `type` is the CircuitJS1 type
 (`"Voltage"`, `"Resistor"`, `"Switch"`, `"Lamp"`, `"Probe"` for the
-voltmeter), and `nth` counts elements of
-that type from 0 in the order the circuit text lists them.
+voltmeter, `"Fuse"`, `"ThermistorNTC"`, `"Capacitor"`), and `nth` counts
+elements of that type from 0 in the order the circuit text lists them.
 
 **`quantities`** is what the learner sees. Their order is the order of the
-readouts under the screen. There are three kinds:
+readouts under the screen. There are four kinds:
 
 | Kind | Written as | Notes |
 |---|---|---|
 | Setting | `setting: "Voltage"` or `"Resistance"` | Steps and sliders change it. The name is matched against the start of the names in CircuitJS1's edit dialog; a wrong one fails the tests with a list of the right ones |
+| Slider | `slider: { min: 0, max: 100 }` | The part's own slider in CircuitJS1: a thermistor's temperature, a potentiometer's wiper. `min` and `max` are its values at the two ends of its travel, and it moves in hundredths of the travel. Steps and sliders change it as they do a setting |
 | Measurement | `measure: "voltage" \| "current" \| "power"` | Across or through one two-ended part. The sign is dropped |
 | Switch | `switch: true`, with no symbol or unit | Reads Closed or Open. In `set` and `goal`, 1 is closed and 0 is open |
 
@@ -140,8 +176,15 @@ Rules:
 - Units are base units: `V`, `A`, `Ω`, `W`. The player adds prefixes when it
   shows a value (0.003 A reads "3 mA", 2000 Ω reads "2 kΩ"), at three
   significant figures.
+- A measurement too small for a shop meter reads 0: under a microamp, a
+  millivolt or a microwatt. So a blown fuse passes "0 A", though
+  the simulator makes it 1 GΩ and not a true gap.
 - Keep to six readouts or fewer. Seven crowd the screen on a phone.
 - Only list what the lesson uses.
+- A part with three ends or more (a transistor, a relay) has no reading of
+  its own. Read it through the two-ended parts round it: the current through
+  its base resistor, the current through its load, a voltmeter (`p` line)
+  across two of its ends.
 
 ## 5. The steps
 
@@ -155,12 +198,23 @@ to go on in the bottom right corner. Both boxes are sized by the window alone,
 so nothing a step says or asks can move or resize the monitor. A step that is
 longer than the sheet scrolls inside the sheet. That keeps the monitor still,
 but it hides the top of the question, so write to the lengths given below: at
-1024 × 768 no step of the ten lessons scrolls.
+1024 × 768 no step of the twenty lessons scrolls.
 
 **Always give `set` in full**, on every step, with every value the step relies
 on. A wrongly answered question comes back at the end of the job, alone, so no
 step can count on the one before it. A question that follows an explore step
 repeats the values that step ended at.
+
+**Parts that remember.** A capacitor keeps its charge, a blown fuse stays
+blown and a relay stays pulled in from one step to the next, and `set` cannot
+change that. A step may carry `reset: true`: after `set`, the circuit starts
+as at switch-on, with capacitors empty, coils without current, fuses whole and
+relays let go. Give it on every step that relies on such a part starting
+fresh. A lesson with such a part also gives `settle`, beside `steps`: the
+simulated seconds its circuit takes to come to rest (a capacitor filling, a
+fuse blowing, a relay pulling in). The tests run the circuit that long after
+`set` and `reset` before they read a number question's answer, so a number
+question asks about the circuit at rest, never about a moment on the way.
 
 ### `read`: shop notes
 
@@ -247,9 +301,14 @@ repeats the values that step ended at.
 ```
 
 - `set` must make the simulator produce `answer` for `solveFor`. The tests
-  compare the two to nine decimal places, two timesteps after setting. So a
-  circuit that takes time to settle (a lamp, a capacitor) cannot carry a
-  number question as things stand.
+  compare the two to nine decimal places, two timesteps after setting, or
+  after the lesson's `settle` seconds.
+- **"About" answers.** A diode drops about 0.7 V, never exactly, so a sum with
+  one in it is only nearly round. Give such a step a `tolerance` (0.05 is 5%):
+  the tests then let the simulator's value differ from `answer` by that much,
+  and the learner's too. Say "about" in the question, give the rounded figure
+  to use ("take the diode's drop as 0.7 V"), and keep the tolerance as tight
+  as the simulator's value allows.
 - `solveFor` may be a measurement or a setting. Asking for a setting is how
   to ask "how big is R?".
 - While the question is open, that quantity's readout and the values on the
@@ -258,7 +317,7 @@ repeats the values that step ended at.
 - `answer` is in the base unit. Prefer answers of 0.1 or more: a learner can
   type "3 mA", but the box is labelled in amps.
 - A typed answer within 1% counts. Set `tolerance` only when the working
-  rounds.
+  rounds, or for an "about" answer.
 - `question` and `explain` are plain text. `explain` is one line of working
   that ends at the answer.
 - Use new values for each question, not the ones from the reading steps.
@@ -278,6 +337,44 @@ Nine to thirteen steps, in this arc:
 5. **The set on the bench** (`read`, then a last `choice`). The real part or
    habit the idea shows up as, and the customer's fault explained by it.
 
+## 6a. A job about a part
+
+A part job answers four things about one part: how it works, what it is for,
+where you meet it, and how to tell a good one from a dead one. The arc of
+section 6 still holds, with these in it:
+
+1. **Meet the part** (`read`). Its name, its symbol on the screen, and what is
+   inside it, in a sentence or two a beginner can picture. No theory that the
+   job does not use.
+2. **See what it does** (`explore`, then `choice`), once or twice.
+3. **Name the rule** (`read`, with a `formula` if the part has one), and
+   **work it out** (one to three `number` steps).
+4. **What it is for** (`read`). Two or three places the learner will meet it,
+   in sets of the time. Its markings and ratings, if a repairer reads them.
+5. **Good or faulty** (`explore` or `read`, then `choice`). What a working one
+   reads on the meter, and what a failed one reads: in the set with a
+   voltmeter, and out of it. Name the ways it really fails, commonest first.
+6. **The customer's fault** (the last `choice`), found from readings.
+
+Ten to fourteen steps. The two fault signs of the fundamentals carry through
+every part: an **open** part has the full supply across it and passes no
+current, and a **shorted** part has 0 V across it and passes too much.
+
+**Showing a fault on the screen.** The circuit cannot be changed part-way, so
+a fault is built into the drawing and brought in by a step's `set`:
+
+- A switch across the part shorts it. A switch in line with it opens it. Say
+  so plainly: "The switch across the diode does what a shorted diode does."
+- A resistor drawn as part of the component, as Ri is in `real-battery.ts`: a
+  leak across a capacitor, burnt contacts in a relay. A slider wears it.
+- Name fault switches and resistors on the drawing (`x` line), and keep to
+  one or two. The readouts are still limited to six.
+
+**The meter test.** A shop meter of the time, set to ohms, is a small battery
+and a resistor: it passes a little current through the part and shows how
+much flows. Where the part is tested out of the set, say what the meter
+shows each way round, in the text. Do not draw a second circuit for it.
+
 ## 7. The story
 
 The learner is the new hand at a TV and radio repair shop in 1984. Every
@@ -293,10 +390,14 @@ lesson is a job a customer brings in.
 - Nothing later than 1984: radios, televisions, cassette players, record
   players, car and caravan electrics, torches, fairy lights.
 - A new name for each customer. Used so far: Rita, Mr. Okafor, Mrs. Papadaki,
-  Lena, Ines, Tomasz, Mrs. Adeyemi, Mr. Castellano.
+  Lena, Ines, Tomasz, Mrs. Adeyemi, Mr. Castellano, Mr. Brennan, Yusuf,
+  Mrs. Nakamura, Dev, Miss Abara, Mr. Halvorsen, Mrs. Farouk, Giorgos, Carmen,
+  Bea.
 - A new set for each customer too. Used so far: a kitchen radio, a string of
   lights, a camper van, a portable radio, a hi-fi amplifier, a cassette
-  player, a portable television.
+  player, a portable television, a car radio, a taxi, a camera flashgun, a
+  walkie-talkie, a hi-fi tuner, a CB radio, a door chime, a remote-control
+  television, a burglar alarm, a lamp flasher built from a kit.
 
 ## 8. Voice
 
@@ -312,7 +413,9 @@ lesson is a job a customer brings in.
 ## 9. Check it
 
 1. `npm run typecheck`
-2. `npm test`. For every lesson it checks that the circuit loads, that every
+2. `npm test`. Before the lesson is in the course list, check it alone with a
+   file of four lines: see the top of `tests/lessonChecks.ts`. For every
+   lesson it checks that the circuit loads, that every
    name and `{reading}` exists, that every `set` is a setting, that each
    `number` answer is the simulator's, that explore goals can be reached, that
    the right answer is not in the same place in every choice question, and
@@ -321,7 +424,11 @@ lesson is a job a customer brings in.
    at phone width (375 px). Tests cannot see text that overflows, a question
    or explanation so long that the sheet has to scroll, or a dull question.
    On a small phone the sheet does scroll once the note appears; at full
-   width it should not.
+   width it should not. `tests/play/playLesson.ts` plays a lesson through
+   from the browser's console and reports, step by step, how far each step
+   runs past the sheet: its first lines say how. Use it to find the steps to
+   look at, not in place of looking. And keep the page in view while a
+   lesson with timing in it plays: a hidden page runs slow.
 4. Answer one question wrongly on purpose, and check that it reads right
    when it comes back at the end.
 
@@ -340,11 +447,12 @@ A click elsewhere on the switch shows its readings and flips nothing.
 Do not work round these in a lesson. They need a change to the player first,
 and `CURRICULUM.md` lists which planned jobs wait on each.
 
-- A reading over time, or a question about a moment in time.
+- A trace of a reading over time, or a question about a moment in time. The
+  readouts do move as a capacitor fills, so the learner can watch a reading
+  rise and fall, but a question can only ask about the circuit at rest.
 - The voltage at a point, measured against ground.
-- A reading on a part with more than two ends.
+- A reading taken from a part with more than two ends itself (see section 4
+  for the way round).
 - Peak or RMS readings.
-- A number answer that is only nearly round, such as a diode's drop of about
-  0.7 V. The tests hold every answer to the simulator's value.
 - More than one circuit in a lesson, or a change of circuit part-way.
 - The learner adding, moving or editing parts. That is what the Bench is for.

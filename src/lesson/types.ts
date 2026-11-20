@@ -23,6 +23,13 @@ export interface Lesson {
     parts: Record<string, PartRef>;
     /** What the learner sees and changes, in the order the readouts appear. */
     quantities: Record<string, Quantity>;
+    /**
+     * Simulated seconds the circuit takes to come to rest after a change: a
+     * capacitor filling, a filament warming, a relay pulling in. The tests run
+     * it this long before they compare a number question's answer. Leave it
+     * out for batteries, resistors and switches, which settle at once.
+     */
+    settle?: number;
     steps: Step[];
 }
 
@@ -73,13 +80,25 @@ export interface SwitchQuantity extends QuantityBase {
 }
 
 /**
+ * A part's own slider in CircuitJS1: a thermistor's temperature, a
+ * potentiometer's wiper. `min` is its value at one end of the travel and
+ * `max` at the other, and it moves in hundredths of the travel. Steps and
+ * sliders can change it, as they can a setting.
+ */
+export interface SliderRange {
+    min: number;
+    max: number;
+}
+
+/**
  * A setting of a part (steps and sliders can change it, e.g. a battery's
- * "Voltage"), something the simulator measures (e.g. the current through
- * a resistor), or a switch (steps set it; the learner flips it on the drawing). Settings are
- * matched by name like CircuitElement.setParam().
+ * "Voltage"), the part's own slider (see SliderRange), something the simulator
+ * measures (e.g. the current through a resistor), or a switch (steps set it;
+ * the learner flips it on the drawing). Settings are matched by name like
+ * CircuitElement.setParam().
  */
 export type Quantity =
-    | (NumberQuantity & ({ setting: string } | { measure: "voltage" | "current" | "power" }))
+    | (NumberQuantity & ({ setting: string } | { slider: SliderRange } | { measure: "voltage" | "current" | "power" }))
     | SwitchQuantity;
 
 export type Step = ReadStep | ExploreStep | ChoiceStep | NumberStep;
@@ -91,6 +110,13 @@ interface StepBase {
      * step relies on.
      */
     set?: Record<string, number>;
+    /**
+     * Start the step with the circuit as at switch-on, after `set`: capacitors
+     * empty, coils without current, a blown fuse whole, a relay let go.
+     * Without it the circuit carries on from where the last step left it, so
+     * give it on every step that relies on such a part's state.
+     */
+    reset?: boolean;
 }
 
 // Text fields: paragraphs are separated by a blank line, **bold** is bold, and
@@ -150,6 +176,11 @@ export interface NumberStep extends StepBase {
     solveFor: string;
     answer: number;
     explain: string;
-    /** Accepted relative error (default 0.01, i.e. 1%). */
+    /**
+     * Accepted relative error in what the learner types (default 0.01, i.e.
+     * 1%). When given, the tests also allow the simulator's value to differ
+     * from `answer` by this much: for parts that are only nearly round, such
+     * as a diode's drop of about 0.7 V.
+     */
     tolerance?: number;
 }

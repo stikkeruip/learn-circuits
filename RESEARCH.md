@@ -6,8 +6,9 @@ took from them. Gathered on 19 November 2026.
 
 Read a job's section here before writing or rewriting that job. Each section
 lists the sources, how they teach the topic, exercises worth adapting, and
-either what went into the lesson (Part 1) or what to build the lesson round
-(Part 2).
+either what went into the lesson (Parts 1 and 2) or what to build the lesson
+round (Part 3). Part 2 was gathered on 20 November 2026, and its full reports
+are in [`docs/research/`](docs/research/).
 
 ## How far to trust this
 
@@ -39,6 +40,12 @@ either what went into the lesson (Part 1) or what to build the lesson round
 | Spinning Numbers (Willy McAllister) | CC BY-NC-SA 4.0 | Ideas only |
 | Open University, OpenLearn Create | Not read | Ideas only |
 | Wikipedia | CC BY-SA 4.0 | Ideas only |
+| Tony Kuphaldt's worksheets, as found on 20 November | Each worksheet PDF states CC BY 1.0. The index page of the collection now states CC BY 3.0 US | Exercises adapted, with credit, as before |
+| US Navy NEETS modules, as copied at tpub.com and archive.org | The copies carry their host's own notice. No statement about the Navy text was seen | Ideas only |
+| Samuel Goldwasser, Sci.Electronics.Repair FAQ | All rights reserved; copying allowed with his notice and at no charge | Ideas only |
+| Makers' notes and data sheets: Littelfuse, EPCOS (TDK), Vishay, Chemi-Con, onsemi, International Rectifier, Texas Instruments, TE Connectivity | All rights reserved | Ideas and figures only |
+| University lab sheets: MIT, Bucknell, Olin, NJIT, Carnegie Mellon, Kansas | None stated | Ideas only |
+| Electronics Club, Electronics Notes, DigiKey articles, Elliott Sound Products, Phil's Old Radios | All rights reserved, or none stated | Ideas only |
 
 The rule followed: **every question added to a lesson is written fresh**, in
 this course's voice, on this course's circuit, with numbers the simulator
@@ -381,7 +388,7 @@ on a rating, and it is at thirteen steps.
 **Left out, and why**
 
 - Stepping the meter round the loop: it needs a reading at a point, which the
-  player cannot take yet. It belongs to №0011.
+  player cannot take yet. It belongs to №0021.
 - Signs and assumed directions.
 
 ### №0008 Combining resistors
@@ -540,11 +547,669 @@ on a rating, and it is at thirteen steps.
 - The most current a battery could ever give (short it and all its voltage
   is lost inside): a good question for a later job on fuses or faults.
 
-## Part 2: the planned jobs
+## Part 2: the part jobs
+
+Gathered on 20 November 2026, for the ten jobs that each teach one part. The
+question put to every source was the same: how does the part work, what is it
+for, where is it found, and how is a faulty one told from a good one?
+
+The full reports are in [`docs/research/`](docs/research/): every page that
+was read, with its address and its licence, the pages that would not load,
+every exercise found, with its answer recomputed, and what is marked
+unverified. The sections here are the short form. Six of these parts already
+had a section from 19 November, on how they are taught: it is kept, under
+"From the first research".
+
+| Report | Parts |
+|---|---|
+| [`fuse-thermistor.md`](docs/research/fuse-thermistor.md) | the fuse (and the switch as a part), the thermistor (and the light-dependent resistor) |
+| [`capacitor-coil.md`](docs/research/capacitor-coil.md) | the capacitor, the coil |
+| [`diode-led-zener.md`](docs/research/diode-led-zener.md) | the diode, the LED, the Zener diode |
+| [`relay-transistor-mosfet.md`](docs/research/relay-transistor-mosfet.md) | the relay, the transistor as a switch, the MOSFET as a switch |
+
+What they found that holds for every part:
+
+- **One method fits them all.** Volts across the part, volts across its
+  load, and one reading on whatever controls it: the coil, the base, the
+  gate.
+- **The meter on ohms has limits, and each lesson says where.** It cannot
+  judge a relay's contacts, find shorted turns in a coil, see a dried-out
+  electrolytic, reach a Zener's voltage, or light every LED.
+- **Swapping in a known good part** is the bench answer wherever the meter
+  cannot tell.
+- **How often a part fails each way is seldom on a page.** Where no source
+  ranked the failures, the lesson does not either.
+
+### №0011 The fuse
+
+Full report: [`docs/research/fuse-thermistor.md`](docs/research/fuse-thermistor.md).
+
+**Main sources**
+
+- Kuphaldt, the *Overcurrent protection* and *Switches* worksheets, and the
+  ModEL modules *Overcurrent Protection* and *Electrical Switches*
+- *Lessons in Electric Circuits*, the chapter on fuses
+- US Navy NEETS, module 3 (circuit protection)
+- Littelfuse, *Fuseology Design Guide*
+- Goldwasser's repair notes, for a television that blows its fuse
+
+**How they teach it**
+
+- The fuse as the thinnest wire in the loop, which melts first. Heat goes
+  with the square of the current, so a fuse sits cool in normal use and goes
+  fast in a fault.
+- It guards wiring against fire, not people against shock, and does nothing
+  about voltage.
+- The rating is what a fuse carries for good, not what blows it. Littelfuse:
+  load it to no more than three-quarters of its rating.
+- A blown fuse is the "open" the learner already knows: the full supply
+  across it. A fuse fails one way only.
+- The fuse is the messenger. One replacement is a fair test; a second blow
+  means the fault is still there.
+
+**Taken into the lesson**
+
+- The weak link, and four times the heat for twice the current, reached
+  through the power rule of №0003. After Kuphaldt's ModEL module.
+- *What is a fuse there to guard against?* After Kuphaldt and OpenStax.
+- The three-quarters rule and the 1.5 A player that gets a 2 A fuse. After
+  Littelfuse.
+- *The meter says the fuse is shorted. What do you do with it?* Put it back.
+  After a NEETS question.
+- Slow-blow, with a television's switch-on surge as the reason. After
+  Goldwasser.
+- Never a bigger fuse, and no foil or wire across one: the wiring becomes the
+  weak link. After NEETS and Kuphaldt.
+
+**Left out, and why**
+
+- Voltage rating and breaking capacity: a second and third number on a first
+  meeting.
+- Circuit breakers: another part.
+- Where in the loop a fuse goes, several fuses in a row, and Kuphaldt's
+  "four good readings, one blown fuse": each needs a bigger circuit.
+- The switch as a part with resistance of its own: not this job's idea. It
+  is in the research file for a later one.
+- Time-current curves: the player has no trace.
+
+### №0012 The thermistor
+
+Full report: [`docs/research/fuse-thermistor.md`](docs/research/fuse-thermistor.md).
+
+**Main sources**
+
+- Kuphaldt, the ModEL module on series circuits and voltage dividers (the
+  sensor in a divider, four ways round), and his temperature-coefficient and
+  bridge worksheets
+- Lab sheets from MIT, Bucknell and Olin
+- Electronics-Tutorials and electronics-notes, on the thermistor and the
+  light-dependent resistor
+- EPCOS and Vishay application notes on surge limiters
+- Goldwasser's repair notes, for the degaussing part of a colour set
+
+**How they teach it**
+
+- In the divider the learner already owns. Every source does.
+- Warm it in the fingers and watch the reading fall, slowly: heat takes time
+  to soak in, and a reading that jumps at once is not the heat.
+- Do not call a part faulty because it is off its marking at room
+  temperature: the marking is for 25 °C.
+
+**Taken into the lesson**
+
+- The car's temperature sender as the job, in a divider on 12 V.
+- *Swap the two over: now which way does Vout move?* After ModEL and
+  Bucknell's pre-lab.
+- *At 20 °C a 10 k thermistor reads 12.2 kΩ. Faulty?* No. The figures are
+  Electronics-Tutorials'.
+- Stuck at the full supply or stuck at 0 V, and check the fixed resistor
+  too. After Kuphaldt's bridge questions.
+- The surge limiter (EPCOS), the degaussing part (Goldwasser), and the
+  light-dependent resistor in a street lamp (electronics-notes).
+
+**Left out, and why**
+
+- The B value and its formula, and self-heating: not for a first meeting.
+- Which failure is commonest: the only figures were seen in a search result,
+  not on a page.
+- How a real dashboard gauge is wired: no source said. The lesson's meter
+  "stands for" the gauge.
+- The bridge: a second circuit.
+
+### №0013 The capacitor
+
+Full report: [`docs/research/capacitor-coil.md`](docs/research/capacitor-coil.md).
+
+**From the first research**
+
+**Sources**
+
+- Kuphaldt, [time constants 1](https://www.ibiblio.org/kuphaldt/socratic/output/time1.pdf), [time constants 2](https://www.ibiblio.org/kuphaldt/socratic/output/time2.pdf) and [capacitors](https://www.ibiblio.org/kuphaldt/socratic/output/caps.pdf)
+- OpenStax College Physics 2e, [21.6 RC circuits](https://openstax.org/books/college-physics-2e/pages/21-6-dc-circuits-containing-resistors-and-capacitors)
+- Electronics-Tutorials, [RC charging](https://www.electronics-tutorials.ws/rc/rc_1.html)
+
+**How they teach it**
+
+- Kuphaldt: the curve can be reasoned out with no formula. As the voltage on
+  the capacitor rises, less is left across the resistor, so less current
+  flows, so the voltage rises more slowly.
+- OpenStax's wording, which needs no exponential: in each time constant the
+  capacitor closes 63% of the gap that is left.
+- OpenStax's way in is a camera flash: slow to charge, gone in an instant.
+- A picture that works: a tank divided by a rubber sheet. Nothing crosses the
+  sheet, and pushing water in one side pushes it out of the other.
+
+**Exercises found**
+
+- What are the voltage across the capacitor, the voltage across the resistor,
+  and the current, at three moments: before the switch closes, the instant
+  it closes, and long after? (0, 0, 0. Then 0, all of it, the most. Then all
+  of it, 0, 0.) Kuphaldt.
+- Is a bigger resistor faster or slower? A bigger capacitor? (Both slower.)
+- 33 µF and a time constant of 10 s: 303 kΩ. Kuphaldt.
+- A capacitor at 100 V let down through a resistor: 36.8 V, 13.5 V, 5 V, 1.8 V and
+  0.7 V after one to five time constants.
+- A 0.75 µF capacitor at 3000 V must be safe within 15 s: about 4 MΩ across it.
+  Kuphaldt. The safety resistor in every old set.
+
+**What the first research said to build the job round**
+
+- Watch the current as well as the voltage. At the first instant the capacitor
+  passes current like a wire, and at the end it is a gap.
+- The 63% as something read off the trace, then matched to R × C.
+- Say that a charged capacitor in a television can kill.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the *Capacitors* worksheet and the ModEL module on capacitance
+  (the leak as a divider), and his amplifier and power supply fault tables
+- US Navy NEETS, modules 2 and 21; a US Army subcourse on the ohmmeter
+- A Chemi-Con note on how electrolytics fail
+- Goldwasser's notes on testing capacitors and on safety
+- Phil's Old Radios, on capacitors in sets of the period
+
+**Faulty or working, as the sources have it**
+
+- A short is the likelier sudden failure, but electrolytics usually wear out
+  first, by drying: less capacitance, more resistance inside. One left unused
+  for years can go leaky. Old paper ones go leaky. Mica and ceramic rarely
+  fail.
+- A DC voltmeter cannot tell an open capacitor from a good one, and an
+  ohmmeter cannot see a dried-out one. Swapping in a known good one is the
+  bench answer in every source.
+- On a moving-needle meter: a good one kicks and falls back, a short stays at
+  zero, a leak stops short, an open or a small one gives no kick.
+
+**Taken into the lesson**
+
+- Fill it, then say why the current fell: the capacitor's voltage leaves the
+  resistor less. After Kuphaldt.
+- The leak as a divider, with a number question each way. After ModEL
+  (CC BY 4.0), with other values.
+- *The meter reads what the service sheet says. Can you be sure it is good?*
+  No: an open one reads the same. After Kuphaldt's fault tables.
+- Discharge through a resistor, never a screwdriver, and meter it again.
+  After Goldwasser and NEETS.
+- The flashgun as the way in. After OpenStax (the idea only).
+
+**Left out, and why**
+
+- A question on the time constant: a question can only ask about the circuit
+  at rest. T = R × C is stated, with the one-second filling on the screen.
+- A dried-out electrolytic's hum and ripple: they need AC. For №0024.
+- Number codes, tolerance letters and colour codes: too many for one job.
+
+### №0014 The diode
+
+Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.md).
+
+**From the first research**
+
+**Sources**
+
+- *Lessons in Electric Circuits*, [introduction to diodes](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/introduction-to-diodes-and-rectifiers/) and [meter check of a diode](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/meter-check-of-a-diode/)
+- Kuphaldt, [rectifying diodes worksheet](https://www.allaboutcircuits.com/worksheets/rectifying-diodes/)
+
+**How they teach it**
+
+- A battery, a lamp and a diode. Turn the diode round and the lamp goes out.
+  A one-way valve, worked by which way the voltage pushes.
+- Then the drop: about 0.7 V whatever the current, so treat it as fixed.
+- The symbol last: the arrow is the way current may go, and the stripe on the
+  part is the bar.
+- Left out of a first lesson by all of them: how it works inside.
+
+**Exercises found** (Kuphaldt, CC BY 1.0)
+
+- A diode and a resistor on a supply. What do the readings do if the diode
+  fails open? (No current, the full supply across it.) Fails short? (More
+  current, 0 V across it.) If the resistor is bridged? (The diode dies.)
+- 9 V, 2 kΩ, 0.7 V: 4.15 mA.
+- Does a diode that is passing current behave like a resistor? (No: more like
+  a 0.7 V battery turned against the supply.)
+
+**What the first research said to build the job round**
+
+- Raise the supply from 0 V and watch the diode's voltage stick near 0.7 V
+  while the resistor takes the rest. The drop is found, not told.
+- The meter test: a reading one way, none the other. Both ways or neither
+  means a dead diode.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the *Rectifying diodes*, *PN junctions* and *Special diodes*
+  worksheets, and the ModEL module on PN junctions and diodes
+- *Lessons in Electric Circuits*, semiconductors chapter 3
+- Vishay data sheets for the 1N4148 and 1N4001 to 1N4007
+- learnabout-electronics.org, Goldwasser's repair notes, NEETS
+
+**Faulty or working, as the sources have it**
+
+- Shorted is the common failure, above all in power supplies, where it takes
+  the fuse with it. Open happens now and then.
+- In the set a good diode fitted backwards reads exactly like an open one:
+  the full supply across it. The two-way test on ohms separates them.
+- On many moving-needle meters the black lead is positive on ohms.
+
+**Taken into the lesson**
+
+- Raise the supply from nothing and watch the drop stick: found, not told,
+  as the first research asked.
+- "Not always exactly 0.7 V". After a note of Kuphaldt's. The simulator's
+  diode gives about 0.6 V, and the lesson says so.
+- *Which part from the drawer replaces a 1N4004?* A replacement matches or
+  beats both ratings. After *Lessons in Electric Circuits* and ModEL.
+- Kuphaldt's order for fault questions: name the fault and ask for the
+  reading, then give the readings and ask for the fault.
+
+**Left out, and why**
+
+- Germanium, radio detection and the diode-test range of later meters.
+- Rectifying the mains: it needs AC. For №0024.
+- A protection diode wired across the supply with a fuse: the research
+  found only the diode in line, so the fault is an open one.
+
+### №0015 The LED
+
+Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.md).
+
+**From the first research**
+
+**Sources**
+
+- *Lessons in Electric Circuits*, [special-purpose diodes](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/special-purpose-diodes/)
+- Adafruit, [all about LEDs](https://learn.adafruit.com/all-about-leds/forward-voltage-and-kvl?view=all)
+- Electronics-Tutorials, [the LED](https://www.electronics-tutorials.ws/diode/diode_8.html)
+
+**How they teach it**
+
+- Adafruit uses the voltage law the learner already has: the LED takes its
+  share, and the resistor must take what is left. Then Ohm's law on the
+  resistor.
+- Drops by colour, at 20 mA: red about 1.8 V, yellow about 2.2 V, blue and
+  white 3 V or more. (A note for the story, not from these sources: blue and
+  white LEDs are later than 1984. The shop has red, yellow and green.)
+- Round the resistor *up* to the next value sold. A little less light, and a
+  longer life.
+
+**Exercises found**
+
+- 6 V, a 1.6 V LED, 20 mA: 220 Ω, and 88 mW in the resistor. On 24 V: 1.12 kΩ and
+  448 mW, too much for a ¼ W part. *Lessons in Electric Circuits*. A use for
+  №0003.
+- 12 V, a 1.8 V LED, 15 mA: 680 Ω exactly, 153 mW.
+- An indicator is dark, with the full supply across the LED and 0 V across its
+  resistor. Which has failed? (The LED, open.)
+- Beware Electronics-Tutorials' example of three red LEDs on 5 V: it
+  contradicts its own table.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the *Optoelectronic devices* and *Special diodes* worksheets,
+  and ModEL
+- Electronics Club, Electronics-Tutorials, learnabout-electronics.org
+- A Vishay LED data sheet; Goldwasser's notes; NEETS
+
+**Faulty or working, as the sources have it**
+
+- An LED mostly fades with the years, or goes open when too much current
+  burns the fine wire inside. It stands only about 5 V in reverse.
+- A shop meter on ohms can read a good LED as open: it puts out too little
+  voltage. The sure test is a battery and a resistor.
+- A dark LED with 0 V across it has two causes: the LED shorted, or its
+  resistor open.
+
+**Taken into the lesson**
+
+- The colour comes from the material, not the plastic. After Kuphaldt.
+- The resistor sum, and rounding up to the next value in the drawer, as the
+  first research had it.
+- The power in the resistor on 24 V: more than a ¼ W part can stand. After
+  the exercise in *Lessons in Electric Circuits*, with other values.
+- The first research's "LED open" exercise now also allows "fitted
+  backwards", which reads the same.
+
+**Left out, and why**
+
+- Strings of LEDs, and one resistor shared by several: other circuits.
+- A shorted LED on the screen: one fault switch is all the readouts allow.
+- Blue and white: later than 1984.
+
+### №0016 The Zener diode
+
+Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.md).
+
+**Main sources**
+
+- Kuphaldt, the *Zener diodes* and *Regulated power sources* worksheets
+- *Lessons in Electric Circuits*, the section on Zener diodes
+- Two handouts from Kansas; the onsemi Zener handbook; a Vishay data sheet
+  for the BZX55
+- Goldwasser's repair notes; Electronics Notes; learnabout-electronics.org
+
+**How they teach it**
+
+- As the loaded divider with one part added.
+- Whether it can hold is settled by taking the Zener out in your head: do
+  the series resistor and the load alone give more than the Zener voltage?
+- Watch the currents: the series resistor's stays put, and the Zener gives
+  up what the load takes.
+- What learners believe: that more comes through the series resistor when
+  the load takes more, that an idle regulator runs cool, and that the Zener
+  supplies voltage.
+
+**Faulty or working, as the sources have it**
+
+- Most fail shorted (0 V out, and a hot series resistor). Next, open: the
+  output rides up to what the divider gives alone, and follows the supply.
+  Fitted backwards, it reads about 0.6 V.
+- A meter on ohms cannot reach the Zener voltage, so it finds only a short
+  or an open.
+
+**Taken into the lesson**
+
+- The divider of №0009 with a Zener where R2 was, and the supply run up from
+  nothing.
+- *The load came on. What did the current through Rs do?* Hardly changed.
+  After Kuphaldt.
+- The take-it-out test, as a number question on a sagging battery.
+- An open Zener on the screen, with the output following the battery. After
+  Kuphaldt's regulator worksheet.
+
+**Left out, and why**
+
+- Sizing the series resistor, and the tables of Zener current against load:
+  the readouts had no room for sliders on Rs and the load.
+- The research's own fault table: its figures were its author's working.
+  Every figure in the lesson is the simulator's.
+- Uses the research could not confirm for sets of the time.
+
+### №0017 The coil
+
+Full report: [`docs/research/capacitor-coil.md`](docs/research/capacitor-coil.md).
+
+**From the first research**
+
+This and №0018 were one job, "Coils and relays", which was two ideas. This
+one is how a coil behaves over time.
+
+**Sources**
+
+- Kuphaldt, [inductors](https://www.ibiblio.org/kuphaldt/socratic/output/inds.pdf) and time constants 1 (above)
+- OpenStax, [College Physics 2e 23.10](https://openstax.org/books/college-physics-2e/pages/23-10-rl-circuits)
+- Electronics-Tutorials, [the inductor](https://www.electronics-tutorials.ws/inductor/inductor.html)
+
+**How they teach it**
+
+- A coil does not hold current back, it holds back *changes* in current.
+  Current cannot start or stop at once. The time constant is L ÷ R, and the
+  63% rule is the capacitor's over again.
+- The surprise for learners: a bigger resistor makes a capacitor slower and a
+  coil faster.
+- On a steady current a coil is only a length of wire: it reads a low
+  resistance on the meter.
+- Switch a coil off and its current has nowhere to go, so the voltage across
+  it leaps. By the textbook formula, a 0.5 H coil that loses 4 A in 10 ms makes
+  200 V.
+
+**Exercises found** (Kuphaldt, CC BY 1.0)
+
+- 75 mH and a time constant of 20 µs: 3.75 kΩ.
+- The current in a 5 H coil rises by 4.5 A every second: 22.5 V across it.
+- A lamp in series with a coil: how does it come on? (Slowly. With a bigger
+  coil, more slowly.)
+
+**What the first research said to build the job round**
+
+- Set it beside №0013: the same curve, with current where the voltage was.
+- Show the kick at switch-off on the trace, then fit a diode across the coil
+  and watch it go. That is the diode fitted across every relay coil.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the *Inductors* worksheets and the ModEL module on inductance
+  (a kick of 182 V worked from Ohm's law)
+- A US Army subcourse on the ohmmeter, and a Navy page on testing coils
+- learnabout-electronics.org; Wikipedia on chokes
+
+**Faulty or working, as the sources have it**
+
+- A coil fails open, often where the fine wire meets its tag, or with
+  shorted turns. The sources do not agree on which is commoner.
+- A good coil reads low and steady on ohms: 1 to 20 Ω for a radio coil,
+  10 to 500 Ω for one of several hundred turns.
+- Shorted turns barely change that reading, so a meter cannot find them.
+  Swap in a known good coil.
+
+**Taken into the lesson**
+
+- The size of the kick from Ohm's law: the coil keeps its current and drives
+  it through whatever resistance it finds. After Kuphaldt's ModEL exercise
+  (CC BY 4.0), with other values.
+- The diode across the coil, seen on the screen: the kick, then no kick.
+- On a steady current a coil is only its winding.
+- Mend a broken lead-out before replacing the coil. After the Army and Navy
+  pages.
+
+**Left out, and why**
+
+- The time constant L ÷ R: a question can only ask about the circuit at
+  rest.
+- Loudspeakers, motors and door chimes: not in the research. The chime is
+  only the setting.
+- A trace of the rise and the kick: the player has none. The kick is on the
+  readout for about a third of a second.
+
+### №0018 The relay
+
+Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-transistor-mosfet.md).
+
+**From the first research**
+
+**Sources**
+
+- Kuphaldt, [relays](https://www.ibiblio.org/kuphaldt/socratic/output/relay1.pdf) and time constants 1 (above)
+- Electronics-Tutorials, [relay switch circuits](https://www.electronics-tutorials.ws/blog/relay-switch-circuit.html)
+
+**How they teach it**
+
+- Kuphaldt teaches the relay as a switch worked by a current, in steady DC,
+  with no word about how a coil behaves over time.
+- Two circuits that never touch: the coil, and the contacts it pulls.
+  Normally open, normally closed.
+- A diode goes across the coil of a relay worked from DC, to take the kick
+  when it is switched off.
+
+**Exercises found** (Kuphaldt, CC BY 1.0)
+
+- A relay coil of 250 Ω made for 5 V, on a 24 V supply: 20 mA, so 950 Ω in series.
+- A push-button, a relay and two lamps: green only while the button is down,
+  red only while it is up. Which contacts?
+- An alarm loop with a broken wire. Wired one way the break goes unnoticed.
+  Wired through a relay's normally closed contact, the break sounds the alarm.
+- A relay lets go late once a lamp is wired across its coil. Why? (The lamp
+  gives the coil's current somewhere to go on flowing.) The diode from №0017
+  does the same.
+
+**What the first research said to build the job round**
+
+- The coil's circuit first: Ohm's law says whether it pulls in. Then the
+  contacts' circuit: which lamp is lit with the coil off?
+- It sets up №0019: a small current switching a large one. The transistor
+  does the same with nothing that moves.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the ModEL module on relays
+- Goldwasser's repair notes, on the mains relay of a remote-control
+  television
+- TE Connectivity and Elliott Sound Products, on contacts
+- Electronics-Tutorials, Electronics Notes, Wikipedia
+
+**Faulty or working, as the sources have it**
+
+- The contacts are the part that wears: sparks pit and burn them, and they
+  can weld shut.
+- A click proves only that the arm moved. The method: listen, then volts on
+  the coil, then volts across the closed contacts under load.
+- A meter on ohms cannot judge a contact: 0.6 Ω on the meter against a few
+  thousandths of an ohm under load.
+
+**Taken into the lesson**
+
+- *Where do the load's amps come from?* The battery: the relay supplies
+  nothing. After ModEL's note on what beginners expect.
+- "Normally" means at rest, not usually. After ModEL.
+- Burnt contacts as a resistor in series with the load, with two number
+  questions. After Electronics-Tutorials' dim headlamp, recomputed.
+- *0.6 Ω on ohms across the contacts. What does it prove?* Nothing. After
+  Elliott.
+
+**Left out, and why**
+
+- Pull-in and drop-out currents: a second idea.
+- AC and DC contact ratings: AC is not taught yet.
+- The green and red lamp question in full, the alarm loop and the series
+  resistor for a 5 V coil: each needs another circuit.
+
+### №0019 The transistor
+
+Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-transistor-mosfet.md).
+
+**From the first research**
+
+**Sources**
+
+- *Lessons in Electric Circuits*, [the transistor as a switch](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-4/transistor-switch-bjt/) and [the experiment](https://www.allaboutcircuits.com/textbook/experiments/chpt-5/transistor-as-a-switch/)
+- Kuphaldt, [transistors as switches worksheet](https://www.allaboutcircuits.com/worksheets/bipolar-junction-transistors-as-switches/)
+- Electronics Notes, [transistor switch design](https://www.electronics-notes.com/articles/analogue_circuits/transistor/transistor-switch.php)
+
+**How they teach it**
+
+- *Lessons in Electric Circuits* takes a lamp with an ordinary switch and puts
+  the transistor where the switch was. It insists on one thing: the lamp's
+  power comes from the battery, not from the signal that turns it on.
+- Off, and fully on. Fully on leaves about 0.2 V across the transistor.
+- The base resistor: work out the base current the load needs, then round the
+  resistor *down*, so there is current to spare.
+- Its experiment: a wet finger across the base resistor lights an LED.
+
+**Exercises found**
+
+- A 4 mA load, a gain of 200, a 2.5 V signal: 20 µA into the base, 90 kΩ, so fit
+  82 kΩ.
+- Six push-button lamp circuits. Three have no base resistor. Which will burn
+  out? Kuphaldt.
+- A lamp that never lights: 24 V at the supply's test point, and at the test
+  point between the lamp and the transistor 0 V with the button pressed and
+  about 23.5 V with it released. What could it be? (The lamp burnt out, the
+  transistor open at its collector, or a break either side of the lamp. The
+  resistor and the button are proved good by those two readings.) Kuphaldt.
+
+**More sources, for what the first research lacked**
+
+- Kuphaldt, the *BJTs as switches* worksheets and the ModEL module on
+  transistor switching
+- *Lessons in Electric Circuits*, the meter check of a transistor
+- US Navy NEETS, module 21; Goldwasser's notes on testing semiconductors
+- learnabout-electronics.org, Electronics Notes
+
+**Faulty or working, as the sources have it**
+
+- Three readings settle a transistor switch in the set: across collector and
+  emitter, across the load, and base to emitter.
+- On ohms a transistor is two diodes joined at the base. But it can be
+  shorted collector to emitter with both of those reading normal, so that
+  pair is checked too.
+- Transistors fail outright, mostly from heat. No page ranked the ways.
+
+**Taken into the lesson**
+
+- Gain as a ceiling, not a multiplier: ten times the base current, and the
+  bell hardly moves. ModEL calls it the idea most often missed.
+- The base current from the supply less 0.7 V, and the largest resistor that
+  still turns it fully on, then the next size down.
+- The corrected Kuphaldt exercise, as an open transistor found from its
+  readings.
+
+**Left out, and why**
+
+- PNP, Darlingtons and switching speed.
+- The half-on state: that is amplifying. For №0025.
+- "The collector to emitter short is the commonest failure": not confirmed,
+  so not said.
+
+### №0020 The MOSFET
+
+Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-transistor-mosfet.md).
+
+**Main sources**
+
+- Kuphaldt, the *Insulated gate field-effect transistors* worksheet and the
+  ModEL module on field-effect transistors
+- A lab from NJIT that swaps a MOSFET into a transistor's lamp circuit
+- Texas Instruments and International Rectifier application notes, and the
+  IRF510 data sheet (Vishay)
+- learnabout-electronics.org; Goldwasser's notes; NEETS
+
+**How they teach it**
+
+- Beside the transistor: the same job, worked by a voltage, not a current.
+- The gate is insulated, so it behaves as a small capacitor. Left joined to
+  nothing, it keeps its last voltage.
+- The threshold is where it starts to conduct, not where it is on. Half on,
+  it makes heat.
+- Avoid the word "saturation": sources use it in opposite senses for the
+  two kinds of transistor.
+
+**Faulty or working, as the sources have it**
+
+- A MOSFET's own fault sign is a gate that draws current: the thin layer
+  under it punched through by static or too many volts.
+- Most die shorted, drain to source.
+- A good one reads shorted on the meter if its gate was left charged. Empty
+  the gate first.
+
+**Taken into the lesson**
+
+- The transistor's loop with a MOSFET in its place, and a reading of the
+  gate's current: nothing.
+- *What did this gate need to put the lamp fully on?* Only a voltage.
+- The holed gate as a leak that makes a divider with the gate resistor.
+- *A new one reads shorted. What first?* Short gate to source. After
+  Kuphaldt.
+
+**Left out, and why**
+
+- P-channel and depletion types, the built-in diode, switching speed.
+- Uses in sets of 1984 that the research could not confirm.
+- Logic-level parts: later than 1984.
+
+## Part 3: the planned jobs
 
 None of these is written. Each section is what to start from.
 
-### №0011 Voltage at a point
+### №0021 Voltage at a point
 
 **Sources**
 
@@ -587,108 +1252,7 @@ None of these is written. Each section is what to start from.
   current, and no volts across a switch that is on.
 - The stepping-round-a-loop exercise left out of №0007.
 
-### №0012 Capacitors
-
-**Sources**
-
-- Kuphaldt, [time constants 1](https://www.ibiblio.org/kuphaldt/socratic/output/time1.pdf), [time constants 2](https://www.ibiblio.org/kuphaldt/socratic/output/time2.pdf) and [capacitors](https://www.ibiblio.org/kuphaldt/socratic/output/caps.pdf)
-- OpenStax College Physics 2e, [21.6 RC circuits](https://openstax.org/books/college-physics-2e/pages/21-6-dc-circuits-containing-resistors-and-capacitors)
-- Electronics-Tutorials, [RC charging](https://www.electronics-tutorials.ws/rc/rc_1.html)
-
-**How they teach it**
-
-- Kuphaldt: the curve can be reasoned out with no formula. As the voltage on
-  the capacitor rises, less is left across the resistor, so less current
-  flows, so the voltage rises more slowly.
-- OpenStax's wording, which needs no exponential: in each time constant the
-  capacitor closes 63% of the gap that is left.
-- OpenStax's way in is a camera flash: slow to charge, gone in an instant.
-- A picture that works: a tank divided by a rubber sheet. Nothing crosses the
-  sheet, and pushing water in one side pushes it out of the other.
-
-**Exercises to adapt**
-
-- What are the voltage across the capacitor, the voltage across the resistor,
-  and the current, at three moments: before the switch closes, the instant
-  it closes, and long after? (0, 0, 0. Then 0, all of it, the most. Then all
-  of it, 0, 0.) Kuphaldt.
-- Is a bigger resistor faster or slower? A bigger capacitor? (Both slower.)
-- 33 µF and a time constant of 10 s: 303 kΩ. Kuphaldt.
-- A capacitor at 100 V let down through a resistor: 36.8 V, 13.5 V, 5 V, 1.8 V and
-  0.7 V after one to five time constants.
-- A 0.75 µF capacitor at 3000 V must be safe within 15 s: about 4 MΩ across it.
-  Kuphaldt. The safety resistor in every old set.
-
-**Build the job round**
-
-- Watch the current as well as the voltage. At the first instant the capacitor
-  passes current like a wire, and at the end it is a gap.
-- The 63% as something read off the trace, then matched to R × C.
-- Say that a charged capacitor in a television can kill.
-
-### №0013 Diodes
-
-**Sources**
-
-- *Lessons in Electric Circuits*, [introduction to diodes](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/introduction-to-diodes-and-rectifiers/) and [meter check of a diode](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/meter-check-of-a-diode/)
-- Kuphaldt, [rectifying diodes worksheet](https://www.allaboutcircuits.com/worksheets/rectifying-diodes/)
-
-**How they teach it**
-
-- A battery, a lamp and a diode. Turn the diode round and the lamp goes out.
-  A one-way valve, worked by which way the voltage pushes.
-- Then the drop: about 0.7 V whatever the current, so treat it as fixed.
-- The symbol last: the arrow is the way current may go, and the stripe on the
-  part is the bar.
-- Left out of a first lesson by all of them: how it works inside.
-
-**Exercises to adapt** (Kuphaldt, CC BY 1.0)
-
-- A diode and a resistor on a supply. What do the readings do if the diode
-  fails open? (No current, the full supply across it.) Fails short? (More
-  current, 0 V across it.) If the resistor is bridged? (The diode dies.)
-- 9 V, 2 kΩ, 0.7 V: 4.15 mA.
-- Does a diode that is passing current behave like a resistor? (No: more like
-  a 0.7 V battery turned against the supply.)
-
-**Build the job round**
-
-- Raise the supply from 0 V and watch the diode's voltage stick near 0.7 V
-  while the resistor takes the rest. The drop is found, not told.
-- The meter test: a reading one way, none the other. Both ways or neither
-  means a dead diode.
-
-### №0014 LEDs
-
-**Sources**
-
-- *Lessons in Electric Circuits*, [special-purpose diodes](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/special-purpose-diodes/)
-- Adafruit, [all about LEDs](https://learn.adafruit.com/all-about-leds/forward-voltage-and-kvl?view=all)
-- Electronics-Tutorials, [the LED](https://www.electronics-tutorials.ws/diode/diode_8.html)
-
-**How they teach it**
-
-- Adafruit uses the voltage law the learner already has: the LED takes its
-  share, and the resistor must take what is left. Then Ohm's law on the
-  resistor.
-- Drops by colour, at 20 mA: red about 1.8 V, yellow about 2.2 V, blue and
-  white 3 V or more. (A note for the story, not from these sources: blue and
-  white LEDs are later than 1984. The shop has red, yellow and green.)
-- Round the resistor *up* to the next value sold. A little less light, and a
-  longer life.
-
-**Exercises to adapt**
-
-- 6 V, a 1.6 V LED, 20 mA: 220 Ω, and 88 mW in the resistor. On 24 V: 1.12 kΩ and
-  448 mW, too much for a ¼ W part. *Lessons in Electric Circuits*. A use for
-  №0003.
-- 12 V, a 1.8 V LED, 15 mA: 680 Ω exactly, 153 mW.
-- An indicator is dark, with the full supply across the LED and 0 V across its
-  resistor. Which has failed? (The LED, open.)
-- Beware Electronics-Tutorials' example of three red LEDs on 5 V: it
-  contradicts its own table.
-
-### №0015 Alternating current
+### №0022 Alternating current
 
 **Sources**
 
@@ -721,7 +1285,15 @@ None of these is written. Each section is what to start from.
 - Have the learner raise an AC source until a resistor runs as hot as it does
   on DC, and read off the peak.
 
-### №0016 The power supply
+### №0023 The transformer
+
+Not researched yet. It needs alternating current first (№0022), and a
+reading that holds still on AC, which the player lacks. The coil report in
+[`docs/research/capacitor-coil.md`](docs/research/capacitor-coil.md) has what
+the sources say about windings: an open one reads no continuity, and shorted
+turns barely change the reading.
+
+### №0024 The power supply
 
 **Sources**
 
@@ -752,105 +1324,7 @@ None of these is written. Each section is what to start from.
 - Test points on a dead supply: mains at the fuse and nothing after it. Mains
   in and 0.5 V out of the transformer. Find each fault.
 
-### №0017 Coils
-
-This and №0018 were one job, "Coils and relays", which was two ideas. This
-one is how a coil behaves over time.
-
-**Sources**
-
-- Kuphaldt, [inductors](https://www.ibiblio.org/kuphaldt/socratic/output/inds.pdf) and time constants 1 (above)
-- OpenStax, [College Physics 2e 23.10](https://openstax.org/books/college-physics-2e/pages/23-10-rl-circuits)
-- Electronics-Tutorials, [the inductor](https://www.electronics-tutorials.ws/inductor/inductor.html)
-
-**How they teach it**
-
-- A coil does not hold current back, it holds back *changes* in current.
-  Current cannot start or stop at once. The time constant is L ÷ R, and the
-  63% rule is the capacitor's over again.
-- The surprise for learners: a bigger resistor makes a capacitor slower and a
-  coil faster.
-- On a steady current a coil is only a length of wire: it reads a low
-  resistance on the meter.
-- Switch a coil off and its current has nowhere to go, so the voltage across
-  it leaps. By the textbook formula, a 0.5 H coil that loses 4 A in 10 ms makes
-  200 V.
-
-**Exercises to adapt** (Kuphaldt, CC BY 1.0)
-
-- 75 mH and a time constant of 20 µs: 3.75 kΩ.
-- The current in a 5 H coil rises by 4.5 A every second: 22.5 V across it.
-- A lamp in series with a coil: how does it come on? (Slowly. With a bigger
-  coil, more slowly.)
-
-**Build the job round**
-
-- Set it beside №0012: the same curve, with current where the voltage was.
-- Show the kick at switch-off on the trace, then fit a diode across the coil
-  and watch it go. That is the diode fitted across every relay coil.
-
-### №0018 Relays
-
-**Sources**
-
-- Kuphaldt, [relays](https://www.ibiblio.org/kuphaldt/socratic/output/relay1.pdf) and time constants 1 (above)
-- Electronics-Tutorials, [relay switch circuits](https://www.electronics-tutorials.ws/blog/relay-switch-circuit.html)
-
-**How they teach it**
-
-- Kuphaldt teaches the relay as a switch worked by a current, in steady DC,
-  with no word about how a coil behaves over time.
-- Two circuits that never touch: the coil, and the contacts it pulls.
-  Normally open, normally closed.
-- A diode goes across the coil of a relay worked from DC, to take the kick
-  when it is switched off.
-
-**Exercises to adapt** (Kuphaldt, CC BY 1.0)
-
-- A relay coil of 250 Ω made for 5 V, on a 24 V supply: 20 mA, so 950 Ω in series.
-- A push-button, a relay and two lamps: green only while the button is down,
-  red only while it is up. Which contacts?
-- An alarm loop with a broken wire. Wired one way the break goes unnoticed.
-  Wired through a relay's normally closed contact, the break sounds the alarm.
-- A relay lets go late once a lamp is wired across its coil. Why? (The lamp
-  gives the coil's current somewhere to go on flowing.) The diode from №0017
-  does the same.
-
-**Build the job round**
-
-- The coil's circuit first: Ohm's law says whether it pulls in. Then the
-  contacts' circuit: which lamp is lit with the coil off?
-- It sets up №0019: a small current switching a large one. The transistor
-  does the same with nothing that moves.
-
-### №0019 The transistor as a switch
-
-**Sources**
-
-- *Lessons in Electric Circuits*, [the transistor as a switch](https://www.allaboutcircuits.com/textbook/semiconductors/chpt-4/transistor-switch-bjt/) and [the experiment](https://www.allaboutcircuits.com/textbook/experiments/chpt-5/transistor-as-a-switch/)
-- Kuphaldt, [transistors as switches worksheet](https://www.allaboutcircuits.com/worksheets/bipolar-junction-transistors-as-switches/)
-- Electronics Notes, [transistor switch design](https://www.electronics-notes.com/articles/analogue_circuits/transistor/transistor-switch.php)
-
-**How they teach it**
-
-- *Lessons in Electric Circuits* takes a lamp with an ordinary switch and puts
-  the transistor where the switch was. It insists on one thing: the lamp's
-  power comes from the battery, not from the signal that turns it on.
-- Off, and fully on. Fully on leaves about 0.2 V across the transistor.
-- The base resistor: work out the base current the load needs, then round the
-  resistor *down*, so there is current to spare.
-- Its experiment: a wet finger across the base resistor lights an LED.
-
-**Exercises to adapt**
-
-- A 4 mA load, a gain of 200, a 2.5 V signal: 20 µA into the base, 90 kΩ, so fit
-  82 kΩ.
-- Six push-button lamp circuits. Three have no base resistor. Which will burn
-  out? Kuphaldt.
-- A lamp that never lights: 24 V at one test point, and 23.5 V across the
-  transistor whether the button is pressed or not. What could it be? Kuphaldt.
-
-### №0020 The transistor as an amplifier
+### №0025 The transistor as an amplifier
 
 **Sources**
 
@@ -886,15 +1360,26 @@ wiring a transistor.
 1. **№0008 opens on something seen**: two equal branches acting as half. The
    formula follows from №0005 in one line. The loaded divider and the real
    battery were written straight after it, as №0009 and №0010, ahead of
-   voltage at a point (№0011): the lesson player can carry them as it is.
+   voltage at a point (№0021): the lesson player can carry them as it is.
 2. **"Coils and relays" was two ideas and is now two jobs**: coils (№0017)
-   and relays (№0018). The transistor jobs moved to №0019 and №0020.
-3. **№0011 ends on fault-finding by voltage.** Every source that teaches
+   and relays (№0018). The transistor jobs moved to №0019 and №0025.
+3. **№0021 ends on fault-finding by voltage.** Every source that teaches
    repair teaches the two signs: the full supply across an open part, and
    nothing across a shorted one. №0004 and №0007 already ask about them, so
-   №0011 measures them, and no separate job repeats them.
+   №0021 measures them, and no separate job repeats them.
 4. **№0010 is taught as a voltage divider.**
 5. **Nothing in the course covers energy over time** (E = P × t, the unit on
    an electricity bill). OpenStax treats it as part of power. It is not
    needed for repair work, so it is left out on purpose until someone
    decides otherwise.
+6. **Ten part jobs were written on 20 November**, №0011 to №0020: the fuse,
+   the thermistor, the capacitor, the diode, the LED, the Zener diode, the
+   coil, the relay, the transistor and the MOSFET. Each answers four things
+   about its part: how it works, what it is for, where it is met, and how a
+   good one is told from a dead one. Three were not in the plan: the fuse,
+   the thermistor and the MOSFET. The Zener diode was not either, and stands
+   between the LED and the coil.
+7. **The jobs that need a trace or a steady reading on AC wait in Part 3**:
+   voltage at a point, alternating current, the power supply and the
+   transistor as an amplifier, now №0021 to №0025, with the transformer
+   added as №0023.
