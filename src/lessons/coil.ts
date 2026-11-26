@@ -23,7 +23,8 @@ import type { Lesson } from "../lesson/types";
 // CircuitJS1 shows no kick when a switch opens the only loop a coil is in:
 // the current simply stops. Here it always has somewhere to go: through R,
 // which stands for whatever the kick would otherwise jump through, or through
-// the diode.
+// the diode. Opening "break" is the exception, on purpose: it stands for the
+// wire itself parting, and the current just stops.
 const circuit = `$ 1 0.0001 9.375 38 12 50
 v 128 320 128 96 16 0 40 12 0 0 0.5
 s 128 96 256 96 0 1 false
@@ -45,7 +46,7 @@ x 532 242 554 245 4 18 L`;
 export const coil: Lesson = {
     id: "coil",
     title: "The coil",
-    summary: "A coil fights every change in its current: slow to start, and a kick of high voltage when it is switched off, which a diode tames.",
+    summary: "How a coil fights every change in its current, why its kick at switch-off burns switches and how a diode tames it, and how to tell a good coil from a dead one.",
     job: {
         title: "The silent chime",
         customer: "Mrs. Farouk, with a door chime",
@@ -64,18 +65,17 @@ export const coil: Lesson = {
         main: { label: "Main switch", part: "main", switch: true },
         diode: { label: "Diode switch", part: "diodeSwitch", switch: true },
         breakSwitch: { label: "Break switch", part: "breakSwitch", switch: true },
-        rw: { label: "Winding", symbol: "Rw", unit: "Ω", part: "rw", setting: "Resistance" },
         current: { label: "Through coil", symbol: "I", unit: "A", part: "rw", measure: "current" },
         vcoil: { label: "Across coil", symbol: "V", unit: "V", part: "r", measure: "voltage" },
     },
-    // The slowest the current settles at any step is with Rw at 24 Ω, in
-    // 4 H ÷ 24 Ω = 1/6 s for each 63% of the way: 5 s is thirty of those.
+    // The current settles in 4 H ÷ 24 Ω = 1/6 s for each 63% of the way: 5 s
+    // is thirty of those.
     settle: 5,
     steps: [
         {
             kind: "read",
             title: "Meet the coil",
-            set: { main: 0, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 0, diode: 0, breakSwitch: 1 },
             reset: true,
             text: "A **coil**, also called an **inductor**, is a long, thin wire wound round and round, often on iron or ferrite. A coat of enamel stops the current short-cutting from turn to turn. Current through it makes it a magnet.\n\n"
                 + "The loops on the right, L, are the coil. Its wire, the **winding**, has resistance of its own, **Rw**, drawn as a resistor in line with it. R, the diode and the switch marked break come in later.",
@@ -83,7 +83,7 @@ export const coil: Lesson = {
         {
             kind: "explore",
             title: "Switch it on",
-            set: { main: 0, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 0, diode: 0, breakSwitch: 1 },
             reset: true,
             text: "Guess first: will the current jump straight to its full value? Then press the main switch, by the battery, and watch **I**, the current through the coil.",
             controls: [],
@@ -92,7 +92,7 @@ export const coil: Lesson = {
         },
         {
             kind: "choice",
-            set: { main: 1, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 1, diode: 0, breakSwitch: 1 },
             question: "The switch closed in an instant, but the current took its time to build. What held it back?",
             options: ["The battery warming up", "The coil, pushing back", "Resistance in the wire"],
             answer: 1,
@@ -101,24 +101,14 @@ export const coil: Lesson = {
         {
             kind: "read",
             title: "Only the winding",
-            set: { main: 1, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 1, diode: 0, breakSwitch: 1 },
             text: "How hard a coil fights a change in its current is its **inductance**, measured in **henries** (H). More turns, or an iron core, give more: this coil is 4 H. Once the current has settled, there is no change left to fight.\n\n"
-                + "So on a steady current a coil is only its winding, and Rw sets the current:",
-            formula: "I = V ÷ Rw",
-            note: "Here: 12 V ÷ 24 Ω = 0.5 A. The 4 H don't come into it.",
-        },
-        {
-            kind: "number",
-            set: { main: 1, diode: 0, breakSwitch: 1, rw: 40 },
-            question: "A coil's winding is 40 Ω, and it is switched on across 12 V. What current flows once it has settled?",
-            solveFor: "current",
-            answer: 0.3,
-            explain: "I = V ÷ Rw = 12 V ÷ 40 Ω = 0.3 A",
+                + "So on a steady current a coil is only its winding, a length of wire. On ohms, out of the set, a good one sends the needle straight to a low reading, and it stays: a few ohms for a small radio coil, hundreds for a big one.",
         },
         {
             kind: "explore",
             title: "Switch it off",
-            set: { main: 1, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 1, diode: 0, breakSwitch: 1 },
             text: "Let the current settle at 0.5 A. Then press the main switch to open it, and keep your eye on **V**, across the coil. It happens fast.",
             controls: [],
             goal: { main: 0 },
@@ -126,41 +116,25 @@ export const coil: Lesson = {
         },
         {
             kind: "choice",
-            set: { main: 0, diode: 0, breakSwitch: 1, rw: 24 },
+            set: { main: 0, diode: 0, breakSwitch: 1 },
             question: "The battery was cut off, yet for an instant the coil had far more than 12 V across it. Where did that come from?",
             options: ["The battery", "Charge stored in R", "The coil's own magnet"],
             answer: 2,
-            explain: "As the current falls, the coil's magnet collapses and pushes the current on. Its only way on is through R, and 0.5 A through 120 Ω needs 60 V. So that is what the coil makes, for an instant.",
-        },
-        {
-            kind: "read",
-            title: "The kick",
-            set: { main: 0, diode: 0, breakSwitch: 1, rw: 24 },
-            text: "That leap is **the kick**. Try to stop a coil's current, and for an instant it makes whatever voltage it takes to keep that current going, through whatever path it finds. Here the path is R, so Ohm's law gives the kick:",
-            formula: "V = I × R",
-            note: "Here: 0.5 A × 120 Ω = 60 V, five times the battery's. With only an opening switch for a path, it can reach thousands of volts and jump the gap as a spark: a car's ignition coil does that on purpose.",
-        },
-        {
-            kind: "number",
-            set: { main: 1, diode: 0, breakSwitch: 1, rw: 30 },
-            question: "Switch this coil off and its current goes on through R, 120 Ω, with 48 V leaping across it. What current is the coil carrying now?",
-            solveFor: "current",
-            answer: 0.4,
-            explain: "I = V ÷ R = 48 V ÷ 120 Ω = 0.4 A",
+            explain: "As the current falls, the coil's magnet collapses and pushes the current on. Its only way on is through R, so the coil makes whatever voltage that takes, for an instant: here, five times the battery's.",
         },
         {
             kind: "explore",
-            title: "A diode across it",
-            set: { main: 1, diode: 1, breakSwitch: 1, rw: 24 },
-            text: "Each spark burns a switch a little more, and the kick kills transistors, the switches with no moving parts you'll meet soon. The cure is a diode across the coil. Its switch is closed now. The diode is in reverse to the battery, so it passes nothing.\n\n"
-                + "Once the current has settled, open the main switch again and watch V.",
+            title: "Tame the kick",
+            set: { main: 1, diode: 1, breakSwitch: 1 },
+            text: "That leap is **the kick**. With only a parting switch for a path, it reaches hundreds of volts and jumps the gap as a spark, and each spark pits the contacts. It kills transistors too, the switches with no moving parts of a later job.\n\n"
+                + "The cure is a diode across the coil. Its switch is closed now: the diode is in reverse to the battery, so it passes nothing. Let the current settle, then open the main switch and watch V.",
             controls: [],
             goal: { main: 0 },
             success: "No leap this time. V stays under a volt, {vcoil} now, and the current dies away gently: {current}.",
         },
         {
             kind: "choice",
-            set: { main: 0, diode: 1, breakSwitch: 1, rw: 24 },
+            set: { main: 0, diode: 1, breakSwitch: 1 },
             question: "With the diode across it, the coil had under a volt across it at switch-off. Why no kick this time?",
             options: ["The diode carries it", "No current in the coil", "The diode blocks it"],
             answer: 0,
@@ -169,25 +143,50 @@ export const coil: Lesson = {
         {
             kind: "read",
             title: "Where you'll find one",
-            set: { main: 1, diode: 1, breakSwitch: 1, rw: 24 },
-            text: "Valve radios and amplifiers smooth their supply with a big iron-cored coil, a **choke**: it lets steady current through and chokes off changes. Small chokes keep radio interference off supply leads. Tuning coils pick out a station: a portable's aerial is one, on a ferrite rod.\n\n"
-                + "Big chokes print their henries. Small coils wear resistor bands, read in microhenries (µH). Many carry nothing: the service sheet gives their resistance.",
-            note: "A relay, the next job, is a coil like this one, and wears the same diode across it.",
+            set: { main: 1, diode: 1, breakSwitch: 1 },
+            text: "Valve radios and amplifiers smooth their supply with a big iron-cored coil, a **choke**: it lets a steady current through and chokes off changes. Tuning coils pick out a station: a portable's aerial is one, on a ferrite rod.\n\n"
+                + "Big chokes print their henries, and often their current. Small coils wear bands like a resistor's, read in microhenries (µH). Many carry nothing: the service sheet gives their resistance. Fit the same henries, and the same current or more.",
+            note: "A relay, the next job, is a coil too, and wears the same diode.",
         },
         {
             kind: "read",
-            title: "Good or faulty",
-            set: { main: 1, diode: 1, breakSwitch: 0, rw: 24 },
-            text: "Coils fail open, or with shorted turns. The break switch is open now, as if the wire had parted at its tag: the full 12 V across the coil, and no current. Out of the set, on ohms: no continuity, either way round.\n\n"
-                + "A good coil reads low and steady: a few ohms for a radio coil, up to hundreds for a big one. Shorted turns, where the enamel fails, barely change that, so the meter can't find them: swap in a known good coil.",
+            title: "How it dies",
+            set: { main: 1, diode: 1, breakSwitch: 1 },
+            text: "Coils fail two ways. In an open winding the wire has parted, often where the hair-fine wire meets its tag, or it has burnt through. Look at that joint first: a re-solder may save the coil.\n\n"
+                + "With **shorted turns**, the enamel between turns has failed and some turns are bypassed. The coil runs hot: it smells burnt, and its varnish darkens or blisters. Yet on ohms it reads near its figure, as little wire is lost. Swap in a known good one.",
+        },
+        {
+            kind: "explore",
+            title: "An open winding",
+            set: { main: 1, diode: 1, breakSwitch: 1 },
+            text: "The coil is on, its current settled. Press the switch marked break, on the top wire, to open it: it does what a winding that has parted does. Watch V and I.",
+            controls: [],
+            goal: { breakSwitch: 0 },
+            success: "V hasn't moved: the coil sits straight across the supply, so it gets the full 12 V, good or open. But the current is gone: {current}. On ohms, out of the set: no continuity, either way round.",
         },
         {
             kind: "choice",
-            set: { main: 1, diode: 1, breakSwitch: 0, rw: 24 },
-            question: "Mrs. Farouk's chime: button pressed, the full supply across its coil, and no current. What has failed?",
-            options: ["The button", "The coil's winding", "Shorted turns"],
+            set: { main: 1, diode: 1, breakSwitch: 0 },
+            question: "A smoothing choke reads close to its figure on ohms. But it runs hot, smells burnt, and its varnish has gone dark. What is wrong?",
+            options: ["Nothing: it reads fine", "An open winding", "Shorted turns"],
+            answer: 2,
+            explain: "Shorted turns: the enamel between some turns has failed. So little wire drops out that the ohms barely move, but the coil cooks. Continuity rules out only an open winding. Swap in a known good choke.",
+        },
+        {
+            kind: "choice",
+            set: { main: 1, diode: 0, breakSwitch: 1 },
+            question: "The switch that works a coil keeps failing, its contacts pitted and black every time. What will stop it?",
+            options: ["Clean the contacts", "Diode across the coil", "A heavier switch"],
             answer: 1,
-            explain: "A dead button would leave 0 V across the coil, and shorted turns still pass current. Full supply and no current is an open part: the winding has parted. Check its tags for a broken joint before fitting a new coil.",
+            explain: "Cleaning and a heavier switch only buy time. Each time the contacts part, the coil's kick jumps the gap as a spark and pits them. A diode across the coil stops that. If one is there, test it: gone open, it does nothing.",
+        },
+        {
+            kind: "choice",
+            set: { main: 1, diode: 1, breakSwitch: 0 },
+            question: "Mrs. Farouk's chime: button pressed, the full 12 V across its coil, and no ding. Out of the set, on ohms, no continuity. What has failed?",
+            options: ["An open winding", "The push-button", "Shorted turns"],
+            answer: 0,
+            explain: "A dead button would leave 0 V at the coil, and shorted turns still read low on ohms. The supply arrives but nothing gets through: the winding has parted. Check the joint at its tag first.",
         },
     ],
 };

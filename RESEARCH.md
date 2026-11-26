@@ -609,27 +609,26 @@ Full report: [`docs/research/fuse-thermistor.md`](docs/research/fuse-thermistor.
 
 **Taken into the lesson**
 
-- The weak link, and four times the heat for twice the current, reached
-  through the power rule of №0003. After Kuphaldt's ModEL module.
+- The weak link, and heat that climbs far faster than the current, so a fuse sits cool in use and goes fast in a fault. Asked as a "why", with "twice the current, four times the heat" said as a rule of thumb, never worked out. After Kuphaldt's ModEL module.
 - *What is a fuse there to guard against?* After Kuphaldt and OpenStax.
-- The three-quarters rule and the 1.5 A player that gets a 2 A fuse. After
-  Littelfuse.
-- *The meter says the fuse is shorted. What do you do with it?* Put it back.
-  After a NEETS question.
-- Slow-blow, with a television's switch-on surge as the reason. After
-  Goldwasser.
-- Never a bigger fuse, and no foil or wire across one: the wiring becomes the
-  weak link. After NEETS and Kuphaldt.
+- Fit the rating the set calls for, never bigger and never the wrong speed, whatever the old fuse was: a board marked 2 A slow-blow, with a 5 A in the holder. After NEETS's replacement rules and its "no exact spare" question, Goldwasser on a fast fuse where a slow one belongs, and ModEL's 30 A fuse fitted for 3 A.
+- Slow-blow, with a television's switch-on surge as the reason. After Goldwasser.
+- How it dies: open only. If a fault beyond it caused that, a new one goes too; if age or a surge did, a new one holds. So one new fuse is a fair test. Not ranked, since no source ranks them. After NEETS and Goldwasser.
+- By eye: a gap, or wire melted onto the glass, and a fine wire that can hide its break, so trust the meter (NEETS). A fuse blown to vapour met a hard short (Goldwasser).
+- The meter: the full supply across a blown fuse in the set, asked on a 24 V lorry. 0 V with the set off proves nothing. On ohms out of the holder, continuity or none, and a fuse left in can read through the set. After NEETS, DigiKey and Kuphaldt.
+- *The meter says the fuse is shorted. What do you do with it?* Put it back. After a NEETS question.
+- Never a bigger fuse, and no foil or wire across one: the wiring becomes the weak link. Now shown with a Foil switch, which also shows that a bridged fuse reads like a good one. After NEETS and Kuphaldt.
 
 **Left out, and why**
 
-- Voltage rating and breaking capacity: a second and third number on a first
-  meeting.
+- The three-quarters rule and the 1.5 A player that gets a 2 A fuse (Littelfuse): a sum, and a designer's choice. A repairer fits what the set calls for.
+- "Black glass means a short, a clean gap means an overload": the research marks it unverified.
+- Voltage rating and breaking capacity: a second and third number on a first meeting.
+- Car fuse colours, and old Lucas fuses marked at twice their rating: no room once the meter steps came in.
+- Corroded or slack fuse-holder clips, the ohmmeter that blows a tiny fuse, and Goldwasser's series lamp: each is a step too many for this job.
 - Circuit breakers: another part.
-- Where in the loop a fuse goes, several fuses in a row, and Kuphaldt's
-  "four good readings, one blown fuse": each needs a bigger circuit.
-- The switch as a part with resistance of its own: not this job's idea. It
-  is in the research file for a later one.
+- Where in the loop a fuse goes, several fuses in a row, and Kuphaldt's "four good readings, one blown fuse": each needs a bigger circuit.
+- The switch as a part with resistance of its own: not this job's idea.
 - Time-current curves: the player has no trace.
 
 ### №0012 The thermistor
@@ -657,23 +656,44 @@ Full report: [`docs/research/fuse-thermistor.md`](docs/research/fuse-thermistor.
 
 **Taken into the lesson**
 
-- The car's temperature sender as the job, in a divider on 12 V.
-- *Swap the two over: now which way does Vout move?* After ModEL and
+- The car's temperature sender as the job, in a divider on 12 V, told in
+  words: the bigger part keeps the bigger share.
+- *Swap the two over: now which way does the gauge move?* After ModEL and
   Bucknell's pre-lab.
+- Stuck at the full supply is open, stuck at 0 V is shorted, and check the
+  fixed resistor too. After Kuphaldt's bridge questions. A shorted one reads
+  next to nothing on ohms.
 - *At 20 °C a 10 k thermistor reads 12.2 kΩ. Faulty?* No. The figures are
   Electronics-Tutorials'.
-- Stuck at the full supply or stuck at 0 V, and check the fixed resistor
-  too. After Kuphaldt's bridge questions.
+- The bench test: near its marking, then a slow fall between finger and
+  thumb (MIT, Bucknell, Olin). A jump at once is the fingers, not the heat:
+  after Kuphaldt's instant-change question, with the research file's own
+  explanation of the jump.
+- How a colour set's thermistors die. A surge limiter runs hot by design
+  (EPCOS); a dead one is cracked, pinholed or burnt, often shorted, some after
+  lightning, and open leaves the set dead (Goldwasser, Vishay, the 1979 bench
+  article). The degaussing one most often shorts across the mains and blows
+  the fuse at switch-on; the set plays without it, but it should not be left
+  out (Goldwasser, the 1979 article).
+- Test a surge limiter cold: hot, it reads next to nothing. Cold, a few ohms
+  to tens (EPCOS, Goldwasser, and the beginners' mistakes).
+- Replace like with like: the same value at 25 °C, and the same kind. From
+  the beginners' mistakes.
 - The surge limiter (EPCOS), the degaussing part (Goldwasser), and the
   light-dependent resistor in a street lamp (electronics-notes).
 
 **Left out, and why**
 
+- The divider rule as a formula, and every reading worked out from it: part
+  jobs have no sums.
 - The B value and its formula, and self-heating: not for a first meeting.
-- Which failure is commonest: the only figures were seen in a search result,
-  not on a page.
+- Which way a sensor bead most often fails, and drift: the only figures were
+  seen in a search result, not on a page.
 - How a real dashboard gauge is wired: no source said. The lesson's meter
   "stands for" the gauge.
+- Bad joints on the degaussing part leaving coloured patches: seen only in a
+  search snippet.
+- What is printed on a thermistor's body: no page loaded covers it.
 - The bridge: a second circuit.
 
 ### №0013 The capacitor
@@ -742,21 +762,22 @@ Full report: [`docs/research/capacitor-coil.md`](docs/research/capacitor-coil.md
 
 **Taken into the lesson**
 
-- Fill it, then say why the current fell: the capacitor's voltage leaves the
-  resistor less. After Kuphaldt.
-- The leak as a divider, with a number question each way. After ModEL
-  (CC BY 4.0), with other values.
-- *The meter reads what the service sheet says. Can you be sure it is good?*
-  No: an open one reads the same. After Kuphaldt's fault tables.
-- Discharge through a resistor, never a screwdriver, and meter it again.
-  After Goldwasser and NEETS.
+- Fill it, then say why the current fell: the capacitor's voltage leaves the resistor less. After Kuphaldt, in words.
+- The leak as a resistor grown across a good capacitor, seen on the screen: it stops short of full, and current keeps flowing. After ModEL, without the divider sum.
+- A shorted capacitor seen through a Short switch: 0 V across it, and the resistor feeding it carries the switch-on current for good. *A supply capacitor reads 0 V and its feed resistor is scorched: what has it done?* After Kuphaldt's power-supply questions.
+- The meter on ohms as a battery and a resistor, so the kick is the charging current on a needle. Good, short, leak and open, and no kick from a good one under about 0.01 µF. After the Army subcourse, Goldwasser and Kuphaldt.
+- How it dies, commonest first (dried out, leaky after years unused, a short likelier than an open), and what you see: a domed or split top, a bung pushed out, a crust, a burnt smell, or no sign at all. After Chemi-Con, Goldwasser, Phil's Old Radios and Wikipedia.
+- *The meter reads what the service sheet says. Can you be sure it is good?* No: an open one reads the same. After Kuphaldt's fault tables.
+- Discharge through a resistor, never a screwdriver, and meter it again. After Goldwasser and NEETS.
 - The flashgun as the way in. After OpenStax (the idea only).
 
 **Left out, and why**
 
-- A question on the time constant: a question can only ask about the circuit
-  at rest. T = R × C is stated, with the one-second filling on the screen.
-- A dried-out electrolytic's hum and ripple: they need AC. For №0024.
+- T = R × C and the 63%: part jobs have no sums, and a question can only ask about the circuit at rest. That a bigger capacitor or resistor fills more slowly is said in words.
+- The leak as a divider sum and its two number questions: part jobs have no sums.
+- A dried-out electrolytic's hum and ripple: they need AC. For №0024. The lesson says only that drying shows as hum, not as a wrong reading.
+- An open capacitor on the screen: a third fault switch and a meter would crowd the drawing, and on DC it reads like a good one anyway.
+- Paper capacitors going leaky: true, but the job is about the electrolytic. Cut for length.
 - Number codes, tolerance letters and colour codes: too many for one job.
 
 ### №0014 The diode
@@ -813,21 +834,43 @@ Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.
 
 **Taken into the lesson**
 
-- Raise the supply from nothing and watch the drop stick: found, not told,
-  as the first research asked.
+- Turn the supply round and watch the current stop, then bring it up and
+  watch the drop stick near 0.6 V while R takes the rest: found, not told, as
+  the first research asked. It is one sweep from −12 V to 12 V.
 - "Not always exactly 0.7 V". After a note of Kuphaldt's. The simulator's
-  diode gives about 0.6 V, and the lesson says so.
+  diode gives about 0.6 V, the lesson says so, and a spot-it asks whether
+  0.56 V against a book's 0.7 V is a fault.
+- The drop as a toll every bit of current pays to cross the layer, however
+  much flows. After ModEL (the idea only).
 - *Which part from the drawer replaces a 1N4004?* A replacement matches or
-  beats both ratings. After *Lessons in Electric Circuits* and ModEL.
+  beats both ratings, and goes in with its band where the old one's was. After
+  *Lessons in Electric Circuits*, ModEL and NEETS.
+- How it dies: outright, not slowly (Electronics Notes); shorted most often,
+  above all in mains supplies, taking the fuse with it (learnabout,
+  Goldwasser); open or leaky now and then, mostly small signal diodes
+  (learnabout); heat above all (NEETS); a cooked look (learnabout) and a
+  smoked electrolytic beside it that may have gone with it (Goldwasser).
 - Kuphaldt's order for fault questions: name the fault and ask for the
-  reading, then give the readings and ask for the fault.
+  reading (an open diode on 9 V), then give the readings and ask for the fault
+  (0.56 V, low both ways, Dev's set).
+- In the set a backwards diode reads like an open one, and the two-way test on
+  ohms splits them: low one way and high the other is good, low both ways
+  shorted, high both ways open. One end lifted, and the black lead positive.
+  After LIEC, ModEL, NEETS, learnabout and Goldwasser.
 
 **Left out, and why**
 
+- V = Vd + VR and every number question: since 26 November 2026, part jobs
+  teach repairing, not designing.
 - Germanium, radio detection and the diode-test range of later meters.
 - Rectifying the mains: it needs AC. For №0024.
-- A protection diode wired across the supply with a fuse: the research
-  found only the diode in line, so the fault is an open one.
+- A protection diode wired across the supply with a fuse: the research found
+  only the diode in line, so the fault is an open one.
+- What the ohms figure is and is not, and the bench thresholds (Goldwasser's
+  100 Ω and 1 MΩ, NEETS's ratios): the lesson teaches low against high, not
+  figures.
+- Meters that put out too little on ohms to open a junction: that is the LED
+  job's point.
 
 ### №0015 The LED
 
@@ -882,17 +925,20 @@ Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.
 **Taken into the lesson**
 
 - The colour comes from the material, not the plastic. After Kuphaldt.
-- The resistor sum, and rounding up to the next value in the drawer, as the
-  first research had it.
-- The power in the resistor on 24 V: more than a ¼ W part can stand. After
-  the exercise in *Lessons in Electric Circuits*, with other values.
-- The first research's "LED open" exercise now also allows "fitted
-  backwards", which reads the same.
+- The rule before any sum, as Electronics Club puts it: an LED needs a series resistor and never goes straight across a battery. The light follows the current, not the voltage, which the learner sees for themselves.
+- The speck of material in its cup and the hair-thin wire to the other lead, so that "open" has a picture. After Electronics-Tutorials, learnabout, CALCE and Wikipedia.
+- How it dies, as far as the sources rank it. Fading comes first, and an LED is judged by its light (Wikipedia, CALCE, Goldwasser). Then open, from too much current, or shorted or leaky, from over about 5 V backwards. No source ranks those two, so the lesson does not.
+- Kuphaldt's fault signs, both on the screen through a Break and a Short switch. Open and backwards read alike. 0 V across the LED means a shorted LED or an open resistor, and measuring R on ohms tells which (the report's exercise 10).
+- Lead length is no guide on a used part: go by the flat, or test it. After learnabout and Electronics Club.
+- Let the meter mislead once: the shop meter on ohms calls a good LED open, and a battery with 1 kΩ settles it. After Goldwasser and Electronics Club.
+- The first research's "LED open" exercise is the customer's fault, with "fitted backwards" ruled out because the light worked for years.
 
 **Left out, and why**
 
-- Strings of LEDs, and one resistor shared by several: other circuits.
-- A shorted LED on the screen: one fault switch is all the readouts allow.
+- The resistor sum, rounding up to the next value in the drawer, and the power in the resistor on a high supply: designing, not repairing. A repairer fits the same value as the old resistor.
+- The dim row of the fault table (resistor gone high, low supply, tired LED): on a volts meter its causes read nearly alike. "Judge an LED by its light" stands in for it.
+- What a meter that can light an LED shows on ohms (low one way, a faint glow): the lesson keeps to the trap. That a 1984 meter's low ohms ranges run from one 1.5 V cell is unverified.
+- Strings of LEDs, one resistor shared by several, two-colour and flashing LEDs, infrared and opto-couplers: other circuits, or more than a first meeting needs.
 - Blue and white: later than 1984.
 
 ### №0016 The Zener diode
@@ -928,21 +974,20 @@ Full report: [`docs/research/diode-led-zener.md`](docs/research/diode-led-zener.
 
 **Taken into the lesson**
 
-- The divider of №0009 with a Zener where R2 was, and the supply run up from
-  nothing.
-- *The load came on. What did the current through Rs do?* Hardly changed.
-  After Kuphaldt.
-- The take-it-out test, as a number question on a sagging battery.
-- An open Zener on the screen, with the output following the battery. After
-  Kuphaldt's regulator worksheet.
+- The divider of №0009 with a Zener where R2 was, and the supply run up from nothing: the output follows, then stops.
+- *The load came on. What did the current through Rs do?* Hardly changed. After Kuphaldt, with the Zener taking what the load leaves.
+- The output's reading as the diagnosis, after Kuphaldt's fault answers and Goldwasser: steady at its marking is good, 0 V with a hot series resistor is shorted, riding up with the supply is open, about 0.6 V is in backwards. Shorted and open are on the screen, as fault switches.
+- Shorted first and open next, as Goldwasser ranks them. Drifting low and turning noisy after Goldwasser, onsemi and learnabout. Check the series resistor after a short.
+- The beginner's mistake of calling a good Zener dead on a low supply: check the supply first. This is the take-it-out test, kept as a sign to recognise rather than a sum.
+- On ohms it reads as an ordinary diode and cannot reach its voltage. To find the voltage, use a circuit like the lesson's own (Goldwasser; *Lessons in Electric Circuits*).
+- Reading the number BZX55C5V6, after Pro Electron and the Vishay data sheet.
 
 **Left out, and why**
 
-- Sizing the series resistor, and the tables of Zener current against load:
-  the readouts had no room for sliders on Rs and the load.
-- The research's own fault table: its figures were its author's working.
-  Every figure in the lesson is the simulator's.
-- Uses the research could not confirm for sets of the time.
+- Every sum: the current in the series resistor, the take-it-out test worked as a divider, sizing the resistor, and the tables of Zener current against load. A part job teaches the reading, not the working.
+- The research's own fault-table figures: they were its author's working. Every reading in the lesson is the simulator's.
+- The series resistor open (0 V with a cold resistor), and a load too heavy: the drawing has room for two fault switches, and both go to the Zener's own faults.
+- Uses the research could not confirm for sets of the time, such as the tuning-voltage stabiliser.
 
 ### №0017 The coil
 
@@ -1003,18 +1048,38 @@ one is how a coil behaves over time.
 
 **Taken into the lesson**
 
-- The size of the kick from Ohm's law: the coil keeps its current and drives
-  it through whatever resistance it finds. After Kuphaldt's ModEL exercise
-  (CC BY 4.0), with other values.
-- The diode across the coil, seen on the screen: the kick, then no kick.
-- On a steady current a coil is only its winding.
-- Mend a broken lead-out before replacing the coil. After the Army and Navy
-  pages.
+- On a steady current a coil is only its winding: on ohms a good one goes
+  straight to a low, steady reading, a few ohms for a radio coil, hundreds
+  for a big one. After K-inds Q9, the Army text and AAC-video.
+- The kick in words, then the diode across the coil seen to tame it. What an
+  untamed kick does: sparks that pit a switch's contacts, and dead
+  transistors (LAE-ind, ModEL, the relay report).
+- An open winding, often where the fine wire meets its tag: mend a broken
+  lead-out before replacing the coil. After the Army and Navy pages.
+- Shorted turns: heat, a burnt smell, dark or blistered varnish, and ohms
+  that barely move, so swap in a known good coil (AAC-video, LIEC-R8, Army,
+  Sams-63).
+- "It has continuity, so it is good" as a beginner's wrong answer (Army,
+  AAC-video).
+- Markings: henries printed on big chokes, bands read in microhenries,
+  unmarked coils checked against the service sheet. A replacement matches the
+  henries and carries at least the current (LAE-ind3, ModEL-L, Sams-63).
 
 **Left out, and why**
 
+- The size of the kick from Ohm's law, and the steady current from the
+  winding: part jobs have no sums.
 - The time constant L ÷ R: a question can only ask about the circuit at
   rest.
+- Which fault is commoner: the Army text says open, the Navy text shorted
+  turns, Kuphaldt about even. The lesson ranks neither.
+- The ringing test and the inductance meter: they need more than the shop's
+  meter on volts and ohms.
+- A short to the core, and a coil shorted end to end: the battery has no
+  resistance of its own, so a short switch across the coil would short it
+  outright.
+- The shock a coil can give from a 9 V battery (K-ind Q14): no room in the
+  steps.
 - Loudspeakers, motors and door chimes: not in the research. The chime is
   only the setting.
 - A trace of the rise and the kick: the player has none. The kick is on the
@@ -1077,20 +1142,25 @@ Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-tr
 
 **Taken into the lesson**
 
-- *Where do the load's amps come from?* The battery: the relay supplies
-  nothing. After ModEL's note on what beginners expect.
-- "Normally" means at rest, not usually. After ModEL.
-- Burnt contacts as a resistor in series with the load, with two number
-  questions. After Electronics-Tutorials' dim headlamp, recomputed.
-- *0.6 Ω on ohms across the contacts. What does it prove?* Nothing. After
-  Elliott.
+- *Where do the load's amps come from?* The battery: the relay supplies nothing. After ModEL's note on what beginners expect.
+- "Normally" means at rest, not usually. After ModEL. It is checked as a bench test: with the coil off, only the normally closed contact shows continuity to the arm, and the two swap when the coil is fed. Continuity to normally open with the coil off means welded. After Blair.
+- How relays fail: contacts burnt and pitted by the spark at each opening (a pit on one, a pip on the other), worst with lamp and motor loads; welded contacts, so the set won't switch off; dirty or sticking contacts that make a set come and go (Goldwasser); the coil's wire broken. After TE, Elliott, Electronics-Tutorials, Goldwasser and Blair.
+- The method is the spine: listen for the click, then volts on the coil, then volts across the closed contacts under load. A click proves only that the arm moved. After Blair and Goldwasser.
+- The readings sorted: full volts on the coil and no click: an open coil, or a stuck arm; no volts on the coil: look at what drives it; a click and volts across the closed contacts: burnt. After Goldwasser's dead set and the in-circuit table.
+- Burnt contacts are shown on the screen as a resistor in series with the load, with nothing to work out. After Electronics-Tutorials' dim headlamp.
+- On ohms, a coil reads tens to hundreds of ohms and a broken one shows no continuity (Blair). *0.6 Ω across closed contacts: what does it prove?* Nothing. After Elliott.
+- A television's relay switches the mains: unplug before testing on ohms, and leave mains readings to the experienced hand. After Goldwasser.
+- The case's two ratings, and a replacement with the same coil voltage and contacts as good or better. After ModEL.
 
 **Left out, and why**
 
+- Every sum: the coil current from its resistance, and the contacts' resistance from their volts. Part jobs teach no working out from 26 November 2026.
 - Pull-in and drop-out currents: a second idea.
 - AC and DC contact ratings: AC is not taught yet.
-- The green and red lamp question in full, the alarm loop and the series
-  resistor for a 5 V coil: each needs another circuit.
+- Welded contacts and a shorted coil on the screen: the drawing's six readouts are taken. Welding is told and asked about in words only.
+- Seeing the pit and pip through a clear cover: no source that was read says the contacts can be seen, so the lesson says only what burnt contacts are like.
+- The diode across the coil: already met with the coil (№0017), and not a fault sign here.
+- The green and red lamp question in full, the alarm loop and the series resistor for a 5 V coil: each needs another circuit (and the last a sum).
 
 ### №0019 The transistor
 
@@ -1145,19 +1215,22 @@ Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-tr
 
 **Taken into the lesson**
 
-- Gain as a ceiling, not a multiplier: ten times the base current, and the
-  bell hardly moves. ModEL calls it the idea most often missed.
-- The base current from the supply less 0.7 V, and the largest resistor that
-  still turns it fully on, then the next size down.
-- The corrected Kuphaldt exercise, as an open transistor found from its
-  readings.
+- Gain as a ceiling, not a multiplier, taught without the word or a figure: ten times the base current and the bell hardly moves, because it is already fully on. ModEL calls this the idea most often missed.
+- The three readings as the method: base to emitter (about 0.7 V fed, 0 V not), across the transistor (next to nothing on, the full supply off), and the load. A good switch sits at one end or the other.
+- From the fault table: open: base fed and the full supply across it, which also proves the load whole (after Kuphaldt); half on from a starved base: several volts across it, a weak load, a hot transistor (ModEL); shorted collector to emitter: 0 V across it whatever the base does. That is Carmen's fault.
+- How it dies: outright, open or shorted, heat first. The causes: a heavy load, a bridged base resistor, a coil's kick, being left half on. A shorted power transistor takes a television's fuse (Goldwasser). Read the voltages round it after a change (Learnabout Electronics).
+- On ohms: two diodes joined at the base, a few hundred ohms one way and nothing the other, then collector to emitter both ways, the check NEETS says the diode tests miss. The moving-coil meter's reversed leads, and keeping off its lowest range.
+- The BC108 and the 2N3055 as the research has them. The mains relay of a remote-control set and electronic ignition as where it is met. A television's mains stages are not for a beginner to probe live.
 
 **Left out, and why**
 
-- PNP, Darlingtons and switching speed.
-- The half-on state: that is amplifying. For №0025.
-- "The collector to emitter short is the commonest failure": not confirmed,
-  so not said.
+- The base current from the supply less 0.7 V, gain as a number, and the largest Rb for a load: design, and part jobs teach repair (since 26 November 2026).
+- PNP, Darlingtons, high-side switching and switching speed.
+- Finding the base and the type with the meter, and telling emitter from collector by a millivolt or two: too fine for a first meeting.
+- A base–emitter junction gone open or shorted: derived in the report, not stated on a page.
+- What a dead transistor looks or smells like: no page described it, so the lesson gives the set's signs instead (a load stuck on or never on, a blown fuse, heat).
+- "The collector to emitter short is the commonest failure": not confirmed, so not said.
+- (Drop the old bullet "The half-on state: that is amplifying. For №0025." The half-on state is now taught, as a fault.)
 
 ### №0020 The MOSFET
 
@@ -1192,18 +1265,21 @@ Full report: [`docs/research/relay-transistor-mosfet.md`](docs/research/relay-tr
 
 **Taken into the lesson**
 
-- The transistor's loop with a MOSFET in its place, and a reading of the
-  gate's current: nothing.
+- The transistor's loop with a MOSFET in its place, and a reading of the gate's current: nothing (NJIT's lab).
 - *What did this gate need to put the lamp fully on?* Only a voltage.
-- The holed gate as a leak that makes a divider with the gate resistor.
-- *A new one reads shorted. What first?* Short gate to source. After
-  Kuphaldt.
+- The threshold is where it starts, not where it is on, and half on it runs hot. *A dull lamp, a hot MOSFET, 4 V on the gate: what's wrong?* Too few volts on the gate (ModEL's cautionary example).
+- How it dies: the gate film holed by static or a spike; the usual end a short, drain to source and often the gate too (Goldwasser's contributors, Herres, Vishay); heat when half on; a coil's kick.
+- Good, open or shorted in the set: a Short switch shows the lamp lit whatever the gate does. *What does an open one read with the timer on?* The full supply, lamp dark (Kuphaldt, igfet Q32).
+- The holed gate as a leak from gate to source, found because the gate takes current through its resistor (the derived punched-gate row).
+- The bench test with a 9 V battery on the gate, and *a new one reads shorted: what first?* Short gate to source. After Kuphaldt (igfet Q19).
 
 **Left out, and why**
 
-- P-channel and depletion types, the built-in diode, switching speed.
-- Uses in sets of 1984 that the research could not confirm.
-- Logic-level parts: later than 1984.
+- P-channel and depletion types, the built-in diode by name, switching speed: not needed to switch or test one.
+- The on-resistance sum (volts = amps × resistance): part jobs have no sums.
+- The resistor from gate to source that empties the gate: the timer does that here, and a resistor in the same place as Bea's leak would muddle her fault.
+- Visual signs: the research gives none for a MOSFET beyond what the load does (stuck on, dead, or dim with the MOSFET hot), so the lesson claims none.
+- Uses in 1984 sets that the research could not confirm. Logic-level parts: later than 1984.
 
 ## Part 3: the planned jobs
 
@@ -1383,3 +1459,11 @@ wiring a transistor.
    voltage at a point, alternating current, the power supply and the
    transistor as an amplifier, now №0021 to №0025, with the transformer
    added as №0023.
+8. **The part jobs lost their sums on 26 November 2026.** The course owner
+   judged that a first meeting with a part should be about how it works and
+   how it fails, the way a repairer tells a shorted capacitor or a blown fuse
+   at a glance, not about working out its numbers. Every formula and number
+   question in №0011 to №0020 gave way to how the part dies, what a good, an
+   open and a shorted one read, and questions that give the readings and ask
+   for the fault. Each part's "Taken into the lesson" above is the reworked
+   one.

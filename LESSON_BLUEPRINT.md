@@ -28,8 +28,10 @@ Read these, in this order:
    written part job nearest to yours. Good models: `fuse.ts` (a part that
    remembers: `reset` and `settle`), `thermistor.ts` (a slider of the part's
    own, and two fault switches), `capacitor.ts` and `coil.ts` (readings that
-   take time), `diode.ts` and `led.ts` ("about" answers), `relay.ts`,
-   `transistor.ts` and `mosfet.ts` (parts with three ends or more).
+   take time), `diode.ts` and `led.ts` (a part that keeps a nearly fixed
+   voltage), `relay.ts`, `transistor.ts` and `mosfet.ts` (parts with three
+   ends or more). A part job has no sums: section 6a says what takes their
+   place.
 
 Then settle four things before writing a line:
 
@@ -39,7 +41,8 @@ Then settle four things before writing a line:
 - **The fault.** What is wrong with the customer's set, and how the idea
   explains it. The last step lands here.
 - **The numbers.** Values that give whole numbers, or one decimal place, at
-  every step. Work them out by hand first.
+  every step. Work them out by hand first. In a part job they are readings to
+  recognise, not answers to work out: choose values that read cleanly.
 
 ## 2. The file
 
@@ -324,7 +327,8 @@ question asks about the circuit at rest, never about a moment on the way.
 
 ## 6. The shape of a job
 
-Nine to thirteen steps, in this arc:
+A fundamentals job (Part 1 of `CURRICULUM.md`) has nine to thirteen steps, in
+this arc. A job about a part follows section 6a instead.
 
 1. **Meet the circuit** (`read`). What is new on the screen, tied to the last
    job: "The same loop as before, with a resistor where the lamp was."
@@ -339,22 +343,41 @@ Nine to thirteen steps, in this arc:
 
 ## 6a. A job about a part
 
-A part job answers four things about one part: how it works, what it is for,
-where you meet it, and how to tell a good one from a dead one. The arc of
-section 6 still holds, with these in it:
+A part job is for someone learning to repair, not to design. It answers four
+things about one part: how it works, what it is for, where you meet it, and
+how to tell a good one from a dead one. **The learner never works anything
+out**: a part job has no `number` steps and no `formula`. What they take away
+is a picture of the part, and the readings and signs that tell a technician
+at a glance that one is good, open, shorted or leaky.
+
+**Readings, not sums.** A rule of thumb a technician says aloud is welcome
+("a working diode keeps about 0.6 V for itself"). A question may state
+readings, and its options may be readings, when the learner picks the right
+one by knowing what a good or failed part shows, never by working it out.
+
+The arc:
 
 1. **Meet the part** (`read`). Its name, its symbol on the screen, and what is
    inside it, in a sentence or two a beginner can picture. No theory that the
    job does not use.
-2. **See what it does** (`explore`, then `choice`), once or twice.
-3. **Name the rule** (`read`, with a `formula` if the part has one), and
-   **work it out** (one to three `number` steps).
+2. **See what it does** (`explore`, then `choice`), once or twice. The
+   question asks what happened, or why: never how much.
+3. **How it works** (`read`), in words: what goes on inside, and the one or
+   two readings that go with a working one, the numbers worth carrying in
+   your head.
 4. **What it is for** (`read`). Two or three places the learner will meet it,
-   in sets of the time. Its markings and ratings, if a repairer reads them.
-5. **Good or faulty** (`explore` or `read`, then `choice`). What a working one
-   reads on the meter, and what a failed one reads: in the set with a
-   voltmeter, and out of it. Name the ways it really fails, commonest first.
-6. **The customer's fault** (the last `choice`), found from readings.
+   in sets of the time. Its markings and ratings, as a repairer reads them to
+   choose a replacement: match the old one, or better it.
+5. **How it dies** (`read`). The ways it really fails, commonest first, and
+   what you see, smell or hear: blackened glass, a bulging or leaking can, a
+   cracked body, a scorched board, no click.
+6. **Good, open or shorted** (`explore` with the fault switches, then
+   `choice`). What the meter reads across a working one, an open one and a
+   shorted one, in the set; and what it shows on ohms, out of the set.
+7. **Spot it** (two or three `choice` steps). A reading or a sign, and the
+   learner says what it means: good, open, shorted, leaky, in backwards. Every
+   reading the question relies on is in the question.
+8. **The customer's fault** (the last `choice`), found from readings or signs.
 
 Ten to fourteen steps. The two fault signs of the fundamentals carry through
 every part: an **open** part has the full supply across it and passes no
