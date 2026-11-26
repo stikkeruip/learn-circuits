@@ -17,5 +17,10 @@
   "workers_dev": false,
   "routes": [
     { "pattern": "learn-circuits.uipko.com", "custom_domain": true }
-  ]
+  ],
+  // Settings for Worker Previews: what a push to any branch other than main
+  // builds, with `npx wrangler preview`. That command stops without this
+  // block. The site has no bindings or variables, so it is empty. Production
+  // ignores it.
+  "previews": {}
 }

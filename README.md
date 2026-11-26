@@ -72,6 +72,11 @@ folder at https://learn-circuits.uipko.com. Cloudflare builds and deploys the
 repository in the Cloudflare dashboard). Its build command fetches the
 simulator first: `git submodule update --init && npm run build`.
 
+A push to any other branch builds a Worker Preview instead, with
+`npx wrangler preview`, which needs the `previews` block in `wrangler.jsonc`
+(empty: the site has no bindings). With `workers_dev` off, a Preview has no
+address of its own, so it checks that the branch builds and nothing more.
+
 To see the built site as Cloudflare serves it, redirects and "not found"
 included:
 
